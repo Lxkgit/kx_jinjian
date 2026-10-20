@@ -1,0 +1,109 @@
+{
+  "outList": [
+    {
+      "name": "经营状态",
+      "content": "",
+      "prop": "state"
+    },
+    {
+      "name": "法定代表人",
+      "content": "",
+      "prop": "person"
+    },
+    {
+      "name": "注册资本",
+      "content": "",
+      "prop": "paidinCapital"
+    },
+    {
+      "name": "成立日期",
+      "content": "",
+      "prop": "startDate"
+    },
+    {
+      "name": "核准日期",
+      "content": "",
+      "prop": "aunnualDate"
+    },
+    {
+      "name": "营业期限",
+      "content": "",
+      "prop": "openTime"
+    },
+    {
+      "name": "所属省份",
+      "content": "",
+      "prop": "province"
+    },
+    {
+      "name": "所属城市",
+      "content": "",
+      "prop": "city"
+    },
+    {
+      "name": "所属区县",
+      "content": "",
+      "prop": "tonwnship"
+    },
+    {
+      "name": "电话",
+      "content": "",
+      "prop": "phone"
+    },
+    {
+      "name": "更多电话",
+      "content": "",
+      "prop": "morePhone"
+    },
+    {
+      "name": "统一社会信用代码",
+      "content": "",
+      "prop": "unifiedCode"
+    },
+    {
+      "name": "纳税人识别号",
+      "content": "",
+      "prop": "taxNo"
+    },
+    {
+      "name": "工商注册号",
+      "content": "",
+      "prop": "regCode"
+    },
+    {
+      "name": "组织机构代码",
+      "content": "",
+      "prop": "orgCodeList"
+    },
+    {
+      "name": "类型",
+      "content": "",
+      "prop": "entType"
+    },
+    {
+      "name": "所属行业",
+      "content": "",
+      "prop": "industry"
+    },
+    {
+      "name": "曾用名",
+      "content": "",
+      "prop": "prevEntName"
+    },
+    {
+      "name": "注册地址",
+      "content": "",
+      "prop": "regAddr"
+    },
+    {
+      "name": "最新年报地址",
+      "content": "",
+      "prop": "annualReportDate"
+    },
+    {
+      "name": "经营范围",
+      "content": "",
+      "prop": "scope"
+    }
+  ]
+}

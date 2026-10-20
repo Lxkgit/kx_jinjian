@@ -1,0 +1,472 @@
+[
+  {
+    "code": 1,
+    "name": "杭州市内",
+    "type": "0",
+    "check": [],
+    "isRoot": true,
+    "hasSon": true,
+    "options": [
+      {
+        "code": "zhihang1",
+        "name": "临平塘栖小微企业专营支行",
+        "type": "1",
+        "check": [],
+        "isRoot": false,
+        "hasSon": true,
+        "options": [
+          {
+            "code": 1448,
+            "name": "张浦团队",
+            "type": "2",
+            "check": [],
+            "isRoot": false,
+            "hasSon": true,
+            "options": [
+              {
+                "code": 1558,
+                "name": "张浦",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              },
+              {
+                "code": 123,
+                "name": "吴能",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              },
+              {
+                "code": 1233,
+                "name": "李诗文",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              }
+            ]
+          },
+          {
+            "code": 14481,
+            "name": "孙阳团队",
+            "type": "2",
+            "check": [],
+            "isRoot": false,
+            "hasSon": true,
+            "options": [
+              {
+                "code": 1233,
+                "name": "孙阳",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              },
+              {
+                "code": 12331,
+                "name": "孙一",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              },
+              {
+                "code": 123311,
+                "name": "李可",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              },
+              {
+                "code": 12331113,
+                "name": "洪田俊",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "code": "zhihang2",
+        "name": "杭州临平支行",
+        "type": "1",
+        "check": [],
+        "isRoot": false,
+        "hasSon": true,
+        "options": [
+          {
+            "code": 144811,
+            "name": "李鸿煊团队",
+            "type": "2",
+            "check": [],
+            "isRoot": false,
+            "hasSon": true,
+            "options": [
+              {
+                "code": 31,
+                "name": "李鸿煊",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              },
+              {
+                "code": 311,
+                "name": "吴信广",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              },
+              {
+                "code": 3113,
+                "name": "张彬贤",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              },
+              {
+                "code": 31133,
+                "name": "林枫",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              }
+            ]
+          },
+          {
+            "code": 1448111,
+            "name": "顾元团队",
+            "type": "2",
+            "check": [],
+            "isRoot": false,
+            "hasSon": true,
+            "options": [
+              {
+                "code": 311333,
+                "name": "顾元",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              },
+              {
+                "code": 12,
+                "name": "盛悦",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              },
+              {
+                "code": 1211,
+                "name": "李强博",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              }
+            ]
+          },
+          {
+            "code": 14481111,
+            "name": "李翠萍团队",
+            "type": "2",
+            "check": [],
+            "isRoot": false,
+            "hasSon": true,
+            "options": [
+              {
+                "code": 22,
+                "name": "李翠萍",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              },
+              {
+                "code": 222,
+                "name": "罗昌平",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              },
+              {
+                "code": 2222,
+                "name": "李承朴",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              },
+              {
+                "code": 22222,
+                "name": "李春平",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "code": "zhihang3",
+        "name": "余杭瓶窑小微综合支行",
+        "type": "1",
+        "check": [],
+        "isRoot": false,
+        "hasSon": true,
+        "options": [
+          {
+            "code": 144811111111111,
+            "name": "张鹏宇团队",
+            "type": "2",
+            "check": [],
+            "isRoot": false,
+            "hasSon": true,
+            "options": [
+              {
+                "code": 222221,
+                "name": "张鹏宇",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              },
+              {
+                "code": 2222213,
+                "name": "侯天宇",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              },
+              {
+                "code": 4,
+                "name": "刘诗雯",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              }
+            ]
+          },
+          {
+            "code": 14481111111,
+            "name": "蔡宇豪团队",
+            "type": "2",
+            "check": [],
+            "isRoot": false,
+            "hasSon": true,
+            "options": [
+              {
+                "code": 44,
+                "name": "蔡宇豪",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              },
+              {
+                "code": 444,
+                "name": "张文腾",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              },
+              {
+                "code": 4444,
+                "name": "吴伟超",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "code": "zhihang4",
+        "name": "杭州分行",
+        "type": "1",
+        "check": [],
+        "isRoot": false,
+        "hasSon": true,
+        "options": [
+          {
+            "code": 213,
+            "name": "刘勤龙团队",
+            "type": "2",
+            "check": [],
+            "isRoot": false,
+            "hasSon": true,
+            "options": [
+              {
+                "code": 55,
+                "name": "刘勤龙",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              },
+              {
+                "code": 555,
+                "name": "顾羽儒",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              }
+            ]
+          },
+          {
+            "code": 2132,
+            "name": "郭玉芳团队",
+            "type": "2",
+            "check": [],
+            "isRoot": false,
+            "hasSon": true,
+            "options": [
+              {
+                "code": 5555,
+                "name": "郭玉芳",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              },
+              {
+                "code": 55555,
+                "name": "张碧嫣",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              },
+              {
+                "code": 6,
+                "name": "高无忧",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              }
+            ]
+          },
+          {
+            "code": 21323,
+            "name": "高卫云团队",
+            "type": "2",
+            "check": [],
+            "isRoot": false,
+            "hasSon": true,
+            "options": [
+              {
+                "code": 66,
+                "name": "高卫云",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              },
+              {
+                "code": 666,
+                "name": "王天世",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              },
+              {
+                "code": 6666,
+                "name": "李奇清",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              }
+            ]
+          },
+          {
+            "code": 213233,
+            "name": "秦逸团队",
+            "type": "2",
+            "check": [],
+            "isRoot": false,
+            "hasSon": true,
+            "options": [
+              {
+                "code": 66666,
+                "name": "秦逸",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              },
+              {
+                "code": 666666,
+                "name": "周晴",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "code": 2,
+    "name": "杭州市外",
+    "type": "0",
+    "check": [],
+    "isRoot": true,
+    "hasSon": true,
+    "options": [
+      {
+        "code": 2222,
+        "name": "xx支行-外",
+        "type": "1",
+        "check": [],
+        "isRoot": false,
+        "hasSon": true,
+        "options": [
+          {
+            "code": 2222,
+            "name": "xx团队-外",
+            "type": "2",
+            "check": [],
+            "isRoot": false,
+            "hasSon": true,
+            "options": [
+              {
+                "code": 22,
+                "name": "xx客户经理-外",
+                "type": "3",
+                "check": [],
+                "isRoot": false,
+                "hasSon": false
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

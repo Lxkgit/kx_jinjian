@@ -1,0 +1,95 @@
+@font-face {
+  font-family: "iconfont"; /* Project id 4358966 */
+  src: url('iconfont.woff2?t=1740990837969') format('woff2'),
+       url('iconfont.woff?t=1740990837969') format('woff'),
+       url('iconfont.ttf?t=1740990837969') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-gengduo:before {
+  content: "\e612";
+}
+
+.icon-haoyou:before {
+  content: "\e600";
+}
+
+.icon-meitixuanchuan:before {
+  content: "\e63b";
+}
+
+.icon-shequ:before {
+  content: "\e62a";
+}
+
+.icon-renqun:before {
+  content: "\e622";
+}
+
+.icon-lifangtilitiduomiantifangkuai:before {
+  content: "\e7fa";
+}
+
+.icon-hangzhengcun:before {
+  content: "\e607";
+}
+
+.icon-zhangben:before {
+  content: "\e617";
+}
+
+.icon-data:before {
+  content: "\e609";
+}
+
+.icon-mianshouxufei:before {
+  content: "\e691";
+}
+
+.icon-zshuaka:before {
+  content: "\e692";
+}
+
+.icon-xinbaniconshangchuan-:before {
+  content: "\e631";
+}
+
+.icon-icon-health:before {
+  content: "\e61f";
+}
+
+.icon-tongjifenxi-changguitongji:before {
+  content: "\e626";
+}
+
+.icon-xitongcanshuguanli:before {
+  content: "\e6a9";
+}
+
+.icon-fuwushang:before {
+  content: "\e64b";
+}
+
+.icon-zerenqu:before {
+  content: "\e709";
+}
+
+.icon-tongjichaxun:before {
+  content: "\e889";
+}
+
+.icon-qianxiang:before {
+  content: "\e614";
+}
+
+.icon-zhuanfa:before {
+  content: "\e63d";
+}
+

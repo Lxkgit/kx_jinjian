@@ -1,0 +1,306 @@
+{
+  "dicTypes": [
+    "CUSTLICENCE",
+    "NATIONINFO",
+    "GENDER"
+  ],
+  "GENDER": [
+    {
+      "value": "1",
+      "label": "男"
+    },
+    {
+      "value": "2",
+      "label": "女"
+    }
+  ],
+  "WHETHERORNOT": [
+    {
+      "value": "1",
+      "label": "是"
+    },
+    {
+      "value": "0",
+      "label": "否"
+    }
+  ],
+  "GDPList": [
+    {
+      "label": "总GDP",
+      "prop": "totalGDP"
+    },
+    {
+      "label": "负债GDP",
+      "prop": "liabilityGDP"
+    },
+    {
+      "label": "资产GDP",
+      "prop": "assetGDP"
+    },
+    {
+      "label": "中收GDP",
+      "prop": "incomeGDP"
+    }
+  ],
+  "aumList": [
+    {
+      "text": "AUM总值"
+    },
+    {
+      "text": "总存款"
+    },
+    {
+      "text": "总理财"
+    },
+    {
+      "text": "总授信"
+    },
+    {
+      "text": "总用信"
+    },
+    {
+      "text": "逾期贷款余额",
+      "style": {
+        "color": "red"
+      }
+    }
+  ],
+  "basicInfoList": [
+    {
+      "name": "性别",
+      "prop": "gender",
+      "value": "",
+      "type": "1",
+      "options": "GENDER"
+    },
+    {
+      "name": "客户编号",
+      "prop": "custNo",
+      "value": "",
+      "type": "1"
+    },
+    {
+      "name": "年龄",
+      "prop": "age",
+      "value": "",
+      "type": "1"
+    },
+    {
+      "name": "出生日期",
+      "prop": "birthday",
+      "value": "",
+      "type": "1"
+    },
+    {
+      "name": "联系电话",
+      "prop": "phone",
+      "value": "",
+      "type": "1"
+    },
+    {
+      "name": "身份证号",
+      "prop": "idenNo",
+      "value": "",
+      "type": "1"
+    },
+    {
+      "name": "婚姻状况",
+      "prop": "maritalStatus",
+      "value": "",
+      "type": "1"
+    },
+    {
+      "name": "职业",
+      "prop": "occupation",
+      "value": "",
+      "type": "1"
+    },
+    {
+      "name": "工作单位",
+      "prop": "workUnit",
+      "value": "",
+      "type": "1"
+    },
+    {
+      "name": "是否户主",
+      "prop": "houseHolder",
+      "value": "",
+      "type": "1",
+      "options": "WHETHERORNOT"
+    },
+    {
+      "name": "是否新市民",
+      "prop": "newCitizen",
+      "value": "",
+      "type": "1",
+      "options": "WHETHERORNOT"
+    },
+    {
+      "name": "归属机构",
+      "prop": "org",
+      "value": "",
+      "type": "1"
+    },
+    {
+      "name": "归属网格",
+      "prop": "addr",
+      "value": "",
+      "type": "1"
+    },
+    {
+      "name": "网格管理员",
+      "prop": "managerName",
+      "value": "",
+      "type": "1"
+    },
+    {
+      "name": "地址",
+      "prop": "address",
+      "value": "",
+      "type": "1"
+    },
+    {
+      "name": "ACRM管户客户经理",
+      "prop": "principalLinkmanName",
+      "value": "",
+      "type": "1"
+    },
+    {
+      "name": "代发企业名称",
+      "prop": "companyAnchorVOS",
+      "value": "",
+      "type": "4",
+      "width": "33%",
+      "key": "custName"
+    },
+    {
+      "name": "商户名称",
+      "prop": "businessList",
+      "value": "",
+      "type": "4",
+      "width": "33%",
+      "key": "entName"
+    }
+  ],
+  "otherInfoList": [
+    {
+      "name": "国籍",
+      "prop": "country",
+      "value": "",
+      "type": "1"
+    },
+    {
+      "name": "境外客户标识",
+      "prop": "overseas",
+      "value": "",
+      "type": "1"
+    },
+    {
+      "name": "籍贯",
+      "prop": "origin",
+      "value": "",
+      "type": "1"
+    },
+    {
+      "name": "民族",
+      "prop": "nation",
+      "value": "",
+      "type": "1"
+    },
+    {
+      "name": "户口性质",
+      "prop": "registeredType",
+      "value": "",
+      "type": "1"
+    },
+    {
+      "name": "政治面貌",
+      "prop": "politicsStatus",
+      "value": "",
+      "type": "1"
+    },
+    {
+      "name": "与我行关系",
+      "prop": "bankRelation",
+      "value": "",
+      "type": "1"
+    },
+    {
+      "name": "最高学位",
+      "prop": "degree",
+      "value": "",
+      "type": "1"
+    },
+    {
+      "name": "最高学历",
+      "prop": "education",
+      "value": "",
+      "type": "1"
+    },
+    {
+      "name": "有效证件类型",
+      "prop": "idenType",
+      "value": "",
+      "type": "1"
+    },
+    {
+      "name": "证件有效日期",
+      "prop": "certPeriod",
+      "value": "",
+      "type": "1"
+    },
+    {
+      "name": "签发机关",
+      "prop": "signOrg",
+      "value": "",
+      "type": "1"
+    },
+    {
+      "name": "是否主证件",
+      "prop": "mainCert",
+      "value": "",
+      "type": "1",
+      "options": "WHETHERORNOT"
+    }
+  ],
+  "productColumns": [
+    {
+      "label": "产品名称",
+      "prop": "productName"
+    },
+    {
+      "label": "到期时间",
+      "prop": "expiryDate"
+    },
+    {
+      "label": "办理时间",
+      "prop": "stIntDate"
+    },
+    {
+      "label": "负责人",
+      "prop": "custBelongMngName"
+    }
+  ],
+  "recordsColumns": [
+    {
+      "label": "交易时间",
+      "prop": "dealTime"
+    },
+    {
+      "label": "交易金额",
+      "prop": "amnt"
+    },
+    {
+      "label": "交易机构",
+      "prop": "tradeOrg"
+    },
+    {
+      "label": "摘要",
+      "prop": "desc"
+    },
+    {
+      "label": "对方户名",
+      "prop": "toAccount"
+    }
+  ]
+}

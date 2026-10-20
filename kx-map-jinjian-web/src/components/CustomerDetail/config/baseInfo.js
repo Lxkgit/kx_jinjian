@@ -1,0 +1,76 @@
+export const basicInfoList = [
+  {
+    name: "性别",
+    prop: "customerSex",
+    value: "",
+    type: "1",
+    options: "sys_user_sex",
+  },
+  {
+    name: "客户编号",
+    prop: "customerInterNum",
+    value: "",
+    type: "1",
+  },
+  {
+    name: "年龄",
+    prop: "customerAge",
+    value: "",
+    type: "1",
+  },
+  {
+    name: "联系电话",
+    prop: "contactPhone",
+    value: "",
+    type: "1",
+  },
+  {
+    name: "身份证号",
+    prop: "cardNum",
+    value: "",
+    type: "1",
+  },
+  {
+    name: "婚姻状况",
+    prop: "marriageFlag",
+    value: "",
+    type: "1",
+    options: "marriage_status",
+  },
+  {
+    name: "职业",
+    prop: "career",
+    value: "",
+    type: "1",
+  },
+  {
+    name: "工作单位",
+    prop: "workAddress",
+    value: "",
+    type: "1",
+  },
+  {
+    name: "归属机构",
+    prop: "dutyDeptDesc",
+    value: "",
+    type: "1",
+  },
+  {
+    name: "归属网格",
+    prop: "belongGridDesc",
+    value: "",
+    type: "1",
+  },
+  {
+    name: "网格管理员",
+    prop: "gridUserDesc",
+    value: "",
+    type: "1",
+  },
+  {
+    name: "地址",
+    prop: "customerAddress",
+    value: "",
+    type: "1",
+  },
+];

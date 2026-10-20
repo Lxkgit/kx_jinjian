@@ -1,0 +1,66 @@
+const list = [
+  {
+    id: "1",
+    name: "2024.01指标任务",
+    evaluationYear: "2024",
+    evaluationStatus: "已结束",
+    evaluationStart: "2024-09-10",
+    evaluationEnd: "2024-09-10",
+    superiorProgress: "6/19",
+    progress: "1/2",
+    startupTime: "2024-09-20",
+    status: "0",
+  },
+  {
+    id: "2",
+    name: "2024.02指标任务",
+    evaluationYear: "2024",
+    evaluationStatus: "已结束",
+    evaluationStart: "2024-09-10",
+    evaluationEnd: "2024-09-10",
+    superiorProgress: "6/19",
+    progress: "1/2",
+    startupTime: "2024-09-20",
+    status: "1",
+  },
+];
+
+const bankList = [
+  {
+    id: "1",
+    name: "建设银行金华分行",
+    evaluationYear: "2024",
+    evaluationStatus: "已结束",
+    evaluationStart: "2024-09-10",
+    evaluationEnd: "2024-09-10",
+    superiorProgress: "6/19",
+    progress: "1/2",
+    startupTime: "2024-09-20",
+    status: "0",
+    nospotScore: "50",
+    spotScore: "50",
+    synthesisScore: "70",
+    creatTime: "2024-09-20",
+  },
+  {
+    id: "2",
+    name: "中国银行金华分行",
+    evaluationYear: "2024",
+    evaluationStatus: "已结束",
+    evaluationStart: "2024-09-10",
+    evaluationEnd: "2024-09-10",
+    superiorProgress: "6/19",
+    progress: "1/2",
+    startupTime: "2024-09-20",
+    status: "1",
+    nospotScore: "50",
+    spotScore: "50",
+    synthesisScore: "70",
+    creatTime: "2024-09-20",
+  },
+];
+
+export default {
+  list,
+  bankList,
+};

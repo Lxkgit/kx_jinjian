@@ -1,0 +1,184 @@
+// base color
+$blue: #324157;
+$light-blue: #3a71a8;
+$red: #c03639;
+$pink: #e65d6e;
+$green: #30b08f;
+$tiffany: #4ab7bd;
+$yellow: #fec171;
+$panGreen: #30b08f;
+
+// 默认菜单主题风格
+$base-menu-color: #3e3f45;
+// $base-menu-bg-active:#5E81F4;
+$base-menu-color-active: #f4f4f5;
+$base-menu-background: #ffffff;
+$base-logo-title-color: #ffffff;
+
+$base-menu-light-color: rgba(0, 0, 0, 0.7);
+$base-menu-light-background: #ffffff;
+$base-logo-light-title-color: #001529;
+
+$base-sub-menu-background: #f8f9fe;
+$base-sub-menu-hover: #e3e7f4;
+
+// 自定义暗色菜单风格
+/**
+$base-menu-color:hsla(0,0%,100%,.65);
+$base-menu-color-active:#fff;
+$base-menu-background:#001529;
+$base-logo-title-color: #ffffff;
+
+$base-menu-light-color:rgba(0,0,0,.70);
+$base-menu-light-background:#ffffff;
+$base-logo-light-title-color: #001529;
+
+$base-sub-menu-background:#000c17;
+$base-sub-menu-hover:#001528;
+*/
+
+$base-sidebar-width: 260px; //侧边栏宽度
+// 公共的变量
+$base-header-height: 64px; // 头部高度
+$logo-width: 600px; // logo宽度
+// $base-header-bg:linear-gradient(264deg, #4350A0, #3B5AA7, #303ACB, #3E4ABF);
+$base-header-bg: #425aaa;
+$base-tags-height: 56px; // tags 高度
+
+// the :export directive is the magic sauce for webpack
+// https://www.bluematador.com/blog/how-to-share-variables-between-js-and-sass
+
+$table-color-primary: #5e81f4;
+$table-color-success: #13ce66;
+$table-color-warning: #ffba00;
+$table-color-danger: #ff4949;
+$table-color-info: #999999;
+
+//公共媒体查询部分
+@media (max-width: 1520px) {
+  #app {
+    .main-container {
+      margin-left: 230px;
+    }
+    .sidebar-container {
+      width: 230px !important;
+      height: calc(100% - 54px);
+      top: 54px;
+
+      & .nest-menu .el-submenu > .el-submenu__title,
+      & .el-submenu .el-menu-item {
+        min-width: 230px !important;
+      }
+    }
+    .el-menu--collapse .el-menu .el-submenu {
+      min-width: 230px !important;
+    }
+  }
+  .mobile {
+    .sidebar-container {
+      width: 230px !important;
+    }
+
+    &.hideSidebar {
+      .sidebar-container {
+        transform: translate3d(-230px, 0, 0);
+      }
+    }
+  }
+  .fixed-header {
+    width: calc(100% - 230px);
+  }
+
+  #app .sidebar-container .el-submenu__title,
+  #app .sidebar-container .el-menu-item {
+    font-size: 16px !important;
+    font-weight: 400 !important;
+    padding: 0 20px 0 25px !important;
+  }
+
+  .topmenu-container.el-menu--horizontal > .el-menu-item {
+    height: 54px !important;
+    line-height: 54px /* 54/37.5 */ !important;
+  }
+  .topmenu-container.el-menu--horizontal > .el-submenu .el-submenu__title {
+    height: 54px !important;
+    line-height: 54px !important;
+  }
+
+  .hasTagsView {
+    .app-main {
+      // height: calc(100vh - 54px - 50px - 10px);
+      // width: calc(100% - 10px);
+      
+      // margin: 10px 0 0 10px;
+      // background: #fff;
+    }
+
+    .fixed-header + .app-main {
+      padding-top: 54px + 50px;
+    }
+  }
+
+  .header-bar-wrapper {
+    height: 54px;
+    .right-menu {
+      line-height: 54px;
+      .avatar-container {
+        .avatar-wrapper {
+          .avatar-name {
+            line-height: 54px !important;
+          }
+        }
+      }
+    }
+  }
+
+  .sidebar-logo-container {
+    height: 54px;
+    line-height: 54px !important;
+    & .sidebar-logo-link {
+      & .sidebar-title {
+        line-height: 54px !important;
+      }
+    }
+  }
+
+  .sub-navbar {
+    height: 50px;
+    line-height: 50px;
+  }
+
+  .navbar {
+    height: 50px;
+    .hamburger-container {
+      line-height: 50px;
+    }
+  }
+  .tags-view-container {
+    height: 50px;
+    .tags-view-wrapper {
+      line-height: 50px;
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+}
+
+:export {
+  menuColor: $base-menu-color;
+  menuLightColor: $base-menu-light-color;
+  menuColorActive: $base-menu-color-active;
+  menuBackground: $base-menu-background;
+  menuLightBackground: $base-menu-light-background;
+  subMenuBackground: $base-sub-menu-background;
+  subMenuHover: $base-sub-menu-hover;
+  sideBarWidth: $base-sidebar-width;
+  logoTitleColor: $base-logo-title-color;
+  logoLightTitleColor: $base-logo-light-title-color;
+  tableColorPrimary: $table-color-primary;
+  tableColorSuccess: $table-color-success;
+  tableColorWarning: $table-color-warning;
+  tableColorDanger: $table-color-danger;
+  tableColorInfo: $table-color-info;
+}

@@ -1,0 +1,14 @@
+{
+  "bd_satellite":"https://maponline3.bdimg.com/starpic/?qt=satepc&u=x={x};y={y};z={z};v=009;type=sate&fm=46&app=webearth2&v=009&udt=20240614",
+  "bd_road":"https://maponline0.bdimg.com/tile/?qt=vtile&styles=sl&v=083&udt=20230119&scaler=2&showtext=1&x={x}&y={y}&z={z}",
+  "bd_normal":"https://maponline0.bdimg.com/tile/?qt=tile&styles=pl&v=083&udt=20230119&scaler=2&showtext=1&x={x}&y={y}&z={z}",
+  "gd_normal":"http://10.1.200.31:19527/roadmap?x={x}&y={y}&z={z}",
+  "gd_satellite":"http://webst0{1-4}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}",
+  "gd_road":"http://wprd0{1-4}.is.autonavi.com/appmaptile?x={x}&y={y}&z={z}&lang=zh_cn&size=1&scl=1&style=8",
+  "gg_satellite":"http://10.1.200.36:19527/map/江苏省/satellite/{z}/{x}/{y}.jpg",
+  "gg_normal":"http://wprd0{1-4}.is.autonavi.com/appmaptile?x={x}&y={y}&z={z}&lang=zh_cn&size=1&scl=1&style=7",
+  "tdt_satellite":"https://t0.tianditu.gov.cn/DataServer?T=img_w&x={x}&y={y}&l={z}&tk=967cb0ddcb23c0b2d9e3abe01db902b2",
+  "tdt_road":"https://t0.tianditu.gov.cn/DataServer?T=cia_w&x={x}&y={y}&l={z}&tk=967cb0ddcb23c0b2d9e3abe01db902b2",
+  "tdt_normal":"https://t0.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=967cb0ddcb23c0b2d9e3abe01db902b2",
+  "base_url":"http://10.1.200.5:8888"
+}
