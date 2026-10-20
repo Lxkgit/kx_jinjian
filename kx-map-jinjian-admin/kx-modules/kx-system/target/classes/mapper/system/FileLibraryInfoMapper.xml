@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.FileLibraryInfoMapper">
+  <resultMap id="BaseResultMap" type="com.kx.system.domain.FileLibraryInfo">
+    <!--@mbg.generated-->
+    <!--@Table file_library_info-->
+    <id column="id" property="id" />
+    <result column="file_url" property="fileUrl" />
+    <result column="file_name" property="fileName" />
+    <result column="create_by" property="createBy" />
+    <result column="create_time" property="createTime" />
+    <result column="create_num" property="createNum" />
+    <result column="down_load_num" property="downLoadNum" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, file_url, file_name, create_by, create_time, create_num, down_load_num
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select
+    <include refid="Base_Column_List" />
+    from file_library_info
+    where id = #{id}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--@mbg.generated-->
+    delete from file_library_info
+    where id = #{id}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.kx.system.domain.FileLibraryInfo" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into file_library_info (file_url, file_name, create_by, create_time, create_num, down_load_num
+      )
+    values (#{fileUrl}, #{fileName}, #{createBy}, #{createTime}, #{createNum}, #{downLoadNum}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.kx.system.domain.FileLibraryInfo" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into file_library_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="fileUrl != null and fileUrl != ''">
+        file_url,
+      </if>
+      <if test="fileName != null and fileName != ''">
+        file_name,
+      </if>
+      <if test="createBy != null and createBy != ''">
+        create_by,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createNum != null and createNum != ''">
+        create_num,
+      </if>
+      <if test="downLoadNum != null">
+        down_load_num,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="fileUrl != null and fileUrl != ''">
+        #{fileUrl},
+      </if>
+      <if test="fileName != null and fileName != ''">
+        #{fileName},
+      </if>
+      <if test="createBy != null and createBy != ''">
+        #{createBy},
+      </if>
+      <if test="createTime != null">
+        #{createTime},
+      </if>
+      <if test="createNum != null and createNum != ''">
+        #{createNum},
+      </if>
+      <if test="downLoadNum != null">
+        #{downLoadNum},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kx.system.domain.FileLibraryInfo">
+    <!--@mbg.generated-->
+    update file_library_info
+    <set>
+      <if test="fileUrl != null and fileUrl != ''">
+        file_url = #{fileUrl},
+      </if>
+      <if test="fileName != null and fileName != ''">
+        file_name = #{fileName},
+      </if>
+
+      <if test="downLoadNum != null">
+        down_load_num = #{downLoadNum},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kx.system.domain.FileLibraryInfo">
+    <!--@mbg.generated-->
+    update file_library_info
+    set file_url = #{fileUrl},
+      file_name = #{fileName},
+      create_by = #{createBy},
+      create_time = #{createTime},
+      create_num = #{createNum},
+      down_load_num = #{downLoadNum}
+    where id = #{id}
+  </update>
+
+  <select id="selectFileLibraryPage" resultMap="BaseResultMap">
+
+    select
+    <include refid="Base_Column_List" />
+    from file_library_info
+    <where>
+      <if test="fileName != null and fileName != ''">
+        and file_name like concat('%',#{fileName},'%')
+      </if>
+    </where>
+
+    </select>
+
+  <delete id="deleteBatchFileLibrary">
+    delete from file_library_info where id in
+    <foreach collection="ids" item="id" separator="," open="(" close=")" >
+      #{id}
+    </foreach>
+  </delete>
+</mapper>

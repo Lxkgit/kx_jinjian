@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.BuildingAnchorPointMapper">
+
+    <resultMap type="com.kx.system.domain.anchor.BuildingAnchorPoint" id="BuildingAnchorPointResult">
+        <result property="id"    column="id"    />
+        <result property="buildingType"    column="building_type"    />
+        <result property="buildingName"    column="building_name"    />
+        <result property="buildingProvince"    column="building_province"    />
+        <result property="buildingCity"    column="building_city"    />
+        <result property="buildingArea"    column="building_area"    />
+        <result property="buildingStreet"    column="building_street"    />
+        <result property="buildingAddress"    column="building_address"    />
+        <result property="lon"    column="lon"    />
+        <result property="lat"    column="lat"    />
+        <result property="floorNum"    column="floor_num"    />
+        <result property="unitNum"    column="unit_num"    />
+        <result property="householdNum"    column="household_num"    />
+        <result property="belongGrid"    column="belong_grid"    />
+        <result property="networkCode"    column="network_code"    />
+    </resultMap>
+
+    <sql id="selectBuildingAnchorPointVo">
+        select id, building_type, building_province, building_city, building_area, building_street, building_address, lon, lat, floor_num, unit_num, household_num, belong_grid from building_anchor_point
+    </sql>
+
+    <select id="selectBuildingAnchorPointList" parameterType="com.kx.system.domain.anchor.BuildingAnchorPoint" resultMap="BuildingAnchorPointResult">
+        SELECT
+            b.id,
+            b.building_name,
+            d.dict_label buildingTypeName,
+            b.building_type,
+            b.building_province,
+            b.building_city,
+            b.building_area,
+            b.building_street,
+            b.building_address,
+            b.lon,
+            b.lat,
+            b.floor_num,
+            b.unit_num,
+            b.household_num,
+            b.belong_grid,
+            b.belong_grid_name  belongGridName,
+            b.network_code
+        FROM
+            building_anchor_point b
+            LEFT JOIN ( SELECT dict_code, dict_value, dict_label FROM sys_dict_data WHERE dict_type = 'aggregate_point_type' ) d ON d.dict_value = b.building_type
+        <where>
+            <if test="buildingType != null "> and b.building_type = #{buildingType}</if>
+            <if test="buildingName != null "> and b.building_name like concat('%', #{buildingName}, '%') </if>
+            <if test="buildingProvince != null  and buildingProvince != ''"> and b.building_province = #{buildingProvince}</if>
+            <if test="buildingCity != null  and buildingCity != ''"> and b.building_city = #{buildingCity}</if>
+            <if test="buildingArea != null  and buildingArea != ''"> and b.building_area = #{buildingArea}</if>
+            <if test="buildingStreet != null  and buildingStreet != ''"> and b.building_street = #{buildingStreet}</if>
+            <if test="buildingAddress != null  and buildingAddress != ''"> and b.building_address = #{buildingAddress}</if>
+            <if test="lon != null "> and b.lon = #{lon}</if>
+            <if test="lat != null "> and b.lat = #{lat}</if>
+            <if test="floorNum != null "> and b.floor_num = #{floorNum}</if>
+            <if test="unitNum != null "> and b.unit_num = #{unitNum}</if>
+            <if test="householdNum != null "> and b.household_num = #{householdNum}</if>
+            <if test="belongGrid != null "> and b.belong_grid = #{belongGrid}</if>
+        </where>
+    </select>
+
+    <select id="selectBuildingAnchorPointById" parameterType="Long" resultMap="BuildingAnchorPointResult">
+        <include refid="selectBuildingAnchorPointVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertBuildingAnchorPoint" parameterType="com.kx.system.domain.anchor.BuildingAnchorPoint" useGeneratedKeys="true" keyProperty="id">
+        insert into building_anchor_point
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="buildingType != null">building_type,</if>
+            <if test="buildingName != null">building_name,</if>
+            <if test="buildingProvince != null">building_province,</if>
+            <if test="buildingCity != null">building_city,</if>
+            <if test="buildingArea != null">building_area,</if>
+            <if test="buildingStreet != null">building_street,</if>
+            <if test="buildingAddress != null">building_address,</if>
+            <if test="lon != null">lon,</if>
+            <if test="lat != null">lat,</if>
+            <if test="floorNum != null">floor_num,</if>
+            <if test="unitNum != null">unit_num,</if>
+            <if test="householdNum != null">household_num,</if>
+            <if test="belongGrid != null">belong_grid,</if>
+            <if test="networkCode != null">network_code,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="buildingType != null">#{buildingType},</if>
+            <if test="buildingName != null">#{buildingName},</if>
+            <if test="buildingProvince != null">#{buildingProvince},</if>
+            <if test="buildingCity != null">#{buildingCity},</if>
+            <if test="buildingArea != null">#{buildingArea},</if>
+            <if test="buildingStreet != null">#{buildingStreet},</if>
+            <if test="buildingAddress != null">#{buildingAddress},</if>
+            <if test="lon != null">#{lon},</if>
+            <if test="lat != null">#{lat},</if>
+            <if test="floorNum != null">#{floorNum},</if>
+            <if test="unitNum != null">#{unitNum},</if>
+            <if test="householdNum != null">#{householdNum},</if>
+            <if test="belongGrid != null">#{belongGrid},</if>
+            <if test="networkCode != null">#{networkCode},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBuildingAnchorPoint" parameterType="com.kx.system.domain.anchor.BuildingAnchorPoint">
+        update building_anchor_point
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="buildingType != null">building_type = #{buildingType},</if>
+            <if test="buildingProvince != null">building_province = #{buildingProvince},</if>
+            <if test="buildingCity != null">building_city = #{buildingCity},</if>
+            <if test="buildingArea != null">building_area = #{buildingArea},</if>
+            <if test="buildingStreet != null">building_street = #{buildingStreet},</if>
+            <if test="buildingAddress != null">building_address = #{buildingAddress},</if>
+            <if test="lon != null">lon = #{lon},</if>
+            <if test="lat != null">lat = #{lat},</if>
+            <if test="floorNum != null">floor_num = #{floorNum},</if>
+            <if test="unitNum != null">unit_num = #{unitNum},</if>
+            <if test="householdNum != null">household_num = #{householdNum},</if>
+            <if test="belongGrid != null">belong_grid = #{belongGrid},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBuildingAnchorPointById" parameterType="Long">
+        delete from building_anchor_point where id = #{id}
+    </delete>
+
+    <delete id="deleteBuildingAnchorPointByIds" parameterType="String">
+        delete from building_anchor_point where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

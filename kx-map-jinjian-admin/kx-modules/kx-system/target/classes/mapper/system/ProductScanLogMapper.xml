@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.ProductScanLogMapper">
+  <resultMap id="BaseResultMap" type="com.kx.system.domain.ProductScanLog">
+    <!--@mbg.generated-->
+    <!--@Table product_scan_log-->
+    <id column="id" property="id" />
+    <result column="product_id" property="productId" />
+    <result column="product_nm" property="productNm" />
+    <result column="manager_name" property="managerName" />
+    <result column="manager_nm" property="managerNm" />
+    <result column="scan_time" property="scanTime" />
+    <result column="scan_person_name" property="scanPersonName" />
+    <result column="scan_phone" property="scanPhone" />
+    <result column="is_buinsess" property="isBuinsess" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, product_id, product_nm, manager_name, manager_nm, scan_time, scan_person_name,
+    scan_phone, is_buinsess
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select
+    <include refid="Base_Column_List" />
+    from product_scan_log
+    where id = #{id}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--@mbg.generated-->
+    delete from product_scan_log
+    where id = #{id}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.kx.system.domain.ProductScanLog" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into product_scan_log (product_id, product_nm, manager_name, manager_nm, scan_time, scan_person_name,
+      scan_phone, is_buinsess)
+    values (#{productId}, #{productNm}, #{managerName}, #{managerNm}, #{scanTime}, #{scanPersonName},
+      #{scanPhone}, #{isBuinsess})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.kx.system.domain.ProductScanLog" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into product_scan_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="productId != null">
+        product_id,
+      </if>
+      <if test="productNm != null and productNm != ''">
+        product_nm,
+      </if>
+      <if test="managerName != null and managerName != ''">
+        manager_name,
+      </if>
+      <if test="managerNm != null and managerNm != ''">
+        manager_nm,
+      </if>
+      <if test="scanTime != null">
+        scan_time,
+      </if>
+      <if test="scanPersonName != null and scanPersonName != ''">
+        scan_person_name,
+      </if>
+      <if test="scanPhone != null and scanPhone != ''">
+        scan_phone,
+      </if>
+      <if test="isBuinsess != null and isBuinsess != ''">
+        is_buinsess,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="productId != null">
+        #{productId},
+      </if>
+      <if test="productNm != null and productNm != ''">
+        #{productNm},
+      </if>
+      <if test="managerName != null and managerName != ''">
+        #{managerName},
+      </if>
+      <if test="managerNm != null and managerNm != ''">
+        #{managerNm},
+      </if>
+      <if test="scanTime != null">
+        #{scanTime},
+      </if>
+      <if test="scanPersonName != null and scanPersonName != ''">
+        #{scanPersonName},
+      </if>
+      <if test="scanPhone != null and scanPhone != ''">
+        #{scanPhone},
+      </if>
+      <if test="isBuinsess != null and isBuinsess != ''">
+        #{isBuinsess},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kx.system.domain.ProductScanLog">
+    <!--@mbg.generated-->
+    update product_scan_log
+    <set>
+      <if test="productId != null">
+        product_id = #{productId},
+      </if>
+      <if test="productNm != null and productNm != ''">
+        product_nm = #{productNm},
+      </if>
+      <if test="managerName != null and managerName != ''">
+        manager_name = #{managerName},
+      </if>
+      <if test="managerNm != null and managerNm != ''">
+        manager_nm = #{managerNm},
+      </if>
+      <if test="scanTime != null">
+        scan_time = #{scanTime},
+      </if>
+      <if test="scanPersonName != null and scanPersonName != ''">
+        scan_person_name = #{scanPersonName},
+      </if>
+      <if test="scanPhone != null and scanPhone != ''">
+        scan_phone = #{scanPhone},
+      </if>
+      <if test="isBuinsess != null and isBuinsess != ''">
+        is_buinsess = #{isBuinsess},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kx.system.domain.ProductScanLog">
+    <!--@mbg.generated-->
+    update product_scan_log
+    set product_id = #{productId},
+      product_nm = #{productNm},
+      manager_name = #{managerName},
+      manager_nm = #{managerNm},
+      scan_time = #{scanTime},
+      scan_person_name = #{scanPersonName},
+      scan_phone = #{scanPhone},
+      is_buinsess = #{isBuinsess}
+    where id = #{id}
+  </update>
+
+  <select id="selectByProductId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from product_scan_log
+    where product_id = #{productId}
+    order by  scan_time desc
+    </select>
+</mapper>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.PaBacklogMapper">
+
+    <resultMap type="com.kx.system.domain.PaBacklog" id="PaBacklogResult">
+        <result property="id"    column="id"    />
+        <result property="matterType"    column="matter_type"    />
+        <result property="matterContent"    column="matter_content"    />
+        <result property="status"    column="status"    />
+        <result property="promoterUserId"    column="promoter_user_id"    />
+        <result property="promoterTime"    column="promoter_time"    />
+        <result property="operatorUserId"    column="operator_user_id"    />
+        <result property="operatorTime"    column="operator_time"    />
+    </resultMap>
+
+    <sql id="selectPaBacklogVo">
+        select id, matter_type, matter_content, status, promoter_user_id, promoter_time, operator_user_id, operator_time from pa_backlog
+    </sql>
+
+    <select id="selectPaBacklogList" parameterType="com.kx.system.domain.PaBacklog" resultMap="PaBacklogResult">
+        SELECT
+            b.id,
+            b.matter_type,
+            d.dict_label matterTypeName,
+            b.matter_content,
+            b.STATUS,
+            b.promoter_user_id,
+            u.user_name promoterUserName,
+            b.promoter_time,
+            b.operator_user_id,
+            u.user_name operatorUserId,
+            b.operator_time
+        FROM
+            pa_backlog b
+            LEFT JOIN ( SELECT dict_code, dict_value, dict_label FROM sys_dict_data WHERE dict_type = 'matter_type' ) d ON b.matter_type = d.dict_value
+            LEFT JOIN sys_user u ON b.promoter_user_id = u.user_id
+            LEFT JOIN sys_user u1 ON b.operator_user_id = u1.user_id
+        <where>
+            <if test="matterType != null "> and b.matter_type = #{matterType}</if>
+            <if test="matterContent != null  and matterContent != ''"> and b.matter_content = #{matterContent}</if>
+            <if test="status != null "> and b.status = #{status}</if>
+            <if test="promoterUserId != null "> and b.promoter_user_id = #{promoterUserId}</if>
+            <if test="promoterTime != null "> and b.promoter_time = #{promoterTime}</if>
+            <if test="operatorUserId != null "> and b.operator_user_id = #{operatorUserId}</if>
+            <if test="operatorTime != null "> and b.operator_time = #{operatorTime}</if>
+        </where>
+    </select>
+
+    <select id="selectPaBacklogById" parameterType="Long" resultMap="PaBacklogResult">
+        <include refid="selectPaBacklogVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPaBacklog" parameterType="com.kx.system.domain.PaBacklog">
+        insert into pa_backlog
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="matterType != null">matter_type,</if>
+            <if test="matterContent != null">matter_content,</if>
+            <if test="status != null">status,</if>
+            <if test="promoterUserId != null">promoter_user_id,</if>
+            <if test="promoterTime != null">promoter_time,</if>
+            <if test="operatorUserId != null">operator_user_id,</if>
+            <if test="operatorTime != null">operator_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="matterType != null">#{matterType},</if>
+            <if test="matterContent != null">#{matterContent},</if>
+            <if test="status != null">#{status},</if>
+            <if test="promoterUserId != null">#{promoterUserId},</if>
+            <if test="promoterTime != null">#{promoterTime},</if>
+            <if test="operatorUserId != null">#{operatorUserId},</if>
+            <if test="operatorTime != null">#{operatorTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePaBacklog" parameterType="com.kx.system.domain.PaBacklog">
+        update pa_backlog
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="matterType != null">matter_type = #{matterType},</if>
+            <if test="matterContent != null">matter_content = #{matterContent},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="promoterUserId != null">promoter_user_id = #{promoterUserId},</if>
+            <if test="promoterTime != null">promoter_time = #{promoterTime},</if>
+            <if test="operatorUserId != null">operator_user_id = #{operatorUserId},</if>
+            <if test="operatorTime != null">operator_time = #{operatorTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePaBacklogById" parameterType="Long">
+        delete from pa_backlog where id = #{id}
+    </delete>
+
+    <delete id="deletePaBacklogByIds" parameterType="String">
+        delete from pa_backlog where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

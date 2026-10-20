@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.CustomerTradeMapper">
+
+    <resultMap type="com.kx.system.domain.customer.CustomerTrade" id="CustomerTradeResult">
+        <result property="id"    column="id"    />
+        <result property="customerId"    column="customer_id"    />
+        <result property="tradeYear"    column="trade_year"    />
+        <result property="tradeMonth"    column="trade_month"    />
+        <result property="tradeDay"    column="trade_day"    />
+        <result property="tradeAmount"    column="trade_amount"    />
+        <result property="tradeCardNum"    column="trade_card_num"    />
+        <result property="tradeTime"    column="trade_time"    />
+    </resultMap>
+
+    <sql id="selectCustomerTradeVo">
+        select id, customer_id, trade_year, trade_month, trade_day, trade_amount, trade_card_num, trade_time from customer_trade
+    </sql>
+
+    <select id="selectCustomerTradeList" resultMap="CustomerTradeResult">
+        <include refid="selectCustomerTradeVo"/>
+        <where>
+            <if test="customerId != null "> and customer_id = #{customerId}</if>
+            <if test="tradeCardNum != null "> and trade_card_num = #{tradeCardNum}</if>
+            <if test="startDate != null "> and trade_time ge #{tradeTime}</if>
+            <if test="endDate != null "> and trade_time le #{endDate}</if>
+        </where>
+    </select>
+
+    <select id="selectCustomerTradeById" parameterType="Long" resultMap="CustomerTradeResult">
+        <include refid="selectCustomerTradeVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertCustomerTrade" parameterType="com.kx.system.domain.customer.CustomerTrade" useGeneratedKeys="true" keyProperty="id">
+        insert into customer_trade
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="customerId != null">customer_id,</if>
+            <if test="tradeYear != null">trade_year,</if>
+            <if test="tradeMonth != null">trade_month,</if>
+            <if test="tradeDay != null">trade_day,</if>
+            <if test="tradeAmount != null">trade_amount,</if>
+            <if test="tradeCardNum != null">trade_card_num,</if>
+            <if test="tradeTime != null">trade_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="customerId != null">#{customerId},</if>
+            <if test="tradeYear != null">#{tradeYear},</if>
+            <if test="tradeMonth != null">#{tradeMonth},</if>
+            <if test="tradeDay != null">#{tradeDay},</if>
+            <if test="tradeAmount != null">#{tradeAmount},</if>
+            <if test="tradeCardNum != null">#{tradeCardNum},</if>
+            <if test="tradeTime != null">#{tradeTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCustomerTrade" parameterType="com.kx.system.domain.customer.CustomerTrade">
+        update customer_trade
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="customerId != null">customer_id = #{customerId},</if>
+            <if test="tradeYear != null">trade_year = #{tradeYear},</if>
+            <if test="tradeMonth != null">trade_month = #{tradeMonth},</if>
+            <if test="tradeDay != null">trade_day = #{tradeDay},</if>
+            <if test="tradeAmount != null">trade_amount = #{tradeAmount},</if>
+            <if test="tradeCardNum != null">trade_card_num = #{tradeCardNum},</if>
+            <if test="tradeTime != null">trade_time = #{tradeTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCustomerTradeById" parameterType="Long">
+        delete from customer_trade where id = #{id}
+    </delete>
+
+    <delete id="deleteCustomerTradeByIds" parameterType="String">
+        delete from customer_trade where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

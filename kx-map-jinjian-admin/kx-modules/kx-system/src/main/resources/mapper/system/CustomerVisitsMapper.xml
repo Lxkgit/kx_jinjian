@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.CustomerVisitsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="customerVisitsResultMap" type="com.kx.system.domain.customer.CustomerVisits">
+        <id column="id" property="id"/>
+        <result column="customer_id" property="customerId"/>
+        <result column="customer_type" property="customerType"/>
+        <result column="type" property="type"/>
+        <result column="identity" property="identity"/>
+        <result column="other_bank_due_demand" property="otherBankDueDemand"/>
+        <result column="due_time" property="dueTime"/>
+        <result column="due_bal" property="dueBal"/>
+        <result column="other_demand" property="otherDemand"/>
+        <result column="other_demand_remark" property="otherDemandRemark"/>
+        <result column="is_visits_black" property="isVisitsBlack"/>
+        <result column="risk_customer_remark" property="riskCustomerRemark"/>
+        <result column="visits_check" property="visitsCheck"/>
+        <result column="visits_time" property="visitsTime"/>
+        <result column="visits_address" property="visitsAddress"/>
+        <result column="visits_remark" property="visitsRemark"/>
+        <result column="visits_picture" property="visitsPicture"/>
+        <result column="visits_manager" property="visitsManager"/>
+        <result column="visits_way" property="visitsWay"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="customer_name" property="customerName"/>
+        <result column="customer_phone" property="customerPhone"/>
+        <result column="work_unit" property="workUnit"/>
+        <result column="grid_address" property="gridAddress"/>
+        <result column="visits_manager_code" property="visitsManagerCode"/>
+        <result column="visits_org_code" property="visitsOrgCode"/>
+        <result column="visits_org" property="visitsOrg"/>
+        <result column="visits_location" property="visitsLocation" />
+    </resultMap>
+
+    <resultMap id="customerManagerResultMap" type="com.kx.system.domain.customer.VisitsManager">
+        <result column="visits_manager" property="visitsManagerName"/>
+        <result column="visits_manager_code" property="visitsManagerCode"/>
+        <result column="visits_org_code" property="visitsOrgCode"/>
+        <result column="visits_org" property="visitsOrgName"/>
+        <result column="visits_count" property="visitsCount"/>
+        <result column="visits_customer_count" property="visitsCustomerCount"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="columns">
+        id,customer_nm ,customer_id, customer_type, type, identity, other_bank_due_demand, due_time, due_bal, other_demand, other_demand_remark, is_visits_black, risk_customer_remark, visits_check, visits_time, visits_address, visits_remark, visits_picture, visits_manager, visits_way, remark, create_time, update_time, customer_name, customer_phone, work_unit, grid_address,visits_manager_code,visits_org_code,visits_org,checkin_address,visit_label,visits_location
+    </sql>
+
+    <sql id="listByMangerCodeSql">
+        select
+        <include refid="columns"/>
+        from customer_visits
+        <where>
+            <if test="visitsStartTime!=null and visitsEndTime!=null">
+                visits_time between #{visitsStartTime} and #{visitsEndTime}
+            </if>
+            <if test=" visitsManagerName!=null and visitsManagerName!='' ">
+                and visits_manager like concat(#{visitsManagerName},'%')
+            </if>
+            <if test=" visitsManagerCode!=null and visitsManagerCode!='' ">
+                and visits_manager_code = #{visitsManagerCode}
+            </if>
+            <if test=" visitsOrgCode!=null and visitsOrgCode!='' ">
+                and visits_org_code = #{visitsOrgCode}
+            </if>
+        </where>
+        order by id
+    </sql>
+
+    <select id="listByMangerCode" resultMap="customerVisitsResultMap">
+        <include refid="listByMangerCodeSql"/>
+    </select>
+
+    <select id="listExportByMangerCode" resultMap="customerVisitsResultMap">
+        <include refid="listByMangerCodeSql"/>
+        limit #{start},#{limit}
+    </select>
+
+    <!-- 查询列表 -->
+    <select id="list" parameterType="com.kx.system.domain.customer.CustomerVisits" resultMap="customerVisitsResultMap">
+        select
+        <include refid="columns"/>
+        from customer_visits
+        <where>
+            <if test=" customerId!=null and customerId !='' ">and customer_id = #{customerId }</if>
+            <if test=" customerType!=null and customerType !='' ">and customer_type = #{customerType }</if>
+            <if test=" type!=null and type !='' ">and type = #{type}</if>
+            <if test=" identity!=null and identity !='' ">and identity = #{identity }</if>
+            <if test=" otherBankDueDemand!=null and otherBankDueDemand !='' ">and other_bank_due_demand =
+                #{otherBankDueDemand }
+            </if>
+            <if test=" dueTime!=null and dueTime !='' ">and due_time = #{dueTime }</if>
+            <if test=" dueBal!=null and dueBal !='' ">and due_bal = #{dueBal }</if>
+            <if test=" otherDemand!=null and otherDemand !='' ">and other_demand = #{otherDemand }</if>
+            <if test=" otherDemandRemark!=null and otherDemandRemark !='' ">and other_demand_remark =
+                #{otherDemandRemark }
+            </if>
+            <if test=" isVisitsBlack!=null and isVisitsBlack !='' ">and is_visits_black = #{isVisitsBlack }</if>
+            <if test=" riskCustomerRemark!=null and riskCustomerRemark !='' ">and risk_customer_remark =
+                #{riskCustomerRemark }
+            </if>
+            <if test=" visitsCheck!=null and visitsCheck !='' ">and visits_check = #{visitsCheck }</if>
+            <if test=" visitsTime!=null ">and visits_time = #{visitsTime }</if>
+            <if test=" visitsAddress!=null and visitsAddress !='' ">and visits_address = #{visitsAddress }</if>
+            <if test=" visitsRemark!=null and visitsRemark !='' ">and visits_remark = #{visitsRemark }</if>
+            <if test=" visitsPicture!=null and visitsPicture !='' ">and visits_picture = #{visitsPicture }</if>
+            <if test=" visitsManager!=null and visitsManager !='' ">and visits_manager = #{visitsManager }</if>
+            <if test=" visitsWay!=null and visitsWay !='' ">and visits_way = #{visitsWay }</if>
+            <if test=" remark!=null and remark !='' ">and remark = #{remark }</if>
+            <if test=" createTime!=null ">and create_time = #{createTime }</if>
+            <if test=" updateTime!=null">and update_time = #{updateTime }</if>
+            <if test=" customerName!=null and customerName !='' ">and customer_name = #{customerName}</if>
+            <if test=" customerPhone!=null and customerPhone !='' ">and customer_phone = #{customerPhone}</if>
+            <if test=" workUnit!=null and workUnit !='' ">and work_unit = #{workUnit}</if>
+            <if test=" gridAddress!=null and gridAddress !='' ">and grid_address = #{gridAddress}</if>
+            <if test=" visitsManagerCode!=null and visitsManagerCode !='' ">and visits_manager_code =
+                #{visitsManagerCode}
+            </if>
+            <if test=" visitsOrg!=null and visitsOrg !='' ">and visits_org = #{visitsOrg}</if>
+            <if test=" visitsOrgCode!=null and visitsOrgCode !='' ">and visits_org_code = #{visitsOrgCode}</if>
+        </where>
+        order by visits_time desc
+    </select>
+
+    <!-- 根据id查询 -->
+    <select id="getById" resultMap="customerVisitsResultMap">
+        select
+        <include refid="columns"/>
+        from customer_visits where id = #{id}
+    </select>
+    <select id="listInfo" resultType="com.kx.system.domain.vo.VisitInfoVO">
+        select visits_manager, visits_time from customer_visits
+            where customer_id = #{customerId} and type = #{type}
+    </select>
+
+    <sql id="listGroupByManagerSql">
+        select visits_manager,
+        visits_manager_code,
+        visits_org,
+        visits_org_code,
+        count(*) as visits_count,
+        count(distinct identity) as visits_customer_count
+        from customer_visits cv
+        left join sys_dept d on cv.visits_org_code = d.org_num
+        left join sys_user u on cv.visits_manager_code = u.manager_num
+        <where>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+            <if test="visitsStartTime!=null and visitsEndTime!=null">
+                and visits_time between #{visitsStartTime} and #{visitsEndTime}
+            </if>
+            <if test=" visitsManagerName!=null and visitsManagerName!='' ">
+                and visits_manager like concat(#{visitsManagerName},'%')
+            </if>
+            <if test=" visitsOrgCode!=null and visitsOrgCode!='' ">
+                and visits_org_code = #{visitsOrgCode}
+            </if>
+        </where>
+        group by visits_manager_code,visits_org_code
+        order by visits_manager_code,visits_org_code
+    </sql>
+
+    <select id="listGroupByManager" resultMap="customerManagerResultMap">
+        <include refid="listGroupByManagerSql"/>
+    </select>
+
+    <select id="listExportGroupByManager" resultMap="customerManagerResultMap">
+        <include refid="listGroupByManagerSql"/>
+        limit #{start},#{limit}
+    </select>
+
+    <!-- 根据id删除 -->
+    <delete id="deleteById">
+        delete from  customer_visits where  id= #{id}
+    </delete>
+
+    <!-- 新增 -->
+    <insert id="insertCustomerVisits" parameterType="com.kx.system.domain.customer.CustomerVisits" keyProperty="id"
+            useGeneratedKeys="true">
+        insert into customer_visits(
+            customer_id,customer_nm,customer_type,type,identity,other_bank_due_demand,due_time,due_bal,other_demand,other_demand_remark,is_visits_black,risk_customer_remark,visits_check,visits_time,visits_address,visits_remark,visits_picture,visits_manager,visits_way,remark,create_time,update_time,customer_name,customer_phone,work_unit,grid_address,grid_address_type,grid_address_detail,visits_manager_code,visits_org_code,visits_org,checkin_address,visit_label,visits_location
+        )values(
+             #{customerId}, #{customerNm},#{customerType}, #{type}, #{identity}, #{otherBankDueDemand}, #{dueTime}, #{dueBal}, #{otherDemand}, #{otherDemandRemark}, #{isVisitsBlack}, #{riskCustomerRemark}, #{visitsCheck}, #{visitsTime}, #{visitsAddress}, #{visitsRemark}, #{visitsPicture}, #{visitsManager}, #{visitsWay}, #{remark}, #{createTime}, #{updateTime},#{customerName},#{customerPhone},#{workUnit},#{gridAddress},#{gridAddressType},#{gridAddressDetail},#{visitsManagerCode},#{visitsOrgCode},#{visitsOrg},#{checkinAddress},#{visitLabel},#{visitsLocation}
+        )
+    </insert>
+
+    <!-- 更新 -->
+    <update id="updateCustomerVisits" parameterType="com.kx.system.domain.customer.CustomerVisits">
+        update customer_visits
+        <trim prefix="SET" suffixOverrides=",">
+            <if test=" customerId!=null and customerId !='' ">customer_id = #{customerId } ,</if>
+            <if test=" customerType!=null and customerType !='' ">customer_type = #{customerType } ,</if>
+            <if test=" type!=null and type !='' ">type = #{type } ,</if>
+            <if test=" identity!=null and identity !='' ">identity = #{identity } ,</if>
+            <if test=" otherBankDueDemand!=null and otherBankDueDemand !='' ">other_bank_due_demand =
+                #{otherBankDueDemand } ,
+            </if>
+            <if test=" dueTime!=null and dueTime !='' ">due_time = #{dueTime } ,</if>
+            <if test=" dueBal!=null and dueBal !='' ">due_bal = #{dueBal } ,</if>
+            <if test=" otherDemand!=null and otherDemand !='' ">other_demand = #{otherDemand } ,</if>
+            <if test=" otherDemandRemark!=null and otherDemandRemark !='' ">other_demand_remark = #{otherDemandRemark }
+                ,
+            </if>
+            <if test=" isVisitsBlack!=null and isVisitsBlack !='' ">is_visits_black = #{isVisitsBlack } ,</if>
+            <if test=" riskCustomerRemark!=null and riskCustomerRemark !='' ">risk_customer_remark =
+                #{riskCustomerRemark } ,
+            </if>
+            <if test=" visitsCheck!=null and visitsCheck !='' ">visits_check = #{visitsCheck } ,</if>
+            <if test=" visitsTime!=null ">visits_time = #{visitsTime } ,</if>
+            <if test=" visitsAddress!=null and visitsAddress !='' ">visits_address = #{visitsAddress } ,</if>
+            <if test=" visitsRemark!=null and visitsRemark !='' ">visits_remark = #{visitsRemark } ,</if>
+            <if test=" visitsPicture!=null and visitsPicture !='' ">visits_picture = #{visitsPicture } ,</if>
+            <if test=" visitsManager!=null and visitsManager !='' ">visits_manager = #{visitsManager } ,</if>
+            <if test=" visitsWay!=null and visitsWay !='' ">visits_way = #{visitsWay } ,</if>
+            <if test=" remark!=null and remark !='' ">remark = #{remark } ,</if>
+            <if test=" createTime!=null ">create_time = #{createTime } ,</if>
+            <if test=" updateTime!=null  ">update_time = #{updateTime } ,</if>
+            <if test=" customerName!=null and customerName !='' ">customer_name = #{customerName} ,</if>
+            <if test=" customerPhone!=null and customerPhone !='' ">customer_phone = #{customerPhone} ,</if>
+            <if test=" workUnit!=null and workUnit !='' ">work_unit = #{workUnit},</if>
+            <if test=" gridAddress!=null and gridAddress !='' ">grid_address = #{gridAddress} ,</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <select id="selectVisitLableNtNull" resultMap="customerVisitsResultMap">
+        select
+        <include refid="columns" />
+        from customer_visits
+        where visit_label is not null
+    </select>
+</mapper>

@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.PaCustomInfoMapper">
+    <resultMap id="BaseResultMap" type="com.kx.system.domain.PaCustomInfo">
+        <!--@mbg.generated-->
+        <!--@Table pa_custom_info-->
+        <result column="nm" jdbcType="VARCHAR" property="nm"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="identify" jdbcType="VARCHAR" property="identify"/>
+        <result column="home_address" jdbcType="VARCHAR" property="homeAddress"/>
+        <result column="contract_address" jdbcType="VARCHAR" property="contractAddress"/>
+        <result column="outlet" jdbcType="VARCHAR" property="outlet"/>
+        <result column="outlet_code" jdbcType="VARCHAR" property="outletCode"/>
+        <result column="township" jdbcType="VARCHAR" property="township"/>
+        <result column="area" jdbcType="VARCHAR" property="area"/>
+        <result column="area_code" jdbcType="VARCHAR" property="areaCode"/>
+        <result column="manager_id" jdbcType="VARCHAR" property="managerId"/>
+        <result column="work" jdbcType="VARCHAR" property="work"/>
+        <result column="profession" jdbcType="VARCHAR" property="profession"/>
+        <result column="telephone" jdbcType="VARCHAR" property="telephone"/>
+        <result column="birthday" property="birthday"/>
+        <result column="gender" jdbcType="VARCHAR" property="gender"/>
+        <result column="marital_status" jdbcType="VARCHAR" property="maritalStatus"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="allocation_date" jdbcType="DATE" property="allocationDate"/>
+        <result column="lon" jdbcType="DOUBLE" property="lon"/>
+        <result column="lat" jdbcType="DOUBLE" property="lat"/>
+        <result column="etl_dt" jdbcType="DATE" property="etlDt"/>
+        <result column="del_flag" jdbcType="TINYINT" property="delFlag"/>
+        <result column="oldStar" jdbcType="VARCHAR" property="oldTarget"/>
+        <result column="newStar" jdbcType="VARCHAR" property="newTarget"/>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        nm, [name], identify, home_address, contract_address,outlet,outlet_code,township,area,area_code,manager_id,
+        [work], profession, telephone,birthday, gender, marital_status,[type],allocation_date,lon,lat,
+        etl_dt
+    </sql>
+    <select id="selectByNm" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select top 1
+        <include refid="Base_Column_List"></include>
+        from pa_custom_info
+        where nm = #{nm,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from pa_custom_info
+        where lon is not null and lat is not null
+    </select>
+
+    <select id="queryByNm" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from pa_custom_info where nm = #{nm} ORDER BY etl_dt DESC
+    </select>
+
+    <insert id="insert" parameterType="com.kx.system.domain.PaCustomInfo">
+        <!--@mbg.generated-->
+        insert into pa_custom_info (nm, [name], identify,
+        home_address, contract_address, outlet,
+        outlet_code, township, area,area_code,
+        manager_id, [work], profession,
+        telephone, birthday, gender,
+        marital_status, [type], allocation_date,lon,lat
+        etl_dt,del_flag)
+        values (#{nm,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{identify,jdbcType=VARCHAR},
+        #{homeAddress,jdbcType=VARCHAR}, #{contractAddress,jdbcType=VARCHAR}, #{outlet,jdbcType=VARCHAR},
+        #{outletCode,jdbcType=VARCHAR}, #{township,jdbcType=VARCHAR},
+        #{area,jdbcType=VARCHAR},#{areaCode,jdbcType=VARCHAR},
+        #{managerId,jdbcType=VARCHAR}, #{work,jdbcType=VARCHAR}, #{profession,jdbcType=VARCHAR},
+        #{telephone,jdbcType=VARCHAR}, #{birthday,jdbcType=DATE}, #{gender,jdbcType=VARCHAR},
+        #{maritalStatus,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{allocationDate,jdbcType=DATE},
+        #{lon,jdbcType=DECIMAL},#{lat,jdbcType=DECIMAL},#{etlDt,jdbcType=DATE},#{delFlag,jdbcType=INTEGER},)
+    </insert>
+    <insert id="insertSelective" parameterType="com.kx.system.domain.PaCustomInfo">
+        <!--@mbg.generated-->
+        insert into pa_custom_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="nm != null">
+                nm,
+            </if>
+            <if test="name != null">
+                [name],
+            </if>
+            <if test="identify != null">
+                identify,
+            </if>
+            <if test="homeAddress != null">
+                home_address,
+            </if>
+            <if test="contractAddress != null">
+                contract_address,
+            </if>
+            <if test="outlet != null">
+                outlet,
+            </if>
+            <if test="outletCode != null">
+                outlet_code,
+            </if>
+            <if test="township != null">
+                township,
+            </if>
+            <if test="area != null">
+                area,
+            </if>
+            <if test="areaCode != null">
+                area_code,
+            </if>
+            <if test="managerId != null">
+                manager_id,
+            </if>
+            <if test="work != null">
+                [work],
+            </if>
+            <if test="profession != null">
+                profession,
+            </if>
+            <if test="telephone != null">
+                telephone,
+            </if>
+            <if test="birthday != null">
+                birthday,
+            </if>
+            <if test="gender != null">
+                gender,
+            </if>
+            <if test="maritalStatus != null">
+                marital_status,
+            </if>
+            <if test="type != null">
+                [type],
+            </if>
+            <if test="allocationDate != null">
+                allocation_date,
+            </if>
+            <if test="lon != null">
+                lon,
+            </if>
+            <if test="lat != null">
+                lat,
+            </if>
+            <if test="etlDt != null">
+                etl_dt,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="nm != null">
+                #{nm,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="identify != null">
+                #{identify,jdbcType=VARCHAR},
+            </if>
+            <if test="homeAddress != null">
+                #{homeAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="contractAddress != null">
+                #{contractAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="outlet != null">
+                #{outlet,jdbcType=VARCHAR},
+            </if>
+            <if test="outletCode != null">
+                #{outletCode,jdbcType=VARCHAR},
+            </if>
+            <if test="township != null">
+                #{township,jdbcType=VARCHAR},
+            </if>
+            <if test="area != null">
+                #{area,jdbcType=VARCHAR},
+            </if>
+            <if test="areaCode != null">
+                #{areaCode,jdbcType=VARCHAR},
+            </if>
+            <if test="managerId != null">
+                #{managerId,jdbcType=VARCHAR},
+            </if>
+            <if test="work != null">
+                #{work,jdbcType=VARCHAR},
+            </if>
+            <if test="profession != null">
+                #{profession,jdbcType=VARCHAR},
+            </if>
+            <if test="telephone != null">
+                #{telephone,jdbcType=VARCHAR},
+            </if>
+            <if test="birthday != null">
+                #{birthday,jdbcType=DATE},
+            </if>
+            <if test="gender != null">
+                #{gender,jdbcType=VARCHAR},
+            </if>
+            <if test="maritalStatus != null">
+                #{maritalStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="allocationDate != null">
+                #{allocationDate,jdbcType=DATE},
+            </if>
+            <if test="lon != null">
+                #{lon,jdbcType=DECIMAL},
+            </if>
+            <if test="lat != null">
+                #{lat,jdbcType=DECIMAL},
+            </if>
+            <if test="etlDt != null">
+                #{etlDt,jdbcType=DATE},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updatePaCustomInfo" parameterType="com.kx.system.domain.PaCustomInfo">
+        update pa_custom_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="nm != null">
+               nm = #{nm},
+            </if>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="identify != null">
+                identify = #{identify},
+            </if>
+            <if test="homeAddress != null">
+                home_address =  #{homeAddress},
+            </if>
+            <if test="contractAddress != null">
+                contract_address = #{contractAddress},
+            </if>
+            <if test="outlet != null">
+                outlet = #{outlet},
+            </if>
+            <if test="outletCode != null">
+               outlet_code =  #{outletCode},
+            </if>
+            <if test="township != null">
+                town_ship = #{township},
+            </if>
+            <if test="area != null">
+                area = #{area},
+            </if>
+            <if test="areaCode != null">
+                area_code = #{areaCode},
+            </if>
+            <if test="managerId != null">
+                manager_id = #{managerId},
+            </if>
+            <if test="work != null">
+               work = #{work},
+            </if>
+            <if test="profession != null">
+                profession = #{profession},
+            </if>
+            <if test="telephone != null">
+                telephone = #{telephone},
+            </if>
+            <if test="birthday != null">
+                birthday = #{birthday},
+            </if>
+            <if test="gender != null">
+                gender = #{gender},
+            </if>
+            <if test="maritalStatus != null">
+                marital_status = #{maritalStatus},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="allocationDate != null">
+                allocation_date = #{allocationDate},
+            </if>
+            <if test="lon != null">
+               lon =  #{lon},
+            </if>
+            <if test="lat != null">
+                lat = #{lat},
+            </if>
+            <if test="etlDt != null">
+                etl_dt = #{etlDt},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag},
+            </if>
+        </trim>
+        where nm = #{nm}
+    </update>
+    <insert id="batchInsertPaCustomInfo" parameterType="com.kx.system.domain.PaCustomInfo">
+        <!--@mbg.generated-->
+        insert into pa_custom_info
+        (nm, [name], identify,
+        home_address, contract_address, outlet,
+        outlet_code, township, area,area_code,
+        manager_id, [work], profession,
+        telephone, birthday, gender,
+        marital_status, [type], allocation_date,lon,lat,
+        etl_dt,del_flag)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.nm,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR}, #{item.identify,jdbcType=VARCHAR},
+            #{item.homeAddress,jdbcType=VARCHAR}, #{item.contractAddress,jdbcType=VARCHAR},
+            #{item.outlet,jdbcType=VARCHAR}, #{item.outletCode,jdbcType=VARCHAR}, #{item.township,jdbcType=VARCHAR},
+            #{item.area,jdbcType=VARCHAR}, #{item.areaCode,jdbcType=VARCHAR}, #{item.managerId,jdbcType=VARCHAR},
+            #{item.work,jdbcType=VARCHAR},
+            #{item.profession,jdbcType=VARCHAR}, #{item.telephone,jdbcType=VARCHAR}, #{item.birthday,jdbcType=DATE},
+            #{item.gender,jdbcType=VARCHAR}, #{item.maritalStatus,jdbcType=VARCHAR}, #{item.type,jdbcType=VARCHAR},
+            #{item.allocationDate,jdbcType=DATE},
+            #{item.lon,jdbcType=DECIMAL},#{item.lat,jdbcType=DECIMAL},#{item.etlDt,jdbcType=DATE},
+            #{item.delFlag,jdbcType=INTEGER})
+        </foreach>
+    </insert>
+    <update id="batchDeletePaCustomInfo" parameterType="com.kx.system.domain.CustomInfo">
+        <foreach collection="list" item="item" index="index">
+            update pa_custom_info set del_flag=1
+            where  nm =#{item.nm};
+        </foreach>
+    </update>
+
+
+    <select id="getAllManagerIds" resultType="java.lang.String">
+
+        select manager_id
+        from pa_custom_info
+        group by manager_id
+
+    </select>
+    <select id="selectByManegerId" resultMap="BaseResultMap">
+        select * from
+            pa_custom_info
+        where manager_id = #{managerCode}
+    </select>
+    <select id="getCustTypeByNetWorkCode" resultType="com.kx.system.domain.dto.MainBusinessData">
+        select
+               count(case when nm like '81%' then 1 else  null end) priNum,
+               count(case when nm like '82%' then 1 else  null end) pubNum
+            from pa_custom_info
+        where etl_dt = #{date} and outlet_code = #{agencyNo}
+    </select>
+    <select id="countByOutCode" resultType="java.lang.Integer">
+        select count(1) from  pa_custom_info  where  outlet_code = #{outletCode}
+    </select>
+    <select id="countBymanagerId" resultType="java.lang.Integer">
+        select count(1) from  pa_custom_info  where  manager_id = #{managerId}
+    </select>
+
+    <select id="selectCurrentBirthday" resultMap="BaseResultMap">
+        select a.*
+        FROM pa_custom_info a
+        LEFT JOIN cust_other_info b ON a.nm = b.nm
+        WHERE DateDiff( dd, b.etl_dt, now() ) = 1
+        and star >=37
+        AND DATE_FORMAT(birthday,'%m-%d') = DATE_FORMAT(now(), '%m-%d' )
+    </select>
+
+    <select id="selectSevenStarCustomers" resultMap="BaseResultMap">
+        select a.*
+        FROM pa_custom_info a
+                 LEFT JOIN cust_other_info b ON a.nm = b.nm
+        WHERE DateDiff( dd, b.etl_dt,  now() ) = 1
+          and star >=37
+    </select>
+
+    <select id="selectStarDropCustomers" resultMap="BaseResultMap">
+        SELECT
+            a.*,today.star newTarget,yesterday.star oldTarget
+        FROM
+            ( SELECT nm, star, etl_dt FROM cust_other_info WHERE DateDiff( dd, etl_dt, getdate ( ) ) = 1 and cast(star as int) > 30 ) today
+            JOIN
+            ( SELECT nm, star, etl_dt FROM cust_other_info WHERE DateDiff( dd, etl_dt, getdate ( ) ) = 2 and cast(star as int) > 30 ) yesterday
+        ON today.nm = yesterday.nm
+            join pa_custom_info a on a.nm = today.nm
+        WHERE
+        <![CDATA[cast(today.star as int) < cast(yesterday.star as int)]]>
+    </select>
+
+    <select id="selectLossOfDepositsCustomers" resultMap="BaseResultMap">
+        SELECT
+        a.*,today.ckzl newTarget,yesterday.ckzl oldTarget
+        FROM
+        ( SELECT nm, ckzl FROM cust_liability_info WHERE DateDiff( dd, etl_dt, getdate ( ) ) = 1 ) today
+        JOIN ( SELECT nm, ckzl FROM cust_liability_info WHERE DateDiff( dd, etl_dt, getdate ( ) ) = 2 ) yesterday ON today.nm = yesterday.nm
+        JOIN pa_custom_info a ON a.nm = today.nm
+        WHERE
+        <![CDATA[today.ckzl < yesterday.ckzl]]>
+        and (yesterday.ckzl - today.ckzl)>500000
+    </select>
+    <select id="selectByEtlDtBetween" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from pa_custom_info
+        where
+        etl_dt between #{beginEtlDt,jdbcType=TIMESTAMP} and #{endEtlDt,jdbcType=TIMESTAMP}
+    </select>
+
+    <select id="selectByAreaCode" resultType="com.kx.system.domain.PaCustomInfo">
+        select nm, name, identify, home_address as homeAddress
+        from pa_custom_info
+        where area_code = #{areaCode}
+    </select>
+
+</mapper>
+

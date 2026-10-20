@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.VillageFinancialServicePointsMapper">
+    
+    <resultMap type="com.kx.system.domain.VillageFinancialServicePoints" id="VillageFinancialServicePointsResult">
+        <result property="id"    column="id"    />
+        <result property="servePointName"    column="serve_point_name"    />
+        <result property="servePointAddr"    column="serve_point_addr"    />
+        <result property="dutyName"    column="duty_name"    />
+        <result property="dutyPhone"    column="duty_phone"    />
+        <result property="gridCode"    column="grid_code"    />
+        <result property="gridName"    column="grid_name"    />
+        <result property="createdTime"    column="created_time"    />
+        <result property="updatedTime"    column="updated_time"    />
+        <result property="lon"    column="lon"    />
+        <result property="lat"    column="lat"    />
+    </resultMap>
+
+
+    <select id="selectServiceMapper" resultType="com.kx.system.domain.VillageFinancialServicePoints"
+            parameterType="com.kx.system.domain.dto.VillageFinancialServicePointsQuery">
+        select
+        vfsp.id,
+        vfsp.serve_point_name,
+        vfsp.serve_point_addr,
+        vfsp.duty_name,
+        vfsp.duty_phone,
+        vfsp.grid_code,
+        vfsp.grid_name,
+        vfsp.created_time,
+        vfsp.updated_time,
+        vfsp.lat,
+        vfsp.lon
+        from village_financial_service_points vfsp
+        left join pa_addr_info_type pait on vfsp.grid_code = pait.code
+        <where>
+            <if test="servePointName != null and servePointName != ''">
+                and serve_point_name like concat('%', #{servePointName}, '%')
+            </if>
+            <if test="belongGridCodeList != null and belongGridCodeList.size > 0">
+                and (
+                <foreach collection="belongGridCodeList" item="item" separator=" or ">
+                    pait.ancestor_codes like concat('%,', #{item}, ',%')
+                </foreach>
+                )
+            </if>
+        </where>
+    </select>
+
+    <select id="selectAll" resultType="com.kx.system.domain.anchor.AnchorPoint">
+        select id, lat,lon from village_financial_service_points
+    </select>
+
+    <update id="updateVillageFinancialServiceGridCode">
+        update village_financial_service_points
+        set grid_code = #{gridCode},
+            grid_name = #{gridName}
+        where id=#{id}
+    </update>
+
+<sql id="getAnchorInfos">
+    select
+    vfsp.created_time,
+    vfsp.duty_name,
+    vfsp.duty_phone,
+    vfsp.grid_code,
+    vfsp.grid_name,
+    vfsp.id,
+    vfsp.lat,
+    vfsp.lon,
+    vfsp.serve_point_addr,
+    vfsp.serve_point_name,
+    vfsp.updated_time
+</sql>
+    <select id="getAnchorInfo" resultType="com.kx.system.domain.VillageFinancialServicePoints">
+        <include refid="getAnchorInfos"/>
+        from village_financial_service_points vfsp
+                 left join pa_addr_info_type pait on vfsp.grid_code = pait.code
+        where ancestor_codes like concat('%,', #{gridCode},',%')
+    </select>
+    <select id="exportBatch" resultType="com.kx.system.domain.VillageExport">
+    select
+    vfsp.serve_point_name,
+    vfsp.serve_point_addr,
+    vfsp.duty_name,
+    vfsp.duty_phone,
+    vfsp.grid_name
+    from village_financial_service_points vfsp
+    left join pa_addr_info_type pait on vfsp.grid_code = pait.code
+    <where>
+        <if test="servePointName != null and servePointName != ''">
+            and serve_point_name like concat('%', #{servePointName}, '%')
+        </if>
+        <if test="belongGridCodeList != null and belongGridCodeList.size > 0">
+            and (
+            <foreach collection="belongGridCodeList" item="item" separator=" or ">
+                pait.ancestor_codes like concat('%,', #{item}, ',%')
+            </foreach>
+            )
+        </if>
+    </where>
+    </select>
+</mapper>

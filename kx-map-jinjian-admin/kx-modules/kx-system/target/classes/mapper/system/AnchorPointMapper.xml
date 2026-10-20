@@ -1,0 +1,990 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.AnchorPointMapper">
+
+    <resultMap type="com.kx.system.domain.anchor.AnchorPoint" id="AnchorPointResult">
+        <result property="id" column="id"/>
+        <result property="customerId" column="customer_id"/>
+        <result property="type" column="type"/>
+        <result property="lon" column="lon"/>
+        <result property="lat" column="lat"/>
+        <result property="belongGrid" column="belong_grid"/>
+        <result property="belongGridType" column="belong_grid_type"/>
+        <result property="buildingId" column="building_id"/>
+        <result property="anchorName" column="anchor_name"/>
+        <result property="addressDesc" column="address_desc"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="addrDetail" column="addr_detail"/>
+        <result property="customerIdentity" column="customer_identity"/>
+        <result property="anchorTypeCode" column="anchor_type_code"/>
+        <result property="customerPhone" column="customer_phone"/>
+        <result property="belongGridName" column="belong_grid_name"/>
+        <result property="belongOrgCode" column="belong_grid_code"/>
+        <result property="belongOrgName" column="belong_org_name"/>
+        <result property="createTime" column="create_time"/>
+        <result property="belongManagerCode" column="belong_manager_code" />
+        <result property="belongManagerName" column="belong_manager_name" />
+        <result property="atmMachine" column="atm_machine"/>
+        <result property="depositMachine" column="deposit_machine"/>
+        <result property="cashTellerMachine" column="cash_teller_machine"/>
+    </resultMap>
+
+    <resultMap type="com.kx.system.domain.anchor.AnchorPointMini" id="AnchorPointMiniResult">
+        <result property="lon" column="lon"/>
+        <result property="lat" column="lat"/>
+    </resultMap>
+
+
+
+    <resultMap type="com.kx.system.domain.es.EsAnchorPointGroupDto" id="EsAnchorPointResult">
+        <result property="id" column="id"/>
+        <result property="customerId" column="customer_id"/>
+        <result property="lon" column="lon"/>
+        <result property="lat" column="lat"/>
+        <result property="customType" column="custom_type" />
+        <result property="userId" column="user_id" />
+        <result property="deptId" column="dept_id" />
+        <result property="ancestorsDeptIds" column="ancestors" />
+        <result property="customGroupId" column="custom_group_id" />
+        <result property="ancestorCodes" column="ancestor_codes" />
+        <result property="belongManagerCode" column="manager_num" />
+
+    </resultMap>
+
+    <sql id="selectAnchorPointVo">
+        select id,
+               customer_id,
+               customer_nm,
+               identity,
+               type,
+               anchor_name,
+               anchor_type_code,
+               anchor_type,
+               address_desc,
+               update_time,
+               lon,
+               lat,
+               address_type,
+               belong_grid_name,
+               belong_grid,
+               belong_grid_type,
+               area_code,
+               belong_org_code,
+               belong_org_name,
+               belong_manager_code,
+               belong_manager_name,
+               customer_phone
+        from anchor_point
+    </sql>
+
+    <select id="selectAnchorPointList" parameterType="com.kx.system.domain.anchor.AnchorPoint"
+             resultMap="AnchorPointResult">
+        select ap.id,customer_id,customer_nm,identity as customerIdentity,ap.type,anchor_name,
+        anchor_type,address_desc,ap.update_time,ap.lon,ap.lat,address_type,
+        belong_grid_name,belong_grid,area_code,belong_org_code,belong_org_name as branchBank,
+        customer_phone,belong_manager_code as creditManagerJobNumber,belong_manager_name as creditManager,grid_manager
+        from anchor_point ap
+        left join sys_user su on ap.belong_manager_code = su.manager_num
+        left join pa_addr_info_type t on t.code = ap.belong_grid
+        <where>
+            ${params.dataScope}
+            <if test="type == 1">and ap.type = '1'</if>
+            <if test="type == 2">and ap.type = '2'</if>
+            <if test="type == 3">and ap.type = '3'</if>
+            <if test="customerNm != null  and customerNm != ''">
+                and ap.customer_nm like concat('%', #{customerNm},'%')
+            </if>
+            <if test="anchorName != null  and anchorName != ''">
+                and ap.anchor_name like concat('%', #{anchorName}, '%')
+            </if>
+            <if test="belongGrids != null and belongGrids.size()>0">
+                and
+                <foreach collection="belongGrids" item="belongGridCode" separator="or" open="(" close=")">
+                    t.ancestor_codes like concat('%,',#{belongGridCode},',%')
+                </foreach>
+            </if>
+            <if test="deptIds != null and deptIds.size()>0">
+                and su.dept_id in
+                <foreach collection="deptIds" item="deptId" open="(" close=")" separator=",">
+                    #{deptId}
+                </foreach>
+            </if>
+            <if test="gridManager != null and gridManager != ''">
+                and grid_manager like concat('%',#{gridManager},'%')
+            </if>
+            <if test="creditManager != null and creditManager != ''">
+                and belong_manager_name like concat('%',#{creditManager},'%')
+            </if>
+            <if test="customerIdentity != null and customerIdentity != ''">
+                and identity like concat('%',#{customerIdentity},'%')
+            </if>
+        </where>
+        order by ap.update_time desc
+    </select>
+
+    <select id="selectAnchorPointById" parameterType="Long" resultMap="AnchorPointResult">
+        <include refid="selectAnchorPointVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertAnchorPoint" parameterType="com.kx.system.domain.anchor.AnchorPoint">
+        insert into anchor_point
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="customerId != null">customer_id,</if>
+            <if test="customerNm != null">customer_nm,</if>
+            <if test="identity != null">identity,</if>
+            <if test="type != null">type,</if>
+            <if test="anchorName != null">anchor_name,</if>
+            <if test="anchorTypeCode != null">anchor_type_code,</if>
+            <if test="anchorType != null">anchor_type,</if>
+            <if test="addressDesc != null">address_desc,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="lon != null">lon,</if>
+            <if test="lat != null">lat,</if>
+            <if test="addressType != null">address_type,</if>
+            <if test="belongGridName != null">belong_grid_name,</if>
+            <if test="belongGrid != null">belong_grid,</if>
+            <if test="belongGridType != null">belong_grid_type,</if>
+            <if test="areaCode != null">area_code,</if>
+            <if test="belongOrgCode != null and belongOrgCode != ''">belong_org_code,</if>
+            <if test="belongOrgName != null and belongOrgName != ''">belong_org_name,</if>
+            <if test="customerPhone != null">customer_phone,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="belongManagerCode != null">belong_manager_code,</if>
+            <if test="belongManagerName != null">belong_manager_name,</if>
+            <if test="gridManager != null">grid_manager,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="customerId != null">#{customerId},</if>
+            <if test="customerNm != null">#{customerNm},</if>
+            <if test="identity != null">#{identity},</if>
+            <if test="type != null">#{type},</if>
+            <if test="anchorName != null">#{anchorName},</if>
+            <if test="anchorTypeCode != null">#{anchorTypeCode},</if>
+            <if test="anchorType != null">#{anchorType},</if>
+            <if test="addressDesc != null">#{addressDesc},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="lon != null">#{lon},</if>
+            <if test="lat != null">#{lat},</if>
+            <if test="addressType != null">#{addressType},</if>
+            <if test="belongGridName != null">#{belongGridName},</if>
+            <if test="belongGrid != null">#{belongGrid},</if>
+            <if test="belongGridType != null">#{belongGridType},</if>
+            <if test="areaCode != null">#{areaCode},</if>
+            <if test="belongOrgCode != null">#{belongOrgCode},</if>
+            <if test="belongOrgName != null">#{belongOrgName},</if>
+            <if test="customerPhone != null">#{customerPhone},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="belongManagerCode != null">#{belongManagerCode},</if>
+            <if test="belongManagerName != null">#{belongManagerName},</if>
+            <if test="gridManager != null">#{gridManager},</if>
+        </trim>
+    </insert>
+
+    <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        insert into anchor_point
+        ( customer_id,
+        customer_nm,
+        identity,
+        type,
+        anchor_name,
+        anchor_type_code,
+        anchor_type,
+        address_desc,
+        update_time,
+        lon,
+        lat,
+        address_type,
+        belong_grid_name,
+        belong_grid,
+        belong_grid_type,
+        area_code,
+        belong_org_code,
+        belong_org_name,
+        customer_phone,
+        create_time,
+        belong_manager_code,
+        belong_manager_name,
+        grid_manager) values
+        <foreach collection="anchorPoints" item="anchorPoint" separator=",">
+            (#{anchorPoint.customerId},
+            #{anchorPoint.customerNm},
+            #{anchorPoint.identity},
+            #{anchorPoint.type},
+            #{anchorPoint.anchorName},
+            #{anchorPoint.anchorTypeCode},
+            #{anchorPoint.anchorType},
+            #{anchorPoint.addressDesc},
+            #{anchorPoint.updateTime},
+            #{anchorPoint.lon},
+            #{anchorPoint.lat},
+            #{anchorPoint.addressType},
+            #{anchorPoint.belongGridName},
+            #{anchorPoint.belongGrid},
+            #{anchorPoint.belongGridType},
+            #{anchorPoint.areaCode},
+            #{anchorPoint.belongOrgCode},
+            #{anchorPoint.belongOrgName},
+            #{anchorPoint.customerPhone},
+            #{anchorPoint.createTime},
+            #{anchorPoint.belongManagerCode},
+            #{anchorPoint.belongManagerName},
+            #{anchorPoint.gridManager})
+        </foreach>
+    </insert>
+
+    <update id="updateAnchorPoint" parameterType="com.kx.system.domain.anchor.AnchorPoint">
+        update anchor_point
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="customerId != null">customer_id = #{customerId},</if>
+            <if test="customerNm != null">customer_nm = #{customerNm},</if>
+            <if test="identity != null">identity = #{identity},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="anchorName != null">anchor_name = #{anchorName},</if>
+            <if test="anchorTypeCode != null">anchor_type_code = #{anchorTypeCode},</if>
+            <if test="anchorType != null">anchor_type = #{anchorType},</if>
+            <if test="addressDesc != null">address_desc = #{addressDesc},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="lon != null">lon = #{lon},</if>
+            <if test="lat != null">lat = #{lat},</if>
+            <if test="addressType != null">address_type = #{addressType},</if>
+            <if test="belongGrid != null">belong_grid = #{belongGrid},</if>
+            <if test="belongGridName != null">belong_grid_name = #{belongGridName},</if>
+            <if test="belongGridType != null">belong_grid_type = #{belongGridType},</if>
+            <if test="areaCode != null">area_code = #{areaCode},</if>
+            <if test="belongOrgCode != null">belong_org_code = #{belongOrgCode},</if>
+            <if test="belongOrgName != null">belong_org_name = #{belongOrgName},</if>
+            <if test="customerPhone != null">customer_phone = #{customerPhone},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="belongManagerCode != null">belong_manager_code = #{belongManagerCode},</if>
+            <if test="belongManagerName != null">belong_manager_name = #{belongManagerName},</if>
+            <if test="gridManager != null">grid_manager = #{gridManager},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="updateSameDayPerCustomerId">
+        update anchor_point ap,performance_customer_info pci set ap.customer_id = pci.id,ap.anchor_name = pci.customer_name,ap.customer_phone = pci.customer_phone,ap.belong_manager_name = pci.credit_manager
+         where DATE_FORMAT(ap.create_time,'%Y-%m-%d') = CURDATE() and ap.type = 1 and ap.customer_nm = pci.customer_nm and pci.credit_manager_job_number  = ap.belong_manager_code
+    </update>
+
+    <update id="updateFullPerCustomerId">
+        update anchor_point ap,performance_customer_info pci set ap.customer_id = pci.id,ap.anchor_name = pci.customer_name,ap.customer_phone = pci.customer_phone,ap.belong_manager_name = pci.credit_manager
+         where ap.type = 1 and ap.customer_nm = pci.customer_nm and pci.credit_manager_job_number  = ap.belong_manager_code
+    </update>
+
+    <update id="updateSameDayCreCustomerId">
+        update anchor_point ap,credit_customer_info cci set ap.customer_id = cci.id,ap.anchor_name = cci.customer_name,ap.customer_phone = cci.customer_phone,ap.belong_manager_name = cci.credit_manager
+        where DATE_FORMAT(ap.create_time,'%Y-%m-%d') = CURDATE() and ap.type = 2 and ap.customer_nm = cci.customer_nm and cci.credit_manager_job_number  = ap.belong_manager_code
+    </update>
+
+        <update id="updateFullCreCustomerId">
+        update anchor_point ap,credit_customer_info cci set ap.customer_id = cci.id,ap.anchor_name = cci.customer_name,ap.customer_phone = cci.customer_phone,ap.belong_manager_name = cci.credit_manager
+        where ap.type = 2 and ap.customer_nm = cci.customer_nm and cci.credit_manager_job_number  = ap.belong_manager_code
+    </update>
+
+    <update id="updateGridManagerByBelongGrid">
+        update anchor_point set grid_manager = #{userManagerNum} where belong_grid = #{code}
+    </update>
+    <update id="updateAnchorPointByNm">
+        update anchor_point
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="identity != null">identity = #{identity},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="anchorName != null">anchor_name = #{anchorName},</if>
+            <if test="anchorTypeCode != null">anchor_type_code = #{anchorTypeCode},</if>
+            <if test="anchorType != null">anchor_type = #{anchorType},</if>
+            <if test="addressDesc != null">address_desc = #{addressDesc},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="lon != null">lon = #{lon},</if>
+            <if test="lat != null">lat = #{lat},</if>
+            <if test="addressType != null">address_type = #{addressType},</if>
+            <if test="belongGrid != null">belong_grid = #{belongGrid},</if>
+            <if test="belongGridName != null">belong_grid_name = #{belongGridName},</if>
+            <if test="belongGridType != null">belong_grid_type = #{belongGridType},</if>
+            <if test="areaCode != null">area_code = #{areaCode},</if>
+            <if test="belongOrgCode != null">belong_org_code = #{belongOrgCode},</if>
+            <if test="belongOrgName != null">belong_org_name = #{belongOrgName},</if>
+            <if test="customerPhone != null">customer_phone = #{customerPhone},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="belongManagerCode != null">belong_manager_code = #{belongManagerCode},</if>
+            <if test="belongManagerName != null">belong_manager_name = #{belongManagerName},</if>
+            <if test="gridManager != null">grid_manager = #{gridManager},</if>
+        </trim>
+        where customer_nm = #{customerNm}
+    </update>
+
+    <delete id="deleteAnchorPointById" parameterType="Long">
+        delete
+        from anchor_point
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteAnchorPointByIds" parameterType="String">
+        delete from anchor_point where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="selectCreditCustomerList" parameterType="com.kx.system.domain.customer.CustomerSelect"
+            resultMap="AnchorPointResult">
+        select a.id,
+        a.customer_id,
+        a.type,
+        a.lon,
+        a.lat,
+        a.belong_grid,
+        a.anchor_name,
+        a.address_desc,
+        a.update_time,
+        a.anchor_type_code,
+        a.identity,
+        a.customer_phone,
+        a.belong_grid_name,
+        a.belong_org_name,
+        a.belong_org_code
+        from anchor_point a left join credit_customer_info b on a.customer_nm = b.customer_nm left join sys_user su on
+        a.belong_manager_code = su.manager_num
+        left join sys_dept d on a.belong_org_code = d.org_num
+        <where>
+            ${params.dataScope}
+            and a.type = '2'
+            <if test="gridChildCodes != null and gridChildCodes.size>0 ">
+                and belong_grid in
+                <foreach item="item" collection="gridChildCodes" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="orgCodes != null and orgCodes.size>0 ">
+                and d.org_num in (select org_num from sys_dept where ancestors like (
+                select ancestors||'%' from sys_dept where org_num = #{orgCodes[0]}
+                ))
+            </if>
+            <if test="managerCodes != null and managerCodes.size>0 ">
+                and belong_manager_code in
+                <foreach item="item" collection="managerCodes" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="riskTypeList != null and riskTypeList.size>0 ">
+                and b.risk_type in
+                <foreach item="item" collection="riskTypeList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="guaranteeTypeList != null and guaranteeTypeList.size>0 ">
+                and
+                <foreach item="item" collection="guaranteeTypeList" open="(" separator="or" close=")">
+                    b.guarantee_method like concat('%',#{item},'%')
+                </foreach>
+            </if>
+            <if test="purposeTypeList != null and purposeTypeList.size>0 ">
+                and b.using_type in
+                <foreach item="item" collection="purposeTypeList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="villageLoanTypeList != null and villageLoanTypeList.size>0 ">
+                and b.village_loan_type in
+                <foreach item="item" collection="villageLoanTypeList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        limit 5000
+    </select>
+
+    <select id="selectByCustomerTypeMini" parameterType="com.kx.system.domain.customer.CustomerSelect"
+            resultMap="AnchorPointMiniResult">
+        select
+        ap.lon,
+        ap.lat
+        from anchor_point ap left join sys_user su on ap.belong_manager_code = su.manager_num
+        left join pa_addr_info_type pait on pait.code=ap.belong_grid
+        left join sys_dept sd on ap.belong_org_code = sd.org_num
+        <where>
+            ${params.dataScope} and ap.lon is not null
+            <if test="gridChildCodes != null and gridChildCodes.size>0 ">
+                and belong_grid in
+                <foreach item="item" collection="gridChildCodes" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="typeList != null and typeList.size>0 ">
+                and ap.type in
+                <foreach item="item" collection="typeList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <foreach item="item" collection="deptIds" open="and (" close=")" separator=" OR ">
+                sd.ancestors like concat('%,',#{item},',%')
+            </foreach>
+            <if test="gridCode != null and gridCode != ''">
+                and pait.ancestor_codes like concat('%,', #{gridCode}, ',%');
+            </if>
+            and ap.belong_grid not like '3302%'
+        </where>
+    </select>
+
+    <select id="selectByCustomerType" parameterType="com.kx.system.domain.customer.CustomerSelect"
+            resultMap="AnchorPointResult">
+        select ap.id,
+        ap.customer_id,
+        ap.type,
+        ap.lon,
+        ap.lat,
+        ap.belong_grid,
+        ap.anchor_name,
+        ap.address_desc,
+        ap.update_time,
+        ap.anchor_type_code,
+        ap.identity,
+        ap.customer_phone,
+        ap.belong_grid_name,
+        ap.belong_org_name,
+        ap.belong_org_code,
+        ap.create_time,
+        s.dot_type,
+        case
+        when b.duty_network_name is not null
+        and b.duty_network_name != ''
+        then '1'
+        else '0' end as is_duty,
+        pci.id as user_id
+        from anchor_point ap
+        left join sys_user su on ap.belong_manager_code = su.manager_num
+        left join (select distinct duty_network_name from grid_message_info) b on ap.anchor_name =
+        b.duty_network_name
+        left join pa_addr_info_type pait on pait.code=ap.belong_grid
+        left join sys_dept s on anchor_name=s.dept_name
+        left join performance_customer_info pci on pci.customer_nm = ap.customer_nm
+        <where>
+            ${params.dataScope}
+            <if test="gridChildCodes != null and gridChildCodes.size>0 ">
+                and belong_grid in
+                <foreach item="item" collection="gridChildCodes" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="deptIds != null and deptIds.size>0 ">
+                and belong_org_code in
+                (select org_num from sys_dept where
+                <foreach item="item" collection="deptIds" separator=" OR ">
+                    ancestors like concat('%,',#{item},',%')
+                </foreach>
+                )
+            </if>
+            <if test="managerCodes != null and managerCodes.size>0 ">
+                and belong_manager_code in
+                <foreach item="item" collection="managerCodes" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="typeList != null and typeList.size>0 ">
+                and ap.type in
+                <foreach item="item" collection="typeList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="gridCode != null and gridCode != ''">
+                and pait.ancestor_codes like concat('%,', #{gridCode}, ',%')
+            </if>
+        </where>
+    </select>
+
+
+
+    <select id="queryGroupMini" parameterType="com.kx.system.domain.customer.CustomerSelect"
+            resultMap="AnchorPointMiniResult">
+        SELECT
+        a.lon,
+        a.lat
+        FROM
+        custom_group_customer c
+        LEFT JOIN custom_group g ON c.custom_group_id = g.id
+        LEFT JOIN anchor_point a ON c.customer_id = a.customer_id
+        where
+        g.custom_type = #{groupCategory} and a.lon is not null
+        <if test="gridChildCodes != null and gridChildCodes.size>0 ">
+            and a.belong_grid in
+            <foreach item="item" collection="gridChildCodes" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="orgCodes != null and orgCodes.size>0 ">
+            and a.belong_org_code in
+            <foreach item="item" collection="orgCodes" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="managerCodes != null and managerCodes.size>0 ">
+            and a.belong_manager_code in
+            <foreach item="item" collection="managerCodes" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="groupIdList != null and groupIdList.size>0 ">
+            and c.custom_group_id in
+            <foreach item="item" collection="groupIdList" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        and a.belong_grid not like '3302%'
+    </select>
+
+    <select id="queryGroup" parameterType="com.kx.system.domain.customer.CustomerSelect" resultMap="AnchorPointResult">
+        SELECT
+        a.id,
+        a.customer_id,
+        a.type,
+        a.lon,
+        a.lat,
+        a.belong_grid,
+        a.anchor_name,
+        a.address_desc,
+        a.update_time,
+        a.anchor_type_code,
+        a.identity,
+        a.customer_phone,
+        a.belong_grid_name,
+        a.belong_org_name,
+        a.belong_org_code,
+        s.dept_name
+        FROM
+        custom_group_customer c
+        LEFT JOIN custom_group g ON c.custom_group_id = g.id
+        LEFT JOIN performance_customer_info pci on pci.id = c.customer_id
+        LEFT JOIN anchor_point a ON pci.customer_nm = a.customer_nm
+        left join sys_dept s on a.anchor_name = s.dept_name
+        <where>
+            <if test="gridCode != null and gridCode != ''">
+                a.belong_grid in (select code from pa_addr_info_type where ancestor_codes like concat('%,',#{gridCode},',%'))
+            </if>
+        <if test="orgCodes != null and orgCodes.size>0 ">
+            and a.belong_org_code in
+            <foreach item="item" collection="orgCodes" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="managerCodes != null and managerCodes.size>0 ">
+            and a.belong_manager_code in
+            <foreach item="item" collection="managerCodes" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="groupIdList != null and groupIdList.size>0 ">
+            and c.custom_group_id in
+            <foreach item="item" collection="groupIdList" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        </where>
+    </select>
+
+
+    <select id="selectCustomerIdByAnchorPoint" resultType="com.kx.system.domain.anchor.AnchorPoint">
+        select customer_id as customerId, type
+        from anchor_point
+        where id = #{id}
+    </select>
+    <select id="selectCreditRecord" resultType="com.kx.system.domain.vo.CustomerJourneyVO">
+        SELECT DISTINCT cr.product_name        AS productName,
+                        cr.create_time         AS creditCreateTime,
+                        cr.expire_date         AS expireDate,
+                        cr.credit_amount       AS creditAmount,
+                        cr.loan_amount         AS loanAmount,
+                        cr.manager             AS manager,
+                        RIGHT(ocr.card_num, 4) AS cardNum,
+                        ocr.card_type          AS cardType,
+                        ocr.create_time        AS openCardCreateTime,
+                        cv.visits_manager      AS visitsManager,
+                        cv.visits_time         AS visitsTime
+        FROM credit_record cr
+                 LEFT JOIN opening_card_record ocr ON cr.custom_id = ocr.custom_id
+                 LEFT JOIN customer_visits cv ON cv.customer_id = cr.custom_id
+        WHERE cr.custom_id = #{customerId}
+          AND cr.type = #{type}
+        ORDER BY cr.custom_id
+    </select>
+    <select id="selectCustomerId" resultType="java.lang.String">
+        SELECT
+            customer_identity
+        FROM
+            performance_customer_info
+        WHERE
+            customer_nm = (
+                SELECT
+                    customer_nm
+                FROM
+                    anchor_point
+                WHERE
+                    ap.id = #{anchorPointId}
+            )
+    </select>
+    <select id="selectAnchorPointByIds" resultMap="AnchorPointResult">
+        <include refid="selectAnchorPointVo"/>
+        where id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+    <select id="queryCustomerByName" resultMap="AnchorPointResult">
+        select
+        a.id,
+        a.customer_id,
+        a.type,
+        a.lon,
+        a.lat,
+        a.belong_grid,
+        a.anchor_name,
+        a.address_desc,
+        a.update_time,
+        a.anchor_type_code,
+        a.identity,
+        a.customer_phone,
+        a.belong_grid_name,
+        a.belong_org_name,
+        a.belong_org_code,
+        a.create_time
+        from
+        anchor_point a
+        left join sys_user u on a.belong_manager_code = u.manager_num
+        <where>
+            ${params.dataScope}
+            <if test="customerName != null and customerName!='' ">
+                and (
+                a.customer_nm like concat('%',#{customerName},'%')
+                OR a.anchor_name like concat('%',#{customerName},'%')
+                OR a.identity like concat('%',#{customerName},'%')
+                OR a.customer_phone like concat('%',#{customerName},'%'))
+            </if>
+            <if test="gridCode != null and gridCode!='' ">
+                and a.belong_grid = #{gridCode}
+            </if>
+            <if test="types != null and types.size > 0">
+                and a.type in
+                <foreach collection="types" item="type" separator="," open="(" close=")">
+                    #{type}
+                </foreach>
+            </if>
+        </where>
+        limit 50
+    </select>
+
+    <select id="listTaskAnchor" resultType="com.kx.system.domain.anchor.AnchorPoint">
+        select lon,lat,area_code from anchor_point
+        where (customer_id,type) in
+        <foreach collection="clients" item="client" open="(" separator="," close=")">
+            (#{client.clientId},#{client.type})
+        </foreach>
+    </select>
+
+    <select id="listUnhandledAnchor" resultType="com.kx.system.domain.anchor.AnchorPoint">
+        select id,lon,lat from anchor_point where belong_grid is null
+    </select>
+    <select id="selectFilingAnchor" resultType="com.kx.system.domain.anchor.AnchorPoint">
+        select lon,lat from anchor_point where type = 3 and belong_grid is null
+    </select>
+    <select id="selectExistFilingAnchor" resultType="com.kx.system.domain.anchor.AnchorPoint">
+        select * from anchor_point where customer_id = #{id} and type = 3
+    </select>
+    <select id="selectByAreaCode" resultType="com.kx.system.domain.anchor.AnchorPoint">
+        select id,lon,lat,customer_id from anchor_point where area_code like concat(#{areaCode},'%')
+    </select>
+    <select id="selectAnchorPointByBelongGrid" resultType="com.kx.system.domain.anchor.AnchorPoint">
+        select * from anchor_point where belong_grid = #{s}
+    </select>
+    <select id="selectAnchorPointByAreaCodes" resultType="com.kx.system.domain.anchor.AnchorPoint">
+        select id,customer_id,lon,lat,type from anchor_point
+        <where>
+            <if test="codes != null and codes.size > 0">
+                belong_grid in
+                <foreach collection="codes" item="code" open="(" close=")" separator=",">
+                    #{code}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectEsDataByGroupId" resultMap="EsAnchorPointResult">
+        SELECT a.id,a.customer_id,a.lon,a.lat, #{customerType} as custom_type,su.user_id,
+        su.dept_id,sd.ancestors,su.manager_num,pait.ancestor_codes,
+        c.custom_group_id
+        FROM custom_group_customer c
+        LEFT JOIN anchor_point a ON c.customer_id = a.customer_id
+        left join sys_user su on a.belong_manager_code = su.manager_num
+        left join sys_dept sd on su.dept_id = sd.dept_id
+        left join pa_addr_info_type pait on pait.code = a.belong_grid
+        where a.lon is not null and
+        c.custom_group_id = #{groupId}
+        limit #{startIndex},#{endIndex}
+    </select>
+
+    <select id="selectByCustNm" resultMap="AnchorPointResult">
+         <include refid="selectAnchorPointVo" /> where customer_nm = #{nm} and TYPE = #{type}
+    </select>
+
+    <update id="updateAnchorPointBush">
+        <foreach collection="anchorPointList" item="anchorPoint" separator=";" close=";" >
+            update anchor_point
+            <trim prefix="SET" suffixOverrides=",">
+                <if test="anchorPoint.customerId != null">customer_id = #{anchorPoint.customerId},</if>
+                <if test="anchorPoint.customerNm != null">customer_nm = #{anchorPoint.customerNm},</if>
+                <if test="anchorPoint.identity != null">identity = #{anchorPoint.identity},</if>
+                <if test="anchorPoint.type != null">type = #{anchorPoint.type},</if>
+                <if test="anchorPoint.anchorName != null">anchor_name = #{anchorPoint.anchorName},</if>
+                <if test="anchorPoint.anchorTypeCode != null">anchor_type_code = #{anchorPoint.anchorTypeCode},</if>
+                <if test="anchorPoint.anchorType != null">anchor_type = #{anchorPoint.anchorType},</if>
+                <if test="anchorPoint.addressDesc != null">address_desc = #{anchorPoint.addressDesc},</if>
+                <if test="anchorPoint.updateTime != null">update_time = #{anchorPoint.updateTime},</if>
+                <if test="anchorPoint.lon != null">lon = #{anchorPoint.lon},</if>
+                <if test="anchorPoint.lat != null">lat = #{anchorPoint.lat},</if>
+                <if test="anchorPoint.addressType != null">address_type = #{anchorPoint.addressType},</if>
+                <if test="anchorPoint.belongGrid != null">belong_grid = #{anchorPoint.belongGrid},</if>
+                <if test="anchorPoint.belongGridName != null">belong_grid_name = #{anchorPoint.belongGridName},</if>
+                <if test="anchorPoint.belongGridType != null">belong_grid_type = #{anchorPoint.belongGridType},</if>
+                <if test="anchorPoint.areaCode != null">area_code = #{anchorPoint.areaCode},</if>
+                <if test="anchorPoint.belongOrgCode != null">belong_org_code = #{anchorPoint.belongOrgCode},</if>
+                <if test="anchorPoint.belongOrgName != null">belong_org_name = #{anchorPoint.belongOrgName},</if>
+                <if test="anchorPoint.customerPhone != null">customer_phone = #{anchorPoint.customerPhone},</if>
+                <if test="anchorPoint.createTime != null">create_time = #{anchorPoint.createTime},</if>
+                <if test="anchorPoint.belongManagerCode != null">belong_manager_code = #{anchorPoint.belongManagerCode},</if>
+                <if test="anchorPoint.belongManagerName != null">belong_manager_name = #{anchorPoint.belongManagerName},</if>
+                <if test="anchorPoint.gridManager != null">grid_manager = #{anchorPoint.gridManager},</if>
+            </trim>
+            where id = #{anchorPoint.id}
+        </foreach>
+    </update>
+    <update id="updateAnchorGridCode">
+        update anchor_point
+        set belong_grid = #{belongGrid} ,
+            belong_grid_name=#{belongGridName}
+        where id = #{id}
+    </update>
+
+    <select id="selectBusinessAll" resultMap="AnchorPointResult">
+        <include refid="selectAnchorPointVo" />
+        where anchor_type_code = 3 and lon is not null and lat is not null
+        and lon between #{minLon} and #{maxLon}
+        and lat between #{minLat} and   #{maxLat}
+        order by RAND()
+        limit 10000
+    </select>
+
+    <resultMap type="com.kx.system.domain.anchor.PaPocAddress" id="PaPocAddressResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="code" column="code"/>
+        <result property="lon" column="lon"/>
+        <result property="lat" column="lat"/>
+        <result property="address" column="address"/>
+    </resultMap>
+
+    <select id="queryCustomerByAddr" resultMap="PaPocAddressResult">
+        select id,
+               name,
+               admin_code as code,
+               lon,
+               lat,
+               address,
+               case
+                   when name like concat(#{addressDesc}, '%') then 1
+                   else 2
+                   end    as sort
+        from pa_poc_address
+        where address like concat('%', #{addressDesc}, '%')
+           or name like concat(#{addressDesc}, '%')
+        order by sort asc
+        limit 50;
+    </select>
+
+    <select id="queryCustomerByAnchor" resultType="com.kx.system.domain.anchor.AnchorPoint"
+            parameterType="java.lang.String">
+        select anchor_name,
+               address_desc,
+               lon,
+               lat,
+               belong_grid,
+               belong_org_code
+        from anchor_point
+        where anchor_name like concat('%', #{anchorName}, '%')
+           or anchor_name like concat(#{anchorName}, '%')
+    </select>
+    <select id="queryCustomerByBranch" resultType="com.kx.system.domain.PaAddrInfoType"
+            parameterType="java.lang.String">
+        select
+            t3.name as threeGrid,
+            t2.name as fourGrid,
+            t1.name,
+            t1.code,
+            t1.addr_level,
+            t1.center_point
+        from pa_addr_info_type t1
+        LEFT JOIN pa_addr_info_type t2 ON t1.parent_code = t2.code
+        LEFT JOIN pa_addr_info_type t3 ON t2.parent_code = t3.code
+        where t1.name like concat('%', #{branchName}, '%')
+           or t1.name like concat(#{branchName}, '%')
+    </select>
+    <select id="selectAll" resultType="com.kx.system.domain.anchor.AnchorPoint">
+        select * from anchor_point
+    </select>
+
+
+
+    <select id="getAnchorTotal" resultType="com.kx.system.domain.dto.AnchorTypeCountDTO">
+        SELECT  count(1) as count
+        FROM  anchor_point a
+        LEFT JOIN pa_addr_info_type pait on a.belong_grid = pait.code
+        <where>
+            <if test="gridCode != null and gridCode != ''">
+                and pait.ancestor_codes like concat('%,', #{gridCode}, ',%')
+            </if>
+        </where>
+    </select>
+    <select id="getTotalCount" resultType="com.kx.system.domain.dto.AnchorTypeCountDTO">
+        SELECT count(1) as count
+        FROM custom_group_customer c
+        LEFT JOIN custom_group g ON c.custom_group_id = g.id
+        LEFT JOIN performance_customer_info pci ON pci.id = c.customer_id
+        LEFT JOIN anchor_point a ON pci.customer_nm = a.customer_nm
+        LEFT JOIN pa_addr_info_type pait ON a.belong_grid = pait.code
+        <where>
+            <if test="gridCode != null and gridCode != ''">
+                and pait.ancestor_codes like concat('%,', #{gridCode}, ',%')
+            </if>
+            <if test="groupId != null and groupId != ''">
+                and c.custom_group_id = #{groupId}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectAllAnchor" resultType="com.kx.system.domain.anchor.AnchorPoint">
+        select ap.id,
+               ap.customer_id,
+               ap.customer_nm,
+               ap.identity,
+               ap.type,
+               ap.anchor_name,
+               ap.anchor_type_code,
+               ap.anchor_type,
+               ap.address_desc,
+               ap.update_time,
+               ap.lon,
+               ap.lat,
+               ap.address_type,
+               ap.belong_grid_name,
+               ap.belong_grid,
+               ap.belong_grid_type,
+               ap.area_code,
+               ap.belong_org_code,
+               ap.belong_org_name,
+               ap.belong_manager_code,
+               ap.belong_manager_name,
+               ap.customer_phone,
+               pci.id as user_id
+        from anchor_point ap
+        left join performance_customer_info pci on ap.customer_nm = pci.customer_nm
+        <where>
+            <if test="anchorName != null and anchorName != ''">
+                and anchor_name like concat('%',#{anchorName},'%')
+            </if>
+        </where>
+    </select>
+    <select id="selectManageInfo" resultType="java.lang.String" parameterType="java.lang.String">
+        SELECT
+            grid_code
+        FROM
+        grid_message_info
+        <where>
+            <if test="dutyNetworkName != null and dutyNetworkName != ''">
+                duty_network_name  = #{dutyNetworkName}
+            </if>
+        </where>
+    </select>
+    <select id="selectEquipment" resultType="com.kx.system.domain.anchor.AnchorPoint"
+            parameterType="java.lang.String">
+        select atm_machine,deposit_machine,cash_teller_machine
+        from anchor_point
+        where anchor_name = #{anchorName}
+    </select>
+
+    <update id="updatePaPocAddressCode">
+        <foreach collection="list" item="item" separator=";">
+            update pa_poc_address
+            set admin_code = #{item.code}
+            where id = #{item.id}
+        </foreach>
+    </update>
+    <select id="selectPaPocAddress" resultType="com.kx.system.task.AnchorPointGrid">
+        select id,lon,lat from pa_poc_address limit ${a},${b};
+    </select>
+    <select id="selectPaPocAddressCount" resultType="int">
+        select count(1) from pa_poc_address;
+    </select>
+    <select id="selectEsAnchorPoints" resultType="com.kx.system.domain.anchor.AnchorPoint">
+        select ap.id,
+               ap.customer_id,
+               ap.type,
+               ap.lon,
+               ap.lat,
+               ap.belong_grid,
+               ap.anchor_name,
+               ap.address_desc,
+               ap.update_time,
+               ap.anchor_type_code,
+               ap.identity,
+               ap.customer_phone,
+               ap.belong_grid_name,
+               ap.belong_org_name,
+               ap.belong_manager_name,
+               ap.belong_org_code,
+               ap.create_time,
+               pait.ancestor_codes,
+               s.dot_type,
+               case
+                   when b.duty_network_name is not null
+                       and b.duty_network_name != ''
+                       then '1'
+                   else '0' end as is_duty,
+               pci.id as user_id
+        from anchor_point ap
+                 left join sys_user su on ap.belong_manager_code = su.manager_num
+                 left join (select distinct duty_network_name from grid_message_info) b on ap.anchor_name =
+                                                                                           b.duty_network_name
+                 left join pa_addr_info_type pait on pait.code=ap.belong_grid
+                 left join sys_dept s on anchor_name=s.dept_name
+                 left join performance_customer_info pci on pci.customer_nm = ap.customer_nm
+    </select>
+    <select id="codeByIds" resultType="java.lang.String">
+        select org_num from sys_dept
+        where
+        <foreach collection="deptIds" item="item" separator="or">
+            ancestors like concat('%,', #{item}, '%')
+        </foreach>
+    and org_num is not null
+    </select>
+    <!--    SELECT-->
+    <!--    pci.belong_grid_code-->
+    <!--    FROM-->
+    <!--    performance_customer_info pci-->
+    <!--    LEFT JOIN grid_message_info b ON pci.belong_grid_code = b.grid_code-->
+    <!--    WHERE  b.duty_network_name IS NOT NULL-->
+    <!--    AND  b.duty_network_name != ''-->
+    <!--    AND  pci.id=#{userId};   -->
+
+    <select id="selectAnchorPageForSync" resultType="com.kx.system.domain.anchor.AnchorPoint">
+        select id, lon, lat
+        from anchor_point
+        where lon is not null and lat is not null
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="selectAnchorTotalCount" resultType="int">
+        select count(*) from anchor_point
+        where lon is not null and lat is not null
+    </select>
+
+</mapper>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.GridInfoPoliceMapper">
+
+    <!-- 通用resultMap -->
+    <resultMap id="BaseResultMap" type="com.kx.common.core.domain.system.grid.GridInfoPolice">
+        <id property="id" column="id"/>
+        <result property="gridCode" column="grid_code"/>
+        <result property="policeStationName" column="police_station_name"/>
+        <result property="policeStationAddr" column="police_station_addr"/>
+        <result property="policeName" column="police_name"/>
+        <result property="policePhone" column="police_phone"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createName" column="create_name"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateName" column="update_name"/>
+        <result property="updateBy" column="update_by"/>
+    </resultMap>
+
+    <!-- 插入派出所信息 -->
+    <insert id="insertGridInfoPolice" parameterType="com.kx.common.core.domain.system.grid.GridInfoPolice" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO grid_info_police
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gridCode != null">grid_code,</if>
+            <if test="policeStationName != null">police_station_name,</if>
+            <if test="policeStationAddr != null">police_station_addr,</if>
+            <if test="policeName != null">police_name,</if>
+            <if test="policePhone != null">police_phone,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createName != null">create_name,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateName != null">update_name,</if>
+            <if test="updateBy != null">update_by,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="gridCode != null">#{gridCode},</if>
+            <if test="policeStationName != null">#{policeStationName},</if>
+            <if test="policeStationAddr != null">#{policeStationAddr},</if>
+            <if test="policeName != null">#{policeName},</if>
+            <if test="policePhone != null">#{policePhone},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createName != null">#{createName},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateName != null">#{updateName},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+        </trim>
+    </insert>
+
+    <!-- 根据ID删除派出所信息 -->
+    <delete id="deleteGridInfoPoliceById">
+        DELETE FROM grid_info_police
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+        </where>
+    </delete>
+
+    <!-- 更新派出所信息 -->
+    <update id="updateGridInfoPolice" parameterType="com.kx.common.core.domain.system.grid.GridInfoPolice">
+        UPDATE grid_info_police
+        <set>
+            <if test="gridCode != null">grid_code = #{gridCode},</if>
+            <if test="policeStationName != null">police_station_name = #{policeStationName},</if>
+            <if test="policeStationAddr != null">police_station_addr = #{policeStationAddr},</if>
+            <if test="policeName != null">police_name = #{policeName},</if>
+            <if test="policePhone != null">police_phone = #{policePhone},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateName != null">update_name = #{updateName},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 通用查询（可根据任意字段组合查询） -->
+    <select id="selectGridInfoPoliceList" parameterType="com.kx.common.core.domain.system.grid.GridInfoPolice"
+            resultMap="BaseResultMap">
+        SELECT * FROM grid_info_police
+        <where>
+            <if test="id != null">AND id = #{id}</if>
+            <if test="gridCode != null">AND grid_code = #{gridCode}</if>
+            <if test="policeStationName != null">AND police_station_name LIKE CONCAT('%', #{policeStationName}, '%')
+            </if>
+            <if test="policeStationAddr != null">AND police_station_addr LIKE CONCAT('%', #{policeStationAddr}, '%')
+            </if>
+            <if test="policeName != null">AND police_name = #{policeName}</if>
+            <if test="policePhone != null">AND police_phone = #{policePhone}</if>
+        </where>
+    </select>
+
+
+</mapper>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.MainTaskMapper">
+
+    <!-- 基础结果映射 -->
+    <resultMap id="BaseResultMap" type="com.kx.system.domain.task.TaskMainInfo">
+        <id property="id" column="id"/>
+        <result property="taskName" column="task_name"/>
+        <result property="taskTypeCode" column="task_type_code"/>
+        <result property="taskLevel" column="task_level"/>
+        <result property="taskFrequency" column="task_frequency"/>
+        <result property="taskStartTime" column="task_start_time"/>
+        <result property="taskEndTime" column="task_end_time"/>
+        <result property="taskCron" column="task_cron"/>
+        <result property="taskExecuteSchedule" column="task_execute_schedule"/>
+        <result property="taskRemark" column="task_remark"/>
+        <result property="taskExecuteType" column="task_execute_type"/>
+        <result property="taskExecuteCode" column="task_execute_code"/>
+        <result property="taskJson" column="task_json"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createName" column="create_name"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateName" column="update_name"/>
+        <result property="updateBy" column="update_by"/>
+    </resultMap>
+
+    <!-- 新增任务（动态字段） -->
+    <insert id="insert" parameterType="com.kx.system.domain.task.TaskMainInfo" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO task_main
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="taskName != null and taskName != ''">task_name,</if>
+            <if test="taskTypeCode != null">task_type_code,</if>
+            <if test="taskLevel != null">task_level,</if>
+            <if test="taskFrequency != null">task_frequency,</if>
+            <if test="taskStartTime != null">task_start_time,</if>
+            <if test="taskEndTime != null">task_end_time,</if>
+            <if test="taskCron != null and taskCron != ''">task_cron,</if>
+            <if test="taskExecuteSchedule != null">task_execute_schedule,</if>
+            <if test="taskRemark != null and taskRemark != ''">task_remark,</if>
+            <if test="taskExecuteType != null">task_execute_type,</if>
+            <if test="taskExecuteCode != null and taskExecuteCode != ''">task_execute_code,</if>
+            <if test="taskJson != null and taskJson != ''">task_json,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createName != null and createName != ''">create_name,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateName != null and updateName != ''">update_name,</if>
+            <if test="updateBy != null">update_by,</if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="taskName != null and taskName != ''">#{taskName},</if>
+            <if test="taskTypeCode != null">#{taskTypeCode},</if>
+            <if test="taskLevel != null">#{taskLevel},</if>
+            <if test="taskFrequency != null">#{taskFrequency},</if>
+            <if test="taskStartTime != null">#{taskStartTime},</if>
+            <if test="taskEndTime != null">#{taskEndTime},</if>
+            <if test="taskCron != null and taskCron != ''">#{taskCron},</if>
+            <if test="taskExecuteSchedule != null">#{taskExecuteSchedule},</if>
+            <if test="taskRemark != null and taskRemark != ''">#{taskRemark},</if>
+            <if test="taskExecuteType != null">#{taskExecuteType},</if>
+            <if test="taskExecuteCode != null and taskExecuteCode != ''">#{taskExecuteCode},</if>
+            <if test="taskJson != null and taskJson != ''">#{taskJson},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createName != null and createName != ''">#{createName},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateName != null and updateName != ''">#{updateName},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+        </trim>
+    </insert>
+
+    <!-- 根据ID删除 -->
+    <delete id="deleteById">
+        DELETE
+        FROM task_main
+        WHERE id = #{id}
+    </delete>
+
+    <!-- 更新任务 -->
+    <update id="update" parameterType="com.kx.system.domain.task.TaskMainInfo">
+        UPDATE task_main
+        <set>
+            <if test="taskName != null">task_name = #{taskName},</if>
+            <if test="taskTypeCode != null">task_type_code = #{taskTypeCode},</if>
+            <if test="taskLevel != null">task_level = #{taskLevel},</if>
+            <if test="taskFrequency != null">task_frequency = #{taskFrequency},</if>
+            <if test="taskStartTime != null">task_start_time = #{taskStartTime},</if>
+            <if test="taskEndTime != null">task_end_time = #{taskEndTime},</if>
+            <if test="taskCron != null">task_cron = #{taskCron},</if>
+            <if test="taskExecuteSchedule != null">task_execute_schedule = #{taskExecuteSchedule},</if>
+            <if test="taskRemark != null">task_remark = #{taskRemark},</if>
+            <if test="taskExecuteType != null">task_execute_type = #{taskExecuteType},</if>
+            <if test="taskExecuteCode != null">task_execute_code = #{taskExecuteCode},</if>
+            <if test="taskJson != null">task_json = #{taskJson},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateName != null">update_name = #{updateName},</if>
+            <if test="updateBy != null">update_by = #{updateBy}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据网格编码查询 -->
+    <select id="selectByGridCode" resultMap="BaseResultMap">
+        SELECT * FROM task_main
+        <where>
+            <if test="gridCode != null and gridCode != ''">
+                <!-- 使用LIKE匹配网格编码 -->
+                task_execute_code LIKE CONCAT('%', #{gridCode}, '%')
+            </if>
+        </where>
+    </select>
+</mapper>

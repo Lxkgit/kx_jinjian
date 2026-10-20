@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.BranchArticleInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.kx.system.domain.branch.BranchArticleInfo">
+        <id column="id" property="id"/>
+        <result column="org_num" property="orgNum"/>
+        <result column="title" property="title"/>
+        <result column="article" property="article"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_name" property="createName"/>
+        <result column="create_by" property="createBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_name" property="updateName"/>
+        <result column="update_by" property="updateBy"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        , org_num, title, article, create_time, create_name, create_by, update_time, update_name, update_by
+    </sql>
+
+    <select id="selectArticleListByOrgNum" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from branch_article_info
+        where org_num = #{orgNum}
+    </select>
+
+    <select id="selectArticleInfoById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from branch_article_info
+        where id = #{id}
+    </select>
+
+
+    <insert id="insertArticle" parameterType="com.kx.system.domain.branch.BranchArticleInfo">
+        insert into branch_article_info
+        (org_num,
+         title,
+         article,
+         create_time,
+         create_name,
+         create_by)
+        values (#{orgNum},
+                #{title},
+                #{article},
+                #{createTime},
+                #{createName},
+                #{createBy})
+    </insert>
+
+    <update id="updateArticleById" parameterType="com.kx.system.domain.branch.BranchArticleInfo">
+        update branch_article_info
+        <set>
+            <if test="title != null">title = #{title},</if>
+            <if test="article != null">article = #{article},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateName != null">update_name = #{updateName},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteArticleById" parameterType="java.lang.Long">
+        update branch_article_info
+        set del_flag = #{delFlag}
+        where id = #{id}
+    </delete>
+
+</mapper>

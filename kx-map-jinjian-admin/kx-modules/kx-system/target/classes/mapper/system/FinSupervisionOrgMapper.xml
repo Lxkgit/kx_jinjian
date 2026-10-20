@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.FinSupervisionOrgMapper">
+
+    <resultMap id="BaseResultMap" type="com.kx.system.domain.FinSupervisionOrg">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="type" property="type"/>
+        <result column="type_code" property="typeCode"/>
+        <result column="address" property="address"/>
+        <result column="lon" property="lon"/>
+        <result column="lat" property="lat"/>
+        <result column="province" property="province"/>
+        <result column="city" property="city"/>
+        <result column="district" property="district"/>
+        <result column="area_code" property="areaCode"/>
+        <result column="level" property="level"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="parent_name" property="parentName"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        o.id, o.`name`, o.`type`, o.type_code, o.address, o.lon, o.lat,
+        o.province, o.city, o.district, o.area_code, o.`level`, o.parent_id,
+        p.`name` AS parent_name
+    </sql>
+
+    <select id="selectByAreaCode" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM fin_supervision_org o
+        LEFT JOIN fin_supervision_org p ON o.parent_id = p.id
+        WHERE o.area_code = #{areaCode}
+        <if test="level != null">
+            AND o.`level` = #{level}
+        </if>
+    </select>
+
+    <select id="selectByAreaCodePrefix" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM fin_supervision_org o
+        LEFT JOIN fin_supervision_org p ON o.parent_id = p.id
+        WHERE o.area_code LIKE CONCAT(#{prefix}, '%')
+        <if test="level != null">
+            AND o.`level` = #{level}
+        </if>
+    </select>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM fin_supervision_org o
+        LEFT JOIN fin_supervision_org p ON o.parent_id = p.id
+        WHERE o.id = #{id}
+    </select>
+
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.kx.system.domain.FinSupervisionOrg" useGeneratedKeys="true">
+        INSERT INTO fin_supervision_org (`name`, `type`, type_code, address, lon, lat, province, city, district, area_code, `level`, parent_id)
+        VALUES (#{name}, #{type}, #{typeCode}, #{address}, #{lon}, #{lat}, #{province}, #{city}, #{district}, #{areaCode}, #{level}, #{parentId})
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.kx.system.domain.FinSupervisionOrg">
+        UPDATE fin_supervision_org
+        <set>
+            <if test="name != null and name != ''">
+                `name` = #{name},
+            </if>
+            <if test="type != null and type != ''">
+                `type` = #{type},
+            </if>
+            <if test="typeCode != null and typeCode != ''">
+                type_code = #{typeCode},
+            </if>
+            <if test="address != null and address != ''">
+                address = #{address},
+            </if>
+            <if test="lon != null">
+                lon = #{lon},
+            </if>
+            <if test="lat != null">
+                lat = #{lat},
+            </if>
+            <if test="province != null and province != ''">
+                province = #{province},
+            </if>
+            <if test="city != null and city != ''">
+                city = #{city},
+            </if>
+            <if test="district != null and district != ''">
+                district = #{district},
+            </if>
+            <if test="areaCode != null and areaCode != ''">
+                area_code = #{areaCode},
+            </if>
+            <if test="level != null">
+                `level` = #{level},
+            </if>
+            <if test="parentId != null">
+                parent_id = #{parentId},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        DELETE FROM fin_supervision_org WHERE id = #{id}
+    </delete>
+
+</mapper>

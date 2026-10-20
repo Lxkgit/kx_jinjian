@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.PaManageAreaMapper">
+
+    <resultMap type="com.kx.system.domain.PaManageArea" id="PaManageAreaResult">
+        <result property="id"    column="id"    />
+        <result property="areaName"    column="area_name"    />
+        <result property="areaCode"    column="area_code"    />
+        <result property="belongManageId"    column="belong_manage_id"    />
+        <result property="belongNetworkId"    column="belong_network_id"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectPaManageAreaVo">
+        select id, area_name, area_code, belong_manage_id, belong_network_id, del_flag from pa_manage_area
+    </sql>
+
+    <select id="selectPaManageAreaList" parameterType="com.kx.system.domain.PaManageArea" resultMap="PaManageAreaResult">
+        <include refid="selectPaManageAreaVo"/>
+        <where>
+            <if test="areaName != null  and areaName != ''"> and area_name like ('%' + #{areaName} + '%')</if>
+            <if test="areaCode != null  and areaCode != ''"> and area_code = #{areaCode}</if>
+            <if test="belongManageId != null "> and belong_manage_id = #{belongManageId}</if>
+            <if test="belongNetworkId != null "> and belong_network_id = #{belongNetworkId}</if>
+        </where>
+    </select>
+
+    <select id="selectPaManageAreaById" parameterType="Long" resultMap="PaManageAreaResult">
+        <include refid="selectPaManageAreaVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPaManageArea" parameterType="com.kx.system.domain.PaManageArea">
+        insert into pa_manage_area
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="areaName != null">area_name,</if>
+            <if test="areaCode != null">area_code,</if>
+            <if test="belongManageId != null">belong_manage_id,</if>
+            <if test="belongNetworkId != null">belong_network_id,</if>
+            <if test="delFlag != null">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="areaName != null">#{areaName},</if>
+            <if test="areaCode != null">#{areaCode},</if>
+            <if test="belongManageId != null">#{belongManageId},</if>
+            <if test="belongNetworkId != null">#{belongNetworkId},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePaManageArea" parameterType="com.kx.system.domain.PaManageArea">
+        update pa_manage_area
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="areaName != null">area_name = #{areaName},</if>
+            <if test="areaCode != null">area_code = #{areaCode},</if>
+            <if test="belongManageId != null">belong_manage_id = #{belongManageId},</if>
+            <if test="belongNetworkId != null">belong_network_id = #{belongNetworkId},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePaManageAreaById" parameterType="Long">
+        delete from pa_manage_area where id = #{id}
+    </delete>
+
+    <delete id="deletePaManageAreaByIds">
+        delete from pa_manage_area where id not in
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectByManageId" resultType="java.lang.String">
+    select area_code from pa_manage_area where belong_manage_id = #{manageId} and del_flag = '0'
+    </select>
+
+    <select id="selectByNotManageId" resultType="java.lang.String">
+        select area_code from pa_manage_area where belong_manage_id != #{manageId} and del_flag = '0'
+    </select>
+
+    <delete id="deleteByCode">
+        update pa_manage_area set del_flag ='2' where area_code = #{code}
+    </delete>
+    <delete id="deleteManageAreaByCode">
+        delete from pa_manage_area where area_code = #{code}
+    </delete>
+
+    <select id="selectByAreaCode" resultMap="PaManageAreaResult">
+        <include refid="selectPaManageAreaVo"/>
+        where area_code = #{manageAreaCode} and del_flag ='0'
+    </select>
+    <select id="selectByManagerId" resultType="java.lang.String">
+        select area_code from pa_manage_area where belong_manage_id = #{managerId} and del_flag ='0'
+    </select>
+
+    <update id="updataLike">
+        UPDATE pa_manage_area SET belong_manage_id = '8635012' where belong_manage_id like '1'
+    </update>
+
+    <select id="selectId" resultType="java.lang.Long">
+        select b.id from ( SELECT DISTINCT id,area_code ,belong_manage_id  from pa_manage_area ) as b
+    </select>
+    <select id="inJurisdiction" resultType="java.lang.Boolean">
+        select (case id when null then 0 else 1 end) exist
+        from pa_manage_area
+        where belong_manage_id = #{jobNumber}
+        and area_code = #{belongCode}
+        and del_flag = '0'
+    </select>
+    <select id="selectBelongManagerUserJobNum" resultType="java.lang.String">
+        select belong_manage_id from pa_manage_area where area_code in
+        <foreach collection="codeList" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+        and del_flag = '0'
+    </select>
+</mapper>

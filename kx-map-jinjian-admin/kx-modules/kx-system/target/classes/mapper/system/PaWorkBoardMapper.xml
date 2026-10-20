@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.PaWorkBoardMapper">
+
+
+    <select id="dataOverview" resultType="com.kx.system.domain.DataOverviewEntity">
+        SELECT
+        ( SELECT COUNT( id ) FROM pa_addr_info ) baseGridNumber,
+        ( SELECT COUNT( id ) FROM pa_addr_info_type ) featureGridNumber,
+        ( SELECT COUNT( id ) FROM customer_info ) customNumber,
+        ( SELECT COUNT( id ) FROM customer_info WHERE customer_type = 0 ) personCustomNumber,
+        ( SELECT COUNT( id ) FROM customer_info WHERE customer_type = 1 ) businessCustomNumber,
+        ( SELECT COUNT( id ) FROM customer_info WHERE customer_type = 2 ) companyCustomNumber,
+        ( SELECT COUNT( id ) FROM pa_task ) taskNumber,
+        ( SELECT COUNT( id ) FROM pa_task WHERE task_status = 1 ) finishTaskNumber,
+        ( SELECT COUNT( id ) FROM pa_task WHERE task_status = 0 ) unFinishTaskNumber
+    </select>
+
+
+</mapper>

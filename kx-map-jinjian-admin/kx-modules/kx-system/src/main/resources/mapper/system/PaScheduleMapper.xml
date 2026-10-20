@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.PaScheduleMapper">
+
+    <resultMap type="com.kx.system.domain.PaSchedule" id="PaScheduleResult">
+        <result property="id"    column="id"    />
+        <result property="scheduleTitle"    column="schedule_title"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="needNotice"    column="need_notice"    />
+        <result property="autoFinish"    column="auto_finish"    />
+        <result property="noticeTime"    column="notice_time"    />
+        <result property="markColor"    column="mark_color"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="batchId"    column="batch_id"    />
+        <result property="taskId"    column="task_id"    />
+        <result property="owner"    column="owner"    />
+        <result property="ownerIds"    column="owner_ids"    />
+        <result property="ownerNames"    column="owner_names"    />
+    </resultMap>
+
+    <sql id="selectPaScheduleVo">
+        select id, schedule_title, start_time, end_time, need_notice, auto_finish, notice_time, notice_time_type, mark_color, remark, create_by, batch_id, task_id, owner, owner_ids, owner_names, status from pa_schedule
+    </sql>
+
+    <select id="selectPaScheduleList" parameterType="com.kx.system.domain.PaSchedule" resultMap="PaScheduleResult">
+        SELECT
+            s.id,
+            s.schedule_title,
+            s.start_time,
+            s.end_time,
+            s.need_notice,
+            s.auto_finish,
+            s.notice_time,
+            s.notice_time_type,
+            d.dict_label noticeTimeTypeName,
+            s.mark_color,
+            s.remark,
+            s.create_by,
+            s.batch_id,
+            s.task_id,
+            s.OWNER,
+            s.owner_ids,
+            s.owner_names,
+            s.status,
+            u.nick_name ownerName ,
+            u1.nick_name createByName,
+            d1.dict_label statusName
+        FROM
+            pa_schedule s
+            LEFT JOIN ( SELECT dict_code, dict_value, dict_label FROM sys_dict_data WHERE dict_type = 'anchor_type' ) d ON d.dict_value = s.notice_time_type
+            LEFT JOIN ( SELECT dict_code, dict_value, dict_label FROM sys_dict_data WHERE dict_type = 'schedule_status' ) d1 ON d1.dict_value = s.status
+            LEFT JOIN sys_user u ON s.OWNER = u.user_id
+            LEFT JOIN sys_user u1 ON s.create_by = u1.user_id
+        <where>
+            <if test="scheduleTitle != null  and scheduleTitle != ''"> and s.schedule_title = #{scheduleTitle}</if>
+            <if test="startTime != null "> and s.start_time &gt;= #{startTime}</if>
+            <if test="endTime != null "> and s.start_time &lt;= #{endTime}</if>
+            <if test="needNotice != null "> and s.need_notice = #{needNotice}</if>
+            <if test="autoFinish != null "> and s.auto_finish = #{autoFinish}</if>
+            <if test="noticeTime != null "> and s.notice_time = #{noticeTime}</if>
+            <if test="noticeTimeType != null "> and s.notice_time_type = #{noticeTimeType}</if>
+            <if test="markColor != null  and markColor != ''"> and s.mark_color = #{markColor}</if>
+            <if test="batchId != null  and batchId != ''"> and s.batch_id = #{batchId}</if>
+            <if test="taskId != null "> and s.task_id = #{taskId}</if>
+            <if test="owner != null "> and s.owner = #{owner}</if>
+            <if test="ownerIds != null  and ownerIds != ''"> and s.owner_ids = #{ownerIds}</if>
+            <if test="ownerNames != null  and ownerNames != ''"> and s.owner_names = #{ownerNames}</if>
+            <if test="status != null  and status != ''"> and s.status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectPaScheduleById" parameterType="Long" resultMap="PaScheduleResult">
+        <include refid="selectPaScheduleVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPaSchedule" parameterType="com.kx.system.domain.PaSchedule">
+        insert into pa_schedule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="scheduleTitle != null">schedule_title,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="needNotice != null">need_notice,</if>
+            <if test="autoFinish != null">auto_finish,</if>
+            <if test="noticeTime != null">notice_time,</if>
+            <if test="noticeTimeType != null">notice_time_type,</if>
+            <if test="markColor != null">mark_color,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="batchId != null">batch_id,</if>
+            <if test="taskId != null">task_id,</if>
+            <if test="owner != null">owner,</if>
+            <if test="ownerIds != null">owner_ids,</if>
+            <if test="ownerNames != null">owner_names,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="scheduleTitle != null">#{scheduleTitle},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="needNotice != null">#{needNotice},</if>
+            <if test="autoFinish != null">#{autoFinish},</if>
+            <if test="noticeTime != null">#{noticeTime},</if>
+            <if test="noticeTimeType != null">#{noticeTimeType},</if>
+            <if test="markColor != null">#{markColor},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="batchId != null">#{batchId},</if>
+            <if test="taskId != null">#{taskId},</if>
+            <if test="owner != null">#{owner},</if>
+            <if test="ownerIds != null">#{ownerIds},</if>
+            <if test="ownerNames != null">#{ownerNames},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePaSchedule" parameterType="com.kx.system.domain.PaSchedule">
+        update pa_schedule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="scheduleTitle != null">schedule_title = #{scheduleTitle},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="needNotice != null">need_notice = #{needNotice},</if>
+            <if test="autoFinish != null">auto_finish = #{autoFinish},</if>
+            <if test="noticeTime != null">notice_time = #{noticeTime},</if>
+            <if test="noticeTimeType != null">notice_time_type = #{noticeTimeType},</if>
+            <if test="markColor != null">mark_color = #{markColor},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="batchId != null">batch_id = #{batchId},</if>
+            <if test="taskId != null">task_id = #{taskId},</if>
+            <if test="owner != null">owner = #{owner},</if>
+            <if test="ownerIds != null">owner_ids = #{ownerIds},</if>
+            <if test="ownerNames != null">owner_names = #{ownerNames},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePaScheduleById" parameterType="Long">
+        delete from pa_schedule where id = #{id}
+    </delete>
+
+    <delete id="deletePaScheduleByIds" parameterType="String">
+        delete from pa_schedule where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

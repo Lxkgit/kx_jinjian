@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.OpeningCardRecordMapper">
+
+    <resultMap type="com.kx.system.domain.OpeningCardRecord" id="OpeningCardRecordResult">
+        <result property="customNm"    column="custom_nm"    />
+        <result property="type"    column="type"    />
+        <result property="cardNum"    column="card_num"    />
+        <result property="cardType"    column="card_type"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="managerNum"    column="manager_num"    />
+        <result property="manager"    column="manager"    />
+    </resultMap>
+
+    <sql id="selectOpeningCardRecordVo">
+        select custom_id, type, card_num, card_type, create_time, manager_num, manager from opening_card_record
+    </sql>
+    <insert id="insertBatch">
+        insert into opening_card_record (type, card_num, card_type, create_time, manager, identity, custom_nm, manager_num,etl_date) values
+        <foreach collection="records" item="record" separator=",">
+            (#{record.type},#{record.cardNum},#{record.cardType},#{record.createTime},#{record.manager},#{record.identity},#{record.customNm},#{record.managerNum},#{record.etlDate})
+        </foreach>
+    </insert>
+    <update id="updateIdentity">
+        update opening_card_record ocr,performance_customer_info pci set ocr.identity = pci.customer_identity where ocr.custom_nm = pci.customer_nm;
+    </update>
+    <delete id="clear">
+        delete from opening_card_record
+    </delete>
+
+    <select id="listInfo" resultType="com.kx.system.domain.vo.CustomerJourneyVO">
+        select travelTime, firstField, secondField, type from (
+                          select create_time as travelTime, card_type as firstField, RIGHT(card_num,4) as secondField, 1 as type from opening_card_record where identity = #{customerIdentity}
+                          union
+                          select create_time as travelTime, product_name as firstField, concat(credit_amount,'元') as secondField, 2 as type from credit_record where identity = #{customerIdentity}
+                          union
+                          select visits_time as travelTime, visits_manager_code as firstField, null as secondField, 3 as type from customer_visits   where identity = #{customerIdentity}
+                      ) as travel_info
+        order by travelTime desc
+    </select>
+
+
+</mapper>

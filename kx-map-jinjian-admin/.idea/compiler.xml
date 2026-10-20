@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="kx-auth" />
+        <module name="kx-common-security" />
+        <module name="kx-modules-system" />
+        <module name="kx-common-log" />
+        <module name="kx-common-swagger" />
+        <module name="kx-common-seata" />
+        <module name="kx-modules-job" />
+        <module name="kx-modules-gen" />
+        <module name="kx-common-redis" />
+        <module name="kx-gateway" />
+        <module name="kx-modules-file" />
+        <module name="kx-api-system" />
+        <module name="kx-common-core" />
+        <module name="kx-visual-monitor" />
+        <module name="kx-common-datasource" />
+        <module name="kx-common-datascope" />
+      </profile>
+    </annotationProcessing>
+  </component>
+</project>

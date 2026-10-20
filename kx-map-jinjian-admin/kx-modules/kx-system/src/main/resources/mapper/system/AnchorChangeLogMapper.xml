@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.AnchorChangeLogMapper">
+    
+    <resultMap type="com.kx.system.domain.AnchorChangeLog" id="AnchorChangeLogResult">
+        <result property="id"    column="id"    />
+        <result property="anchorId"    column="anchor_id"    />
+        <result property="anchorName"    column="anchor_name"    />
+        <result property="type"    column="type"    />
+        <result property="typeName"    column="type_name"    />
+        <result property="oldAddress"    column="old_address"    />
+        <result property="oldAddressTypeCode"    column="old_address_type_code"    />
+        <result property="oldAddressType"    column="old_address_type"    />
+        <result property="newAddress"    column="new_address"    />
+        <result property="newAddressTypeCode"    column="new_address_type_code"    />
+        <result property="newAddressType"    column="new_address_type"    />
+        <result property="createUser"    column="create_user"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectAnchorChangeLogVo">
+        select id, anchor_id, anchor_name, type, type_name, old_address, old_address_type_code, old_address_type, new_address, new_address_type_code, new_address_type, create_user, create_time from anchor_change_log
+    </sql>
+
+    <select id="selectAnchorChangeLogList" parameterType="com.kx.system.domain.AnchorChangeLog" resultMap="AnchorChangeLogResult">
+        <include refid="selectAnchorChangeLogVo"/>
+        <where>  
+            <if test="anchorId != null "> and anchor_id = #{anchorId}</if>
+            <if test="anchorName != null  and anchorName != ''"> and anchor_name like concat('%', #{anchorName}, '%')</if>
+            <if test="oldAddressTypeCodes != null  and oldAddressTypeCodes.size > 0"> and old_address_type_code in
+                <foreach collection="oldAddressTypeCodes" item="oldAddressTypeCode" open="(" separator="," close=")">
+                     #{oldAddressTypeCode}
+                </foreach>
+            </if>
+            <if test="newAddressTypeCodes != null  and newAddressTypeCodes.size > 0"> and new_address_type_code in
+                <foreach collection="newAddressTypeCodes" item="newAddressTypeCode" open="(" separator="," close=")">
+                    #{newAddressTypeCode}
+                </foreach>
+            </if>
+
+
+            <if test="type != null "> and type = #{type}</if>
+            <if test="typeName != null  and typeName != ''"> and type_name like concat('%', #{typeName}, '%')</if>
+            <if test="oldAddress != null  and oldAddress != ''"> and old_address = #{oldAddress}</if>
+            <if test="oldAddressTypeCode != null "> and old_address_type_code = #{oldAddressTypeCode}</if>
+            <if test="oldAddressType != null  and oldAddressType != ''"> and old_address_type = #{oldAddressType}</if>
+            <if test="newAddress != null  and newAddress != ''"> and new_address = #{newAddress}</if>
+            <if test="newAddressTypeCode != null "> and new_address_type_code = #{newAddressTypeCode}</if>
+            <if test="newAddressType != null  and newAddressType != ''"> and new_address_type = #{newAddressType}</if>
+            <if test="createUser != null  and createUser != ''"> and create_user = #{createUser}</if>
+        </where>
+    </select>
+    
+    <select id="selectAnchorChangeLogById" parameterType="Long" resultMap="AnchorChangeLogResult">
+        <include refid="selectAnchorChangeLogVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAnchorChangeLog" parameterType="com.kx.system.domain.AnchorChangeLog">
+        insert into anchor_change_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="anchorId != null">anchor_id,</if>
+            <if test="anchorName != null">anchor_name,</if>
+            <if test="type != null">type,</if>
+            <if test="typeName != null">type_name,</if>
+            <if test="oldAddress != null">old_address,</if>
+            <if test="oldAddressTypeCode != null">old_address_type_code,</if>
+            <if test="oldAddressType != null">old_address_type,</if>
+            <if test="newAddress != null">new_address,</if>
+            <if test="newAddressTypeCode != null">new_address_type_code,</if>
+            <if test="newAddressType != null">new_address_type,</if>
+            <if test="createUser != null">create_user,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="anchorId != null">#{anchorId},</if>
+            <if test="anchorName != null">#{anchorName},</if>
+            <if test="type != null">#{type},</if>
+            <if test="typeName != null">#{typeName},</if>
+            <if test="oldAddress != null">#{oldAddress},</if>
+            <if test="oldAddressTypeCode != null">#{oldAddressTypeCode},</if>
+            <if test="oldAddressType != null">#{oldAddressType},</if>
+            <if test="newAddress != null">#{newAddress},</if>
+            <if test="newAddressTypeCode != null">#{newAddressTypeCode},</if>
+            <if test="newAddressType != null">#{newAddressType},</if>
+            <if test="createUser != null">#{createUser},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAnchorChangeLog" parameterType="com.kx.system.domain.AnchorChangeLog">
+        update anchor_change_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="anchorId != null">anchor_id = #{anchorId},</if>
+            <if test="anchorName != null">anchor_name = #{anchorName},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="typeName != null">type_name = #{typeName},</if>
+            <if test="oldAddress != null">old_address = #{oldAddress},</if>
+            <if test="oldAddressTypeCode != null">old_address_type_code = #{oldAddressTypeCode},</if>
+            <if test="oldAddressType != null">old_address_type = #{oldAddressType},</if>
+            <if test="newAddress != null">new_address = #{newAddress},</if>
+            <if test="newAddressTypeCode != null">new_address_type_code = #{newAddressTypeCode},</if>
+            <if test="newAddressType != null">new_address_type = #{newAddressType},</if>
+            <if test="createUser != null">create_user = #{createUser},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAnchorChangeLogById" parameterType="Long">
+        delete from anchor_change_log where id = #{id}
+    </delete>
+
+    <delete id="deleteAnchorChangeLogByIds" parameterType="String">
+        delete from anchor_change_log where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.PaCompanyInfoMapper">
+    <resultMap id="BaseResultMap" type="com.kx.system.domain.PaCompanyInfo">
+        <!--@mbg.generated-->
+        <!--@Table company_info-->
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="nm" jdbcType="VARCHAR" property="nm"/>
+        <result column="credit_code" jdbcType="VARCHAR" property="creditCode"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="township" jdbcType="VARCHAR" property="township"/>
+        <result column="area" jdbcType="VARCHAR" property="area"/>
+        <result column="outlet_code" jdbcType="VARCHAR" property="outletCode"/>
+        <result column="outlet" jdbcType="VARCHAR" property="outlet"/>
+        <result column="manager_id" jdbcType="VARCHAR" property="managerId"/>
+        <result column="telephone" jdbcType="VARCHAR" property="telephone"/>
+        <result column="legal_person" jdbcType="VARCHAR" property="legalPerson"/>
+        <result column="capital" jdbcType="DECIMAL" property="capital"/>
+        <result column="scope" jdbcType="VARCHAR" property="scope"/>
+        <result column="industry" jdbcType="VARCHAR" property="industry"/>
+        <result column="bad_interest_settlement_two_year" jdbcType="INTEGER" property="badInterestSettlementTwoYear"/>
+        <result column="borrower_trans_cnt_year" jdbcType="INTEGER" property="borrowerTransCntYear"/>
+        <result column="loan_trans_cnt_year" jdbcType="INTEGER" property="loanTransCntYear"/>
+        <result column="sum_deposit_year" jdbcType="DECIMAL" property="sumDepositYear"/>
+        <result column="sum_loan_year" jdbcType="DECIMAL" property="sumLoanYear"/>
+        <result column="asset" jdbcType="DECIMAL" property="asset"/>
+        <result column="receivable" jdbcType="DECIMAL" property="receivable"/>
+        <result column="house_asset" jdbcType="DECIMAL" property="houseAsset"/>
+        <result column="equipment_asset" jdbcType="DECIMAL" property="equipmentAsset"/>
+        <result column="deposit" jdbcType="DECIMAL" property="deposit"/>
+        <result column="total_liability" jdbcType="DECIMAL" property="totalLiability"/>
+        <result column="loan" jdbcType="VARCHAR" property="loan"/>
+        <result column="external_guarantee" jdbcType="VARCHAR" property="externalGuarantee"/>
+        <result column="sdfdk" jdbcType="VARCHAR" property="sdfdk"/>
+        <result column="corporate_internet_banking" jdbcType="VARCHAR" property="corporateInternetBanking"/>
+        <result column="etl_dt" jdbcType="DATE" property="etlDt"/>
+        <result column="type" jdbcType="VARCHAR" property="poolClientType"/>
+        <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
+    </resultMap>
+
+    <resultMap id="CompanyAndBelongMap" type="com.kx.system.domain.vo.PaCompanyInfoVO">
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="nm" jdbcType="VARCHAR" property="nm"/>
+        <result column="township" jdbcType="VARCHAR" property="township"/>
+        <result column="area" jdbcType="VARCHAR" property="area"/>
+        <result column="area_code" jdbcType="VARCHAR" property="areaCode"/>
+        <result column="outlet_code" jdbcType="VARCHAR" property="outletCode"/>
+        <result column="outlet" jdbcType="VARCHAR" property="outlet"/>
+        <result column="manager_id" jdbcType="VARCHAR" property="managerId"/>
+        <result column="lon" jdbcType="DECIMAL" property="lon"/>
+        <result column="lat" jdbcType="DECIMAL" property="lat"/>
+        <result column="del_flag" jdbcType="INTEGER" property="delFlag"/>
+    </resultMap>
+
+    <sql id="selectPaCompanyInfoVo">
+        <!--@mbg.generated-->
+        select [name], nm, credit_code, address, telephone, legal_person, capital, [scope], industry, etl_dt from
+        pa_company_info
+    </sql>
+
+    <select id="selectPaCompanyInfoList" parameterType="com.kx.system.domain.PaCompanyInfo" resultMap="BaseResultMap">
+        select distinct ci.[name], ci.nm, ci.credit_code, ci.address, ci.telephone, ci.legal_person, ci.capital,
+        ci.[scope], ci.industry, ci.actual_controller, ci.etl_dt, ci.area_code,
+        cai.outlet_code, cai.outlet, cai.manager_id, cai.township, cai.area, cai.type from pa_company_belong_info as cai
+        left join pa_company_info as ci on ci.nm = cai.nm
+        left join pa_client_label la on ci.nm = la.client_code
+        <where>
+            ci.nm is not null
+            <if test="jobNumber != null and jobNumber != ''">
+                and cai.manager_id = #{jobNumber}
+            </if>
+            <if test="clientName != null and clientName !=''">
+                and ci.name like ('%'+ #{clientName}+'%')
+            </if>
+            <if test="areaCode != null and areaCode !=''">
+                and ci.area_code = #{areaCode}
+            </if>
+            <if test="labelIdList != null">
+                and la.label_id in
+                <foreach item="labelId" collection="labelIdList" open="(" separator="," close=")">
+                    #{labelId}
+                </foreach>
+            </if>
+            <if test="villageNameList != null">
+                and cai.area in
+                <foreach item="villageName" collection="villageNameList" open="(" separator="," close=")">
+                    #{villageName}
+                </foreach>
+            </if>
+            <if test="areaCodeList != null">
+                and cai.area_code in
+                <foreach item="areaCode" collection="areaCodeList" open="(" separator="," close=")">
+                    #{areaCode}
+                </foreach>
+            </if>
+            <if test="networkCodes != null">
+                and cai.outlet_code in
+                <foreach item="networkCode" collection="networkCodes" open="(" separator="," close=")">
+                    #{networkCode}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectPaCompanyInfoByNm" parameterType="String" resultMap="BaseResultMap">
+        <include refid="selectPaCompanyInfoVo"/>
+        where nm = #{nm}
+    </select>
+
+    <select id="selectPaCompanyInfoAndBelongToByNm" parameterType="String" resultMap="BaseResultMap">
+        select [name], a.nm, credit_code, address, telephone, legal_person, capital, [scope], industry , b.outlet, b.outlet_code,b.manager_id,b.area,b.area_code
+        from pa_company_info a left join pa_company_belong_info b on a.nm = b.nm
+        where a.nm = #{nm}
+    </select>
+
+    <select id="selectPublicPaCompanyInfoList" parameterType="com.kx.system.domain.PaCustomInfo"
+            resultMap="BaseResultMap">
+        select distinct ci.[name], ci.nm, ci.credit_code, ci.address, ci.telephone, ci.legal_person, ci.capital,
+        ci.[scope], ci.industry, ci.etl_dt, cai.outlet_code, cai.outlet, cai.manager_id, cai.township, cai.area,
+        cai.type
+        from pa_company_belong_info as cai
+        left join company_info as ci on ci.nm = cai.nm
+        left join pa_client_label la on ci.nm = la.client_code
+        <where>
+            (cai.type = '00' or cai.type = '01' )
+            <if test="jobNumber != null and jobNumber != ''">
+                and cai.manager_id = #{jobNumber}
+            </if>
+            <if test="clientName != null and clientName !=''">
+                and ci.name like ('%'+ #{clientName}+'%')
+            </if>
+            <if test="areaCode != null and areaCode !=''">
+                and ci.area_code = #{areaCode}
+            </if>
+            <if test="labelIdList != null">
+                and la.label_id in
+                <foreach item="labelId" collection="labelIdList" open="(" separator="," close=")">
+                    #{labelId}
+                </foreach>
+            </if>
+            <if test="villageNameList != null">
+                and cai.area in
+                <foreach item="villageName" collection="villageNameList" open="(" separator="," close=")">
+                    #{villageName}
+                </foreach>
+            </if>
+            <if test="areaCodeList != null">
+                and cai.area_code in
+                <foreach item="areaCode" collection="areaCodeList" open="(" separator="," close=")">
+                    #{areaCode}
+                </foreach>
+            </if>
+            <if test="networkCodes != null">
+                and cai.outlet_code in
+                <foreach item="networkCode" collection="networkCodes" open="(" separator="," close=")">
+                    #{networkCode}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectNetworkPaCompanyInfoList" parameterType="com.kx.system.domain.PaCustomInfo"
+            resultMap="BaseResultMap">
+        select distinct ci.[name], ci.nm, ci.credit_code, ci.address, ci.telephone, ci.legal_person, ci.capital,
+        ci.[scope], ci.industry, ci.etl_dt, cai.outlet_code, cai.outlet, cai.manager_id, cai.township, cai.area,
+        cai.type
+        from pa_company_belong_info as cai
+        left join company_info as ci on ci.nm = cai.nm
+        left join pa_client_label la on ci.nm = la.client_code
+        <where>
+            (cai.type is null or cai.type != '00' and cai.type != '01' )
+            <if test="jobNumber != null and jobNumber != ''">
+                and cai.manager_id = #{jobNumber}
+            </if>
+            <if test="clientName != null and clientName !=''">
+                and ci.name like ('%'+ #{clientName}+'%')
+            </if>
+            <if test="areaCode != null and areaCode !=''">
+                and ci.area_code = #{areaCode}
+            </if>
+            <if test="labelIdList != null">
+                and la.label_id in
+                <foreach item="labelId" collection="labelIdList" open="(" separator="," close=")">
+                    #{labelId}
+                </foreach>
+            </if>
+            <if test="villageNameList != null">
+                and cai.area in
+                <foreach item="villageName" collection="villageNameList" open="(" separator="," close=")">
+                    #{villageName}
+                </foreach>
+            </if>
+            <if test="areaCodeList != null">
+                and cai.area_code in
+                <foreach item="areaCode" collection="areaCodeList" open="(" separator="," close=")">
+                    #{areaCode}
+                </foreach>
+            </if>
+            <if test="networkCodes != null">
+                and cai.outlet_code in
+                <foreach item="networkCode" collection="networkCodes" open="(" separator="," close=")">
+                    #{networkCode}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectPaCompanyInfoByFullCompanyName" resultMap="BaseResultMap">
+        <include refid="selectPaCompanyInfoVo"/>
+        where name = #{companyName}
+    </select>
+
+    <update id="updatePaCompanyInfo" parameterType="com.kx.system.domain.PaCustomInfo">
+        update pa_company_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != ''">
+                name= #{name},
+            </if>
+            <if test="creditCode != null">
+                credit_code= #{creditCode},
+            </if>
+            <if test="address != null">
+                address= #{address},
+            </if>
+            <if test="telephone != null">
+                telephone= #{telephone},
+            </if>
+            <if test="legalPerson != null ">
+                legal_person= #{legalPerson},
+            </if>
+            <if test="capital != null ">
+                capital= #{capital},
+            </if>
+            <if test="actualController != null ">
+                actual_controller= #{actualController},
+            </if>
+            <if test="scope != null ">
+                scope= #{scope},
+            </if>
+            <if test="industry != null ">
+                industry= #{industry},
+            </if>
+            <if test="scale != null ">
+                scale= #{scale},
+            </if>
+            <if test="type != null ">
+                type= #{type},
+            </if>
+            <if test="etlDt != null ">
+                etl_dt= #{etlDt},
+            </if>
+            <if test="delFlag != null ">
+                del_flag= #{delFlag},
+            </if>
+        </trim>
+        where nm = #{nm}
+    </update>
+
+    <update id="deletePaCompanyInfo" parameterType="String">
+        update pa_company_info
+        set del_flag = 1
+        where nm = #{nm}
+    </update>
+
+
+    <insert id="insertPaCompanyInfo" parameterType="com.kx.system.domain.PaCustomInfo">
+        <!--@mbg.generated-->
+        insert into pa_company_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                [name],
+            </if>
+            <if test="nm != null">
+                nm,
+            </if>
+            <if test="creditCode != null">
+                credit_code,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="telephone != null">
+                telephone,
+            </if>
+            <if test="legalPerson != null">
+                legal_person,
+            </if>
+            <if test="capital != null">
+                capital,
+            </if>
+            <if test="actualController != null">
+                actual_controller,
+            </if>
+            <if test="scope != null">
+                [scope],
+            </if>
+            <if test="industry != null">
+                industry,
+            </if>
+            <if test="scale != null">
+                [scale],
+            </if>
+            <if test="type != null">
+                [type],
+            </if>
+            <if test="etlDt != null">
+                etl_dt,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="nm != null">
+                #{nm,jdbcType=VARCHAR},
+            </if>
+            <if test="creditCode != null">
+                #{creditCode,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="telephone != null">
+                #{telephone,jdbcType=VARCHAR},
+            </if>
+            <if test="legalPerson != null">
+                #{legalPerson,jdbcType=VARCHAR},
+            </if>
+            <if test="capital != null">
+                #{capital,jdbcType=DECIMAL},
+            </if>
+            <if test="actualController != null">
+                #{actualController,jdbcType=VARCHAR},
+            </if>
+            <if test="scope != null">
+                #{scope,jdbcType=VARCHAR},
+            </if>
+            <if test="industry != null">
+                #{industry,jdbcType=VARCHAR},
+            </if>
+            <if test="scale != null">
+                #{scale,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="etlDt != null">
+                #{etlDt,jdbcType=DATE},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+
+    <update id="updatePaCompanyExtraInfo" parameterType="com.kx.system.domain.PaCustomInfo">
+        update pa_company_belong_info
+        <trim prefix="SET" suffixOverrides=",">
+            manager_id= #{managerId},
+            <if test="outlet != null">
+                outlet= #{outlet},
+            </if>
+            <if test="lon != null">
+                lon= #{lon},
+            </if>
+            <if test="lat != null">
+                lat= #{lat},
+            </if>
+            <if test="outletCode != null">
+                outlet_code= #{outletCode},
+            </if>
+            <if test="clientType != null and clientType != ''">
+                type = #{clientType},
+            </if>
+        </trim>
+        where nm = #{nm}
+    </update>
+    <update id="updatePaCompanyExtraInfoPoolTransfer" parameterType="com.kx.system.domain.PaCustomInfo">
+        update pa_company_belong_info
+        <trim prefix="SET" suffixOverrides=",">
+            manager_id= #{managerId},
+            outlet= #{outlet},
+            outlet_code= #{outletCode},
+            <if test="poolClientType != null and poolClientType != ''">
+                type= #{poolClientType},
+            </if>
+        </trim>
+        where nm = #{nm}
+    </update>
+    <update id="updatePaCompanyLonLat" parameterType="com.kx.system.domain.PaCustomInfo">
+        update pa_company_belong_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="lon != null">
+                lon= #{lon},
+            </if>
+            <if test="lat != null">
+                lat= #{lat},
+            </if>
+        </trim>
+        where nm = #{nm}
+    </update>
+
+
+    <select id="selectNewCompanyInfo" parameterType="String" resultMap="CompanyAndBelongMap">
+        select ci.[name],
+               ci.nm,
+               cai.outlet_code,
+               cai.outlet,
+               cai.area_code,
+               cai.lon,
+               cai.lat,
+               cai.del_flag,
+               cai.manager_id,
+               cai.township,
+               cai.area,
+               cai.type
+        from pa_company_info as ci
+                 left join pa_company_belong_info as cai on ci.nm = cai.nm
+        where ci.etl_dt >= #{nowDate}
+    </select>
+    <select id="selectAllCompanyInfo" resultMap="CompanyAndBelongMap">
+        select ci.[name],
+               ci.nm,
+               cai.outlet_code,
+               cai.outlet,
+               cai.area_code,
+               cai.lon,
+               cai.lat,
+               cai.del_flag,
+               cai.manager_id,
+               cai.township,
+               cai.area,
+               cai.type
+        from pa_company_info as ci
+                 left join pa_company_belong_info as cai on ci.nm = cai.nm
+        <if test="etlDt != null">
+            where ci.etl_dt = #{etlDt}
+        </if>
+    </select>
+    <select id="selectByEtlDtBetween" resultMap="BaseResultMap">
+        <include refid="selectPaCompanyInfoVo"/>
+        where
+        etl_dt between #{beginEtlDt,jdbcType=TIMESTAMP} and #{endEtlDt,jdbcType=TIMESTAMP}
+    </select>
+
+    <select id="getByCreditCode" resultMap="BaseResultMap">
+        select top 1  * from pa_company_info where credit_code = #{creditCode}
+    </select>
+
+
+</mapper>

@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.PaViewGridOverviewManagerGridMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="paViewGridOverviewManagerGridResultMap" type="com.kx.system.domain.small.PaViewGridOverview">
+        <id column="grid_overview_id" property="gridOverviewId"/>
+        <result column="manager_code" property="managerCode"/>
+        <result column="grid_code" property="gridCode"/>
+        <result column="ftp" property="ftp"/>
+        <result column="customer_type" property="customerType"/>
+        <result column="level_four_grid_num" property="levelFourGridNum"/>
+        <result column="level_five_grid_num" property="levelFiveGridNum"/>
+        <result column="customer_total_num" property="customerTotalNum"/>
+        <result column="performance_customer_num" property="performanceCustomerNum"/>
+        <result column="performance_inside_customer_num" property="performanceInsideCustomerNum"/>
+        <result column="performance_inside_customer_ratio" property="performanceInsideCustomerRatio"/>
+        <result column="performance_outside_customer_num" property="performanceOutsideCustomerNum"/>
+        <result column="performance_outside_customer_ratio" property="performanceOutsideCustomerRatio"/>
+        <result column="credit_customer_num" property="creditCustomerNum"/>
+        <result column="credit_inside_customer_num" property="creditInsideCustomerNum"/>
+        <result column="credit_inside_customer_ratio" property="creditInsideCustomerRatio"/>
+        <result column="credit_outside_customer_num" property="creditOutsideCustomerNum"/>
+        <result column="credit_outside_customer_ratio" property="creditOutsideCustomerRatio"/>
+        <result column="acquire_customer_num" property="acquireCustomerNum"/>
+        <result column="acquire_inside_customer_num" property="acquireInsideCustomerNum"/>
+        <result column="acquire_inside_customer_ratio" property="acquireInsideCustomerRatio"/>
+        <result column="acquire_outside_customer_num" property="acquireOutsideCustomerNum"/>
+        <result column="acquire_outside_customer_ratio" property="acquireOutsideCustomerRatio"/>
+        <result column="value_customer_num" property="valueCustomerNum"/>
+        <result column="value_inside_customer_num" property="valueInsideCustomerNum"/>
+        <result column="value_inside_customer_ratio" property="valueInsideCustomerRatio"/>
+        <result column="value_outside_customer_num" property="valueOutsideCustomerNum"/>
+        <result column="value_outside_customer_ratio" property="valueOutsideCustomerRatio"/>
+        <result column="record_customer_num" property="recordCustomerNum"/>
+        <result column="record_inside_customer_num" property="recordInsideCustomerNum"/>
+        <result column="record_inside_customer_ratio" property="recordInsideCustomerRatio"/>
+        <result column="record_outside_customer_num" property="recordOutsideCustomerNum"/>
+        <result column="record_outside_customer_ratio" property="recordOutsideCustomerRatio"/>
+        <result column="grid_people_num" property="gridPeopleNum"/>
+        <result column="gdp" property="gdp"/>
+        <result column="village_num" property="villageNum"/>
+        <result column="village_people_num" property="villagePeopleNum"/>
+        <result column="Industrial_park_num" property="industrialParkNum"/>
+        <result column="company_num" property="companyNum"/>
+        <result column="financial_institution_num" property="financialInstitutionNum"/>
+        <result column="business_area_num" property="businessAreaNum"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="columns">
+        grid_overview_id, manager_code, grid_code, ftp, customer_type, level_four_grid_num, level_five_grid_num, customer_total_num, performance_customer_num, performance_inside_customer_num, performance_inside_customer_ratio, performance_outside_customer_num, performance_outside_customer_ratio, credit_customer_num, credit_inside_customer_num, credit_inside_customer_ratio, credit_outside_customer_num, credit_outside_customer_ratio, acquire_customer_num, acquire_inside_customer_num, acquire_inside_customer_ratio, acquire_outside_customer_num, acquire_outside_customer_ratio, value_customer_num, value_inside_customer_num, value_inside_customer_ratio, value_outside_customer_num, value_outside_customer_ratio, record_customer_num, record_inside_customer_num, record_inside_customer_ratio, record_outside_customer_num, record_outside_customer_ratio, grid_people_num, gdp, village_num, village_people_num, Industrial_park_num, company_num, financial_institution_num, business_area_num, create_time, update_time
+    </sql>
+
+    <sql id="querySumColumns">
+        SUM(ftp) AS ftp,
+        SUM(level_four_grid_num) AS level_four_grid_num,
+        SUM(level_five_grid_num) AS level_five_grid_num,
+        SUM(customer_total_num) AS customer_total_num,
+        SUM(performance_customer_num) AS performance_customer_num,
+        SUM(performance_inside_customer_num) AS performance_inside_customer_num,
+        CASE
+            WHEN SUM(performance_customer_num) = 0 THEN 0.00
+            ELSE ROUND(1.0 * SUM(performance_inside_customer_num) * 100 / SUM(performance_customer_num), 2)
+        END AS performance_inside_customer_ratio,
+        SUM(performance_outside_customer_num) AS performance_outside_customer_num,
+        CASE
+            WHEN SUM(performance_customer_num) = 0 THEN 0.00
+            ELSE ROUND(1.0 * SUM(performance_outside_customer_num) * 100 / SUM(performance_customer_num), 2)
+        END AS performance_outside_customer_ratio,
+        SUM(credit_customer_num) AS credit_customer_num,
+        SUM(credit_inside_customer_num) AS credit_inside_customer_num,
+        CASE
+            WHEN SUM(credit_customer_num) = 0 THEN 0.00
+            ELSE ROUND(1.0 * SUM(credit_inside_customer_num) * 100 / SUM(credit_customer_num), 2)
+        END AS credit_inside_customer_ratio,
+        SUM(credit_outside_customer_num) AS credit_outside_customer_num,
+        CASE
+            WHEN SUM(credit_customer_num) = 0 THEN 0.00
+            ELSE ROUND(1.0 * SUM(credit_outside_customer_num) * 100 / SUM(credit_customer_num), 2)
+        END AS credit_outside_customer_ratio,
+        SUM(acquire_customer_num) AS acquire_customer_num,
+        SUM(acquire_inside_customer_num) AS acquire_inside_customer_num,
+        CASE
+            WHEN SUM(acquire_customer_num) = 0 THEN 0.00
+            ELSE ROUND(1.0 * SUM(acquire_inside_customer_num) * 100 / SUM(acquire_customer_num), 2)
+        END AS acquire_inside_customer_ratio,
+        SUM(acquire_outside_customer_num) AS acquire_outside_customer_num,
+        CASE
+            WHEN SUM(acquire_customer_num) = 0 THEN 0.00
+            ELSE ROUND(1.0 * SUM(acquire_outside_customer_num) * 100 / SUM(acquire_customer_num), 2)
+        END AS acquire_outside_customer_ratio,
+        SUM(value_customer_num) AS value_customer_num,
+        SUM(value_inside_customer_num) AS value_inside_customer_num,
+        CASE
+            WHEN SUM(value_customer_num) = 0 THEN 0.00
+            ELSE ROUND(1.0 * SUM(value_inside_customer_num) * 100 / SUM(value_customer_num), 2)
+        END AS value_inside_customer_ratio,
+        SUM(value_outside_customer_num) AS value_outside_customer_num,
+        CASE
+            WHEN SUM(value_customer_num) = 0 THEN 0.00
+            ELSE ROUND(1.0 * SUM(value_outside_customer_num) * 100 / SUM(value_customer_num), 2)
+        END AS value_outside_customer_ratio,
+        SUM(record_customer_num) AS record_customer_num,
+        SUM(record_inside_customer_num) AS record_inside_customer_num,
+        CASE
+            WHEN SUM(record_customer_num) = 0 THEN 0.00
+            ELSE ROUND(1.0 * SUM(record_inside_customer_num) * 100 / SUM(record_customer_num), 2)
+        END AS record_inside_customer_ratio,
+        SUM(record_outside_customer_num) AS record_outside_customer_num,
+        CASE
+            WHEN SUM(record_customer_num) = 0 THEN 0.00
+            ELSE ROUND(1.0 * SUM(record_outside_customer_num) * 100 / SUM(record_customer_num), 2)
+        END AS record_outside_customer_ratio,
+        SUM(grid_people_num) AS grid_people_num,
+        SUM(gdp) AS gdp,
+        SUM(village_num) AS village_num,
+        SUM(village_people_num) AS village_people_num,
+        SUM(Industrial_park_num) AS Industrial_park_num,
+        SUM(company_num) AS company_num,
+        SUM(financial_institution_num) AS financial_institution_num,
+        SUM(business_area_num) AS business_area_num
+    </sql>
+
+
+    <!-- 查询列表 -->
+    <select id="list" parameterType="com.kx.system.domain.small.PaViewGridOverview"
+            resultMap="paViewGridOverviewManagerGridResultMap">
+        select
+        <include refid="columns"/>
+        from pa_view_grid_overview_manager_grid
+        <where>
+            <if test=" managerCode!=null and managerCode !='' ">
+                and manager_code = #{managerCode }
+            </if>
+            <if test=" gridCode!=null and gridCode !='' ">
+                and grid_code = #{gridCode }
+            </if>
+            <if test=" ftp!=null and ftp !='' ">
+                and ftp = #{ftp }
+            </if>
+            <if test=" customerType!=null and customerType !='' ">
+                and customer_type = #{customerType }
+            </if>
+            <if test=" levelFourGridNum!=null and levelFourGridNum !='' ">
+                and level_four_grid_num = #{levelFourGridNum }
+            </if>
+            <if test=" levelFiveGridNum!=null and levelFiveGridNum !='' ">
+                and level_five_grid_num = #{levelFiveGridNum }
+            </if>
+            <if test=" customerTotalNum!=null and customerTotalNum !='' ">
+                and customer_total_num = #{customerTotalNum }
+            </if>
+            <if test=" performanceCustomerNum!=null and performanceCustomerNum !='' ">
+                and performance_customer_num = #{performanceCustomerNum }
+            </if>
+            <if test=" performanceInsideCustomerNum!=null and performanceInsideCustomerNum !='' ">
+                and performance_inside_customer_num = #{performanceInsideCustomerNum }
+            </if>
+            <if test=" performanceInsideCustomerRatio!=null and performanceInsideCustomerRatio !='' ">
+                and performance_inside_customer_ratio = #{performanceInsideCustomerRatio }
+            </if>
+            <if test=" performanceOutsideCustomerNum!=null and performanceOutsideCustomerNum !='' ">
+                and performance_outside_customer_num = #{performanceOutsideCustomerNum }
+            </if>
+            <if test=" performanceOutsideCustomerRatio!=null and performanceOutsideCustomerRatio !='' ">
+                and performance_outside_customer_ratio = #{performanceOutsideCustomerRatio }
+            </if>
+            <if test=" creditCustomerNum!=null and creditCustomerNum !='' ">
+                and credit_customer_num = #{creditCustomerNum }
+            </if>
+            <if test=" creditInsideCustomerNum!=null and creditInsideCustomerNum !='' ">
+                and credit_inside_customer_num = #{creditInsideCustomerNum }
+            </if>
+            <if test=" creditInsideCustomerRatio!=null and creditInsideCustomerRatio !='' ">
+                and credit_inside_customer_ratio = #{creditInsideCustomerRatio }
+            </if>
+            <if test=" creditOutsideCustomerNum!=null and creditOutsideCustomerNum !='' ">
+                and credit_outside_customer_num = #{creditOutsideCustomerNum }
+            </if>
+            <if test=" creditOutsideCustomerRatio!=null and creditOutsideCustomerRatio !='' ">
+                and credit_outside_customer_ratio = #{creditOutsideCustomerRatio }
+            </if>
+            <if test=" acquireCustomerNum!=null and acquireCustomerNum !='' ">
+                and acquire_customer_num = #{acquireCustomerNum }
+            </if>
+            <if test=" acquireInsideCustomerNum!=null and acquireInsideCustomerNum !='' ">
+                and acquire_inside_customer_num = #{acquireInsideCustomerNum }
+            </if>
+            <if test=" acquireInsideCustomerRatio!=null and acquireInsideCustomerRatio !='' ">
+                and acquire_inside_customer_ratio = #{acquireInsideCustomerRatio }
+            </if>
+            <if test=" acquireOutsideCustomerNum!=null and acquireOutsideCustomerNum !='' ">
+                and acquire_outside_customer_num = #{acquireOutsideCustomerNum }
+            </if>
+            <if test=" acquireOutsideCustomerRatio!=null and acquireOutsideCustomerRatio !='' ">
+                and acquire_outside_customer_ratio = #{acquireOutsideCustomerRatio }
+            </if>
+            <if test=" valueCustomerNum!=null and valueCustomerNum !='' ">
+                and value_customer_num = #{valueCustomerNum }
+            </if>
+            <if test=" valueInsideCustomerNum!=null and valueInsideCustomerNum !='' ">
+                and value_inside_customer_num = #{valueInsideCustomerNum }
+            </if>
+            <if test=" valueInsideCustomerRatio!=null and valueInsideCustomerRatio !='' ">
+                and value_inside_customer_ratio = #{valueInsideCustomerRatio }
+            </if>
+            <if test=" valueOutsideCustomerNum!=null and valueOutsideCustomerNum !='' ">
+                and value_outside_customer_num = #{valueOutsideCustomerNum }
+            </if>
+            <if test=" valueOutsideCustomerRatio!=null and valueOutsideCustomerRatio !='' ">
+                and value_outside_customer_ratio = #{valueOutsideCustomerRatio }
+            </if>
+            <if test=" recordCustomerNum!=null and recordCustomerNum !='' ">
+                and record_customer_num = #{recordCustomerNum }
+            </if>
+            <if test=" recordInsideCustomerNum!=null and recordInsideCustomerNum !='' ">
+                and record_inside_customer_num = #{recordInsideCustomerNum }
+            </if>
+            <if test=" recordInsideCustomerRatio!=null and recordInsideCustomerRatio !='' ">
+                and record_inside_customer_ratio = #{recordInsideCustomerRatio }
+            </if>
+            <if test=" recordOutsideCustomerNum!=null and recordOutsideCustomerNum !='' ">
+                and record_outside_customer_num = #{recordOutsideCustomerNum }
+            </if>
+            <if test=" recordOutsideCustomerRatio!=null and recordOutsideCustomerRatio !='' ">
+                and record_outside_customer_ratio = #{recordOutsideCustomerRatio }
+            </if>
+            <if test=" gridPeopleNum!=null and gridPeopleNum !='' ">
+                and grid_people_num = #{gridPeopleNum }
+            </if>
+            <if test=" gdp!=null and gdp !='' ">
+                and gdp = #{gdp }
+            </if>
+            <if test=" villageNum!=null and villageNum !='' ">
+                and village_num = #{villageNum }
+            </if>
+            <if test=" villagePeopleNum!=null and villagePeopleNum !='' ">
+                and village_people_num = #{villagePeopleNum }
+            </if>
+            <if test=" industrialParkNum!=null and industrialParkNum !='' ">
+                and Industrial_park_num = #{industrialParkNum }
+            </if>
+            <if test=" companyNum!=null and companyNum !='' ">
+                and company_num = #{companyNum }
+            </if>
+            <if test=" financialInstitutionNum!=null and financialInstitutionNum !='' ">
+                and financial_institution_num = #{financialInstitutionNum }
+            </if>
+            <if test=" businessAreaNum!=null and businessAreaNum !='' ">
+                and business_area_num = #{businessAreaNum }
+            </if>
+            <if test=" createTime!=null and createTime !='' ">
+                and create_time = #{createTime }
+            </if>
+            <if test=" updateTime!=null and updateTime !='' ">
+                and update_time = #{updateTime }
+            </if>
+        </where>
+    </select>
+
+    <!-- 根据id查询 -->
+    <select id="getById" resultMap="paViewGridOverviewManagerGridResultMap">
+        select
+        <include refid="columns"/>
+        from pa_view_grid_overview_manager_grid where grid_overview_id = #{id}
+    </select>
+
+    <!-- 根据id删除 -->
+    <delete id="deleteById">
+        delete from  pa_view_grid_overview_manager_grid where  grid_overview_id= #{id}
+    </delete>
+    <delete id="truncate">
+        truncate table pa_view_grid_overview_manager_grid
+    </delete>
+
+    <!-- 新增 -->
+    <insert id="insertPaViewGridOverviewManagerGrid" parameterType="com.kx.system.domain.small.PaViewGridOverview"
+            keyProperty="id" useGeneratedKeys="true">
+        insert into pa_view_grid_overview_manager_grid(
+            manager_code,grid_code,ftp,customer_type,level_four_grid_num,level_five_grid_num,customer_total_num,performance_customer_num,performance_inside_customer_num,performance_inside_customer_ratio,performance_outside_customer_num,performance_outside_customer_ratio,credit_customer_num,credit_inside_customer_num,credit_inside_customer_ratio,credit_outside_customer_num,credit_outside_customer_ratio,acquire_customer_num,acquire_inside_customer_num,acquire_inside_customer_ratio,acquire_outside_customer_num,acquire_outside_customer_ratio,value_customer_num,value_inside_customer_num,value_inside_customer_ratio,value_outside_customer_num,value_outside_customer_ratio,record_customer_num,record_inside_customer_num,record_inside_customer_ratio,record_outside_customer_num,record_outside_customer_ratio,grid_people_num,gdp,village_num,village_people_num,Industrial_park_num,company_num,financial_institution_num,business_area_num,create_time,update_time,
+        )values(
+             #{managerCode}, #{gridCode}, #{ftp}, #{customerType}, #{levelFourGridNum}, #{levelFiveGridNum}, #{customerTotalNum}, #{performanceCustomerNum}, #{performanceInsideCustomerNum}, #{performanceInsideCustomerRatio}, #{performanceOutsideCustomerNum}, #{performanceOutsideCustomerRatio}, #{creditCustomerNum}, #{creditInsideCustomerNum}, #{creditInsideCustomerRatio}, #{creditOutsideCustomerNum}, #{creditOutsideCustomerRatio}, #{acquireCustomerNum}, #{acquireInsideCustomerNum}, #{acquireInsideCustomerRatio}, #{acquireOutsideCustomerNum}, #{acquireOutsideCustomerRatio}, #{valueCustomerNum}, #{valueInsideCustomerNum}, #{valueInsideCustomerRatio}, #{valueOutsideCustomerNum}, #{valueOutsideCustomerRatio}, #{recordCustomerNum}, #{recordInsideCustomerNum}, #{recordInsideCustomerRatio}, #{recordOutsideCustomerNum}, #{recordOutsideCustomerRatio}, #{gridPeopleNum}, #{gdp}, #{villageNum}, #{villagePeopleNum}, #{industrialParkNum}, #{companyNum}, #{financialInstitutionNum}, #{businessAreaNum}, #{createTime}, #{updateTime},
+        )
+    </insert>
+    <insert id="batchInsert">
+        insert into pa_view_grid_overview_manager_grid(
+        manager_code,grid_code,ftp,customer_type,level_four_grid_num,level_five_grid_num,customer_total_num,performance_customer_num,performance_inside_customer_num,performance_inside_customer_ratio,performance_outside_customer_num,performance_outside_customer_ratio,credit_customer_num,credit_inside_customer_num,credit_inside_customer_ratio,credit_outside_customer_num,credit_outside_customer_ratio,acquire_customer_num,acquire_inside_customer_num,acquire_inside_customer_ratio,acquire_outside_customer_num,acquire_outside_customer_ratio,value_customer_num,value_inside_customer_num,value_inside_customer_ratio,value_outside_customer_num,value_outside_customer_ratio,record_customer_num,record_inside_customer_num,record_inside_customer_ratio,record_outside_customer_num,record_outside_customer_ratio,grid_people_num,gdp,village_num,village_people_num,Industrial_park_num,company_num,financial_institution_num,business_area_num,create_time,update_time
+        ) values
+        <foreach collection="paViewGridOverviews" item="c" separator=",">
+            (
+            #{c.managerCode}, #{c.gridCode}, #{c.ftp}, #{c.customerType}, #{c.levelFourGridNum}, #{c.levelFiveGridNum},
+            #{c.customerTotalNum}, #{c.performanceCustomerNum}, #{c.performanceInsideCustomerNum},
+            #{c.performanceInsideCustomerRatio}, #{c.performanceOutsideCustomerNum},
+            #{c.performanceOutsideCustomerRatio}, #{c.creditCustomerNum}, #{c.creditInsideCustomerNum},
+            #{c.creditInsideCustomerRatio}, #{c.creditOutsideCustomerNum}, #{c.creditOutsideCustomerRatio},
+            #{c.acquireCustomerNum}, #{c.acquireInsideCustomerNum}, #{c.acquireInsideCustomerRatio},
+            #{c.acquireOutsideCustomerNum}, #{c.acquireOutsideCustomerRatio}, #{c.valueCustomerNum},
+            #{c.valueInsideCustomerNum}, #{c.valueInsideCustomerRatio}, #{c.valueOutsideCustomerNum},
+            #{c.valueOutsideCustomerRatio}, #{c.recordCustomerNum}, #{c.recordInsideCustomerNum},
+            #{c.recordInsideCustomerRatio}, #{c.recordOutsideCustomerNum}, #{c.recordOutsideCustomerRatio},
+            #{c.gridPeopleNum}, #{c.gdp}, #{c.villageNum}, #{c.villagePeopleNum}, #{c.industrialParkNum},
+            #{c.companyNum}, #{c.financialInstitutionNum}, #{c.businessAreaNum}, now(), now()
+            )
+        </foreach>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="updatePaViewGridOverviewManagerGrid" parameterType="com.kx.system.domain.small.PaViewGridOverview">
+        update pa_view_grid_overview_manager_grid
+        <trim prefix="SET" suffixOverrides=",">
+            <if test=" managerCode!=null and managerCode !='' ">
+                manager_code = #{managerCode } ,
+            </if>
+            <if test=" gridCode!=null and gridCode !='' ">
+                grid_code = #{gridCode } ,
+            </if>
+            <if test=" ftp!=null and ftp !='' ">
+                ftp = #{ftp } ,
+            </if>
+            <if test=" customerType!=null and customerType !='' ">
+                customer_type = #{customerType } ,
+            </if>
+            <if test=" levelFourGridNum!=null and levelFourGridNum !='' ">
+                level_four_grid_num = #{levelFourGridNum } ,
+            </if>
+            <if test=" levelFiveGridNum!=null and levelFiveGridNum !='' ">
+                level_five_grid_num = #{levelFiveGridNum } ,
+            </if>
+            <if test=" customerTotalNum!=null and customerTotalNum !='' ">
+                customer_total_num = #{customerTotalNum } ,
+            </if>
+            <if test=" performanceCustomerNum!=null and performanceCustomerNum !='' ">
+                performance_customer_num = #{performanceCustomerNum } ,
+            </if>
+            <if test=" performanceInsideCustomerNum!=null and performanceInsideCustomerNum !='' ">
+                performance_inside_customer_num = #{performanceInsideCustomerNum } ,
+            </if>
+            <if test=" performanceInsideCustomerRatio!=null and performanceInsideCustomerRatio !='' ">
+                performance_inside_customer_ratio = #{performanceInsideCustomerRatio } ,
+            </if>
+            <if test=" performanceOutsideCustomerNum!=null and performanceOutsideCustomerNum !='' ">
+                performance_outside_customer_num = #{performanceOutsideCustomerNum } ,
+            </if>
+            <if test=" performanceOutsideCustomerRatio!=null and performanceOutsideCustomerRatio !='' ">
+                performance_outside_customer_ratio = #{performanceOutsideCustomerRatio } ,
+            </if>
+            <if test=" creditCustomerNum!=null and creditCustomerNum !='' ">
+                credit_customer_num = #{creditCustomerNum },
+            </if>
+            <if test=" creditInsideCustomerNum!=null and creditInsideCustomerNum !='' ">
+                credit_inside_customer_num = #{creditInsideCustomerNum } ,
+            </if>
+            <if test=" creditInsideCustomerRatio!=null and creditInsideCustomerRatio !='' ">
+                credit_inside_customer_ratio= #{creditInsideCustomerRatio } ,
+            </if>
+            <if test=" creditOutsideCustomerNum!=null and creditOutsideCustomerNum !='' ">
+                credit_outside_customer_num = #{creditOutsideCustomerNum } ,
+            </if>
+            <if test=" creditOutsideCustomerRatio!=null and creditOutsideCustomerRatio !='' ">
+                credit_outside_customer_ratio = #{creditOutsideCustomerRatio } ,
+            </if>
+            <if test=" acquireCustomerNum!=null and acquireCustomerNum !='' ">
+                acquire_customer_num = #{acquireCustomerNum } ,
+            </if>
+            <if test=" acquireInsideCustomerNum!=null and acquireInsideCustomerNum !='' ">
+                acquire_inside_customer_num = #{acquireInsideCustomerNum } ,
+            </if>
+            <if test=" acquireInsideCustomerRatio!=null and acquireInsideCustomerRatio !='' ">
+                acquire_inside_customer_ratio = #{acquireInsideCustomerRatio } ,
+            </if>
+            <if test=" acquireOutsideCustomerNum!=null and acquireOutsideCustomerNum !='' ">
+                acquire_outside_customer_num= #{acquireOutsideCustomerNum } ,
+            </if>
+            <if test=" acquireOutsideCustomerRatio!=null and acquireOutsideCustomerRatio !='' ">
+                acquire_outside_customer_ratio = #{acquireOutsideCustomerRatio } ,
+            </if>
+            <if test=" valueCustomerNum!=null and valueCustomerNum !='' ">
+                value_customer_num = #{valueCustomerNum } ,
+            </if>
+            <if test=" valueInsideCustomerNum!=null and valueInsideCustomerNum !='' ">
+                value_inside_customer_num = #{valueInsideCustomerNum } ,
+            </if>
+            <if test=" valueInsideCustomerRatio!=null and valueInsideCustomerRatio !='' ">
+                value_inside_customer_ratio = #{valueInsideCustomerRatio } ,
+            </if>
+            <if test=" valueOutsideCustomerNum!=null and valueOutsideCustomerNum !='' ">
+                value_outside_customer_num =#{valueOutsideCustomerNum } ,
+            </if>
+            <if test=" valueOutsideCustomerRatio!=null and valueOutsideCustomerRatio !='' ">
+                value_outside_customer_ratio = #{valueOutsideCustomerRatio } ,
+            </if>
+            <if test=" recordCustomerNum!=null and recordCustomerNum !='' ">
+                record_customer_num = #{recordCustomerNum } ,
+            </if>
+            <if test=" recordInsideCustomerNum!=null and recordInsideCustomerNum !='' ">
+                record_inside_customer_num =#{recordInsideCustomerNum } ,
+            </if>
+            <if test=" recordInsideCustomerRatio!=null and recordInsideCustomerRatio !='' ">
+                record_inside_customer_ratio = #{recordInsideCustomerRatio } ,
+            </if>
+            <if test=" recordOutsideCustomerNum!=null and recordOutsideCustomerNum !='' ">
+                record_outside_customer_num = #{recordOutsideCustomerNum } ,
+            </if>
+            <if test=" recordOutsideCustomerRatio!=null and recordOutsideCustomerRatio !='' ">
+                record_outside_customer_ratio = #{recordOutsideCustomerRatio } ,
+            </if>
+            <if test=" gridPeopleNum!=null and gridPeopleNum !='' ">
+                grid_people_num = #{gridPeopleNum } ,
+            </if>
+            <if test=" gdp!=null and gdp !='' ">
+                gdp = #{gdp } ,
+            </if>
+            <if test=" villageNum!=null and villageNum !='' ">
+                village_num = #{villageNum } ,
+            </if>
+            <if test=" villagePeopleNum!=null and villagePeopleNum !='' ">
+                village_people_num = #{villagePeopleNum } ,
+            </if>
+            <if test=" industrialParkNum!=null and industrialParkNum !='' ">
+                Industrial_park_num = #{industrialParkNum } ,
+            </if>
+            <if test=" companyNum!=null and companyNum !='' ">
+                company_num = #{companyNum } ,
+            </if>
+            <if test=" financialInstitutionNum!=null and financialInstitutionNum !='' ">
+                financial_institution_num = #{financialInstitutionNum } ,
+            </if>
+            <if test=" businessAreaNum!=null and businessAreaNum !='' ">
+                business_area_num = #{businessAreaNum } ,
+            </if>
+            <if test=" createTime!=null and createTime !='' ">
+                create_time = #{createTime } ,
+            </if>
+            <if test=" updateTime!=null and updateTime !='' ">
+                update_time = #{updateTime } ,
+            </if>
+        </trim>
+        where manager_code = #{managerCode } and grid_code = #{gridCode }
+    </update>
+
+
+    <select id="getByQuery" parameterType="com.kx.system.domain.param.PaViewSmallParam"
+            resultMap="paViewGridOverviewManagerGridResultMap">
+        select
+        <include refid="querySumColumns"/>
+        from pa_view_grid_overview_manager_grid
+        where customer_type = '1' and grid_code in
+        <foreach collection="gridCodes" item="g" open="(" close=")" separator=",">
+            #{g}
+        </foreach>
+    </select>
+
+
+</mapper>

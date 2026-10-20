@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.FilingImportRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="filingImportRecordResultMap" type="com.kx.system.domain.filing.FilingImportRecord">
+        <id column="id" property="id" />
+        <result column="import_status" property="importStatus" />
+        <result column="import_num" property="importNum" />
+        <result column="user_name" property="userName" />
+        <result column="user_id" property="userId" />
+        <result column="fail_reason" property="failReason" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="columns">
+        id, import_status, import_num, user_name, user_id, fail_reason, create_time
+    </sql>
+
+    <!-- 查询列表 -->
+    <select id="list" parameterType="com.kx.system.domain.filing.FilingImportRecord" resultMap="filingImportRecordResultMap">
+        select  id, import_status, import_num, record.user_name, record.user_id, fail_reason, record.create_time
+        from filing_import_record record left join sys_user u on record.user_id=u.user_id
+        <where>
+            ${params.dataScope}
+            <if test=" importStatus!=null and importStatus !='' "> and import_status = #{importStatus } </if>
+            <if test=" importNum!=null and importNum !='' "> and import_num = #{importNum } </if>
+            <if test=" userName!=null and userName !='' "> and record.user_name = #{userName } </if>
+            <if test=" userId!=null and userId !='' "> and record.user_id = #{userId } </if>
+            <if test=" failReason!=null and failReason !='' "> and fail_reason = #{failReason } </if>
+            <if test=" createTime!=null and createTime !='' "> and record.create_time = #{createTime } </if>
+        </where>
+        order by record.create_time Desc
+    </select>
+
+    <!-- 根据id查询 -->
+    <select id="getById"  resultMap="filingImportRecordResultMap">
+        select <include refid="columns"/>  from filing_import_record where id = #{id}
+    </select>
+
+    <!-- 根据id删除 -->
+    <delete id="deleteById">
+        delete from  filing_import_record where  id= #{id}
+    </delete>
+
+    <!-- 新增 -->
+    <insert id="insertFilingImportRecord" parameterType="com.kx.system.domain.filing.FilingImportRecord" keyProperty="id" useGeneratedKeys="true">
+        insert into filing_import_record(
+            import_status,import_num,user_name,user_id,fail_reason,create_time
+        )values(
+             #{importStatus}, #{importNum}, #{userName}, #{userId}, #{failReason}, #{createTime}
+        )
+    </insert>
+
+    <!-- 更新 -->
+    <update id="updateFilingImportRecord" parameterType="com.kx.system.domain.filing.FilingImportRecord">
+        update filing_import_record
+    <trim prefix="SET" suffixOverrides=",">
+        <if test=" importStatus!=null and importStatus !='' ">  import_status = #{importStatus } ,</if>
+        <if test=" importNum!=null and importNum !='' ">  import_num = #{importNum } ,</if>
+        <if test=" userName!=null and userName !='' ">  user_name = #{userName } ,</if>
+        <if test=" userId!=null and userId !='' ">  user_id = #{userId } ,</if>
+        <if test=" failReason!=null and failReason !='' ">  fail_reason = #{failReason } ,</if>
+        <if test=" createTime!=null and createTime !='' ">  create_time = #{createTime } </if>
+    </trim>
+     where id = #{id}
+    </update>
+
+</mapper>

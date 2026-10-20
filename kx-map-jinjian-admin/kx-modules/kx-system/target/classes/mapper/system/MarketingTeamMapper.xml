@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.MarketingTeamMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="MarketingTeamResultMap" type="com.kx.system.domain.dto.MarketingTeamDto">
+        <result column="mkt_team_id" property="mktTeamId" />
+        <result column="mkt_team_name" property="mktTeamName" />
+        <result column="org_id" property="orgId" />
+        <result column="org_name" property="orgName" />
+        <result column="deptfirst" property="deptfirst" />
+        <result column="deptsecond" property="deptsecond" />
+        <result column="lead_telephone" property="leadTelephone" />
+        <result column="team_leader" property="teamLeader" />
+        <result column="team_leader_id" property="teamLeaderId" />
+        <result column="team_num" property="teamNum" />
+    </resultMap>
+
+    <select id="selectMarketingTeamPageList" resultMap="MarketingTeamResultMap">
+        select a.mkt_team_id, a.mkt_team_name,a.org_id,a.org_name,a.deptfirst,a.deptsecond,a.lead_telephone,a.team_leader,a.team_leader_id,b.num as team_num from F_OCRM_F_CM_MKT_TEAM a
+        left join
+        (select mkt_team_id ,count(1) as num from F_OCRM_F_CM_TEAM_CUST_MANAGER group by mkt_team_id ) b
+        on a.mkt_team_id = b.mkt_team_id
+        <where>
+            <if test="mktTeamName != null and mktTeamName != ''">
+                and mkt_team_name like concat('%',#{mktTeamName},'%')
+            </if>
+            <if test="teamUserId != null and teamUserId != ''">
+                and a.mkt_team_id in
+                (select mkt_team_id from F_OCRM_F_CM_TEAM_CUST_MANAGER where user_id like  concat('%',#{teamUserId},'%') )
+            </if>
+        </where>
+
+
+          order by mkt_team_id desc
+    </select>
+
+
+</mapper>

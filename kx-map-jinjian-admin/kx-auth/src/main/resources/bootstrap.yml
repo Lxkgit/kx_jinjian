@@ -1,0 +1,29 @@
+# Tomcat
+server:
+  port: 9200
+
+# Spring
+spring:
+  application:
+    # 应用名称
+    name: kangxu-auth-jinjian-dev
+  profiles:
+    # 环境配置
+    active: @profileActive@
+  cloud:
+    nacos:
+      discovery:
+        # 服务注册地址
+          server-addr: @nacosUrl@
+          namespace: @namespace@
+      config:
+        # 配置中心地址
+        server-addr: @nacosUrl@
+        # 热加载
+        refresh-enabled: true
+        # 配置文件格式
+        file-extension: yml
+        # 共享配置
+        shared-configs:
+          - @applicationFile@
+        namespace: @namespace@

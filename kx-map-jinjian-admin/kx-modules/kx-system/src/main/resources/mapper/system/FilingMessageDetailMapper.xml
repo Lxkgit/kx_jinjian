@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.FilingMessageDetailMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="filingMessageDetailResultMap" type="com.kx.system.domain.filing.FilingMessageDetail">
+        <id column="id" property="id" />
+        <result column="model_id" property="modelId" />
+        <result column="json_message" property="jsonMessage" />
+        <result column="json_finish" property="jsonFinish" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+        <result column="filing_id" property="filingId" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="columns">
+        id, model_id, json_message, update_time, create_time, filing_id,json_finish
+    </sql>
+
+    <!-- 查询列表 -->
+    <select id="list" parameterType="com.kx.system.domain.filing.FilingMessageDetail" resultMap="filingMessageDetailResultMap">
+        select <include refid="columns"/>  from filing_message_detail
+        <where>
+            <if test=" modelId!=null and modelId !='' "> and model_id = #{modelId } </if>
+            <if test=" filingId!=null and filingId !='' "> and filing_id = #{filingId} </if>
+            <if test=" jsonFinish!=null and jsonFinish !='' "> and json_finish = #{jsonFinish} </if>
+            <if test=" jsonMessage!=null and jsonMessage !='' "> and json_message = #{jsonMessage } </if>
+            <if test=" updateTime!=null and updateTime !='' "> and update_time = #{updateTime } </if>
+            <if test=" createTime!=null and createTime !='' "> and create_time = #{createTime } </if>
+        </where>
+    </select>
+
+    <!-- 根据id查询 -->
+    <select id="getById"  resultMap="filingMessageDetailResultMap">
+        select <include refid="columns"/>  from filing_message_detail where id = #{id}
+    </select>
+
+    <!-- 根据id删除 -->
+    <delete id="deleteById">
+        delete from  filing_message_detail where  id= #{id}
+    </delete>
+
+    <delete id="deleteByFilingId">
+        delete from  filing_message_detail where  filing_id = #{id}
+    </delete>
+
+
+    <!-- 新增 -->
+    <insert id="insertFilingMessageDetail" parameterType="com.kx.system.domain.filing.FilingMessageDetail" keyProperty="id" useGeneratedKeys="true">
+        insert into filing_message_detail(
+            model_id,json_message,update_time,create_time,filing_id,json_finish
+        )values(
+             #{modelId}, #{jsonMessage}, now(), now(),#{filingId},#{jsonFinish}
+        )
+    </insert>
+
+    <!-- 更新 -->
+    <update id="updateFilingMessageDetail" parameterType="com.kx.system.domain.filing.FilingMessageDetail">
+        update filing_message_detail
+    <trim prefix="SET" suffixOverrides=",">
+        update_time = now() ,
+        <if test=" modelId!=null and modelId !='' ">  model_id = #{modelId } ,</if>
+        <if test=" jsonMessage!=null and jsonMessage !='' ">  json_message = #{jsonMessage } ,</if>
+        <if test=" jsonFinish!=null and jsonFinish !='' ">  json_finish = #{jsonFinish} ,</if>
+        <if test=" filingId!=null and filingId !='' ">  filing_id = #{filingId} </if>
+    </trim>
+     where id = #{id}
+    </update>
+
+
+    <select id="listByMap"  resultType="java.lang.String" >
+        select JSON_UNQUOTE(json_message) as json_message from filing_message_detail
+        <where>
+            <if test=" modelId!=null and modelId !='' "> and model_id = #{modelId } </if>
+            <if test=" filingId!=null and filingId !='' "> and filing_id = #{filingId} </if>
+            <foreach collection="maps" index="key" item="item">
+                <if test="maps[key]  != null and maps[key]  != ''">
+                    and JSON_EXTRACT(json_message, CONCAT('$.', "${key}")) like CONCAT('%' ,#{maps[${key}]},'%')
+                </if>
+            </foreach>
+        </where>
+    </select>
+
+    <select id="getByIdentityAndModelId"  resultMap="filingMessageDetailResultMap">
+        select <include refid="columns"/>  from filing_message_detail where
+         model_id = #{modelId}
+        and filing_id = #{filingId}
+    </select>
+
+    <select id="getByModelIdAndFilingId"  resultMap="filingMessageDetailResultMap">
+        select <include refid="columns"/>  from filing_message_detail where
+        model_id = #{modelId}
+        and filing_id = #{filingId}
+    </select>
+
+
+
+    <insert id="batchInsert" parameterType="com.kx.system.domain.filing.FilingMessageDetail" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO filing_message_detail (filing_id, model_id, json_message, update_time, create_time,json_finish)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.filingId}, #{item.modelId}, #{item.jsonMessage}, #{item.updateTime}, #{item.createTime},#{item.jsonFinish})
+        </foreach>
+    </insert>
+
+
+</mapper>

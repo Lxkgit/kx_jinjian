@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.PaChangeLogMapper">
+
+    <resultMap id="BaseResultMap" type="com.kx.system.domain.PaChangeLog">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="subject" column="subject" jdbcType="VARCHAR"/>
+        <result property="operateType" column="operate_type" jdbcType="VARCHAR"/>
+        <result property="logType" column="log_type" jdbcType="VARCHAR"/>
+        <result property="configBefore" column="config_before" jdbcType="VARCHAR"/>
+        <result property="configUpdate" column="config_update" jdbcType="VARCHAR"/>
+        <result property="logContent" column="log_content" jdbcType="VARCHAR"/>
+        <result property="operatorId" column="operator_id" jdbcType="BIGINT"/>
+        <result property="operatorName" column="operator_name" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        p.id,
+        p.subject,
+        p.operate_type,
+        p.log_type,
+        p.log_content,
+        p.operator_id,
+        p.operator_name,
+        p.create_time
+    </sql>
+
+    <sql id="Anchor_Column_List">
+        p.id,
+        p.subject,
+        p.operate_type,
+        p.log_type,
+        p.config_before,
+        p.config_update,
+        p.log_content,
+        p.operator_id,
+        p.operator_name,
+        p.create_time
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from pa_change_log p
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <sql id="selectPachangLogSubSql">
+        select
+        <include refid="Base_Column_List"/>
+        ,u.manager_num
+        from pa_change_log p
+        left join sys_user u on u.user_id = p.operator_id
+        <where>
+            ${params.dataScope}
+            <if test="logType != null and logType != ''">
+                and log_type = #{logType}
+            </if>
+            <if test="operatorName != null and operatorName != ''">
+                and operator_name like concat('%', #{operatorName}, '%')
+            </if>
+            <if test="startTime != null">
+                and p.create_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                and p.create_time &lt;= #{endTime}
+            </if>
+        </where>
+        order by p.create_time desc
+    </sql>
+
+    <select id="selectPaChangeLogList" resultType="com.kx.system.domain.PaChangeLog">
+        <include refid="selectPachangLogSubSql"/>
+    </select>
+
+    <select id="selectPaChangeLogExportList" resultType="com.kx.system.domain.PaChangeLog">
+        <include refid="selectPachangLogSubSql"/>
+        limit #{start},#{limit}
+    </select>
+
+    <sql id="selectAnchorChangeLogSql">
+        select
+        <include refid="Anchor_Column_List"/>
+        from pa_change_log p
+        left join sys_user u on u.user_id = p.operator_id
+        <where>
+            log_type = '2'
+            ${params.dataScope}
+            <if test="anchorName != null and anchorName != ''">
+                and "subject" like concat('%',#{anchorName},'%')
+            </if>
+            <if test="oldAddressTypeCodes != null and oldAddressTypeCodes != ''">
+                and config_before like concat('%',#{oldAddressTypeCodes},'%')
+            </if>
+            <if test="newAddressTypeCodes != null and newAddressTypeCodes != ''">
+                and config_update like concat('%',#{newAddressTypeCodes},'%')
+            </if>
+            <if test="operatorName != null and operatorName != ''">
+                and operator_name like concat('%',#{operatorName},'%')
+            </if>
+        </where>
+        order by p.create_time desc
+    </sql>
+
+    <select id="selectAnchorChangeLog" resultMap="BaseResultMap">
+        <include refid="selectAnchorChangeLogSql"/>
+    </select>
+    <select id="selectAnchorChangeLogExportList" resultType="com.kx.system.domain.PaChangeLog">
+        <include refid="selectAnchorChangeLogSql"/>
+        limit #{start},#{limit}
+    </select>
+    <select id="selectYesterdayLog" resultType="com.kx.system.domain.PaChangeLog">
+        select log_type,operate_type,config_before,config_update from pa_change_log where log_type = 0
+        and DATE_FORMAT(create_time,'%Y-%m-%d') = DATE_FORMAT(#{date},'%Y-%m-%d')
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete
+        from pa_change_log
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.kx.system.domain.PaChangeLog"
+            useGeneratedKeys="true">
+        insert into pa_change_log
+        ( subject, operate_type, log_type
+        , config_before, config_update, log_content
+        , operator_id, operator_name, create_time)
+        values ( #{subject,jdbcType=VARCHAR}, #{operateType,jdbcType=VARCHAR}
+               , #{logType,jdbcType=VARCHAR}
+               , #{configBefore,jdbcType=LONGVARCHAR}, #{configUpdate,jdbcType=LONGVARCHAR}, #{logContent,jdbcType=VARCHAR}
+               , #{operatorId,jdbcType=BIGINT}, #{operatorName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.kx.system.domain.PaChangeLog"
+            useGeneratedKeys="true">
+        insert into pa_change_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="subject != null">subject,</if>
+            <if test="operateType != null">operate_type,</if>
+            <if test="logType != null">log_type,</if>
+            <if test="configBefore != null">config_before,</if>
+            <if test="configUpdate != null">config_update,</if>
+            <if test="logContent != null">log_content,</if>
+            <if test="operatorId != null">operator_id,</if>
+            <if test="operatorName != null">operator_name,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id,jdbcType=BIGINT},</if>
+            <if test="subject != null">#{subject,jdbcType=VARCHAR},</if>
+            <if test="operateType != null">#{operateType,jdbcType=VARCHAR},</if>
+            <if test="logType != null">#{logType,jdbcType=VARCHAR},</if>
+            <if test="configBefore != null">#{configBefore,jdbcType=VARCHAR},</if>
+            <if test="configUpdate != null">#{configUpdate,jdbcType=VARCHAR},</if>
+            <if test="logContent != null">#{logContent,jdbcType=VARCHAR},</if>
+            <if test="operatorId != null">#{operatorId,jdbcType=BIGINT},</if>
+            <if test="operatorName != null">#{operatorName,jdbcType=VARCHAR},</if>
+            <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.kx.system.domain.PaChangeLog">
+        update pa_change_log
+        <set>
+            <if test="subject != null">
+                subject = #{subject,jdbcType=VARCHAR},
+            </if>
+            <if test="operateType != null">
+                operate_type = #{operateType,jdbcType=VARCHAR},
+            </if>
+            <if test="logType != null">
+                log_type = #{logType,jdbcType=VARCHAR},
+            </if>
+            <if test="configBefore != null">
+                config_before = #{configBefore,jdbcType=VARCHAR},
+            </if>
+            <if test="configUpdate != null">
+                config_update = #{configUpdate,jdbcType=VARCHAR},
+            </if>
+            <if test="logContent != null">
+                log_content = #{logContent,jdbcType=VARCHAR},
+            </if>
+            <if test="operatorId != null">
+                operator_id = #{operatorId,jdbcType=BIGINT},
+            </if>
+            <if test="operatorName != null">
+                operator_name = #{operatorName,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.kx.system.domain.PaChangeLog">
+        update pa_change_log
+        set subject       = #{subject,jdbcType=VARCHAR},
+            operate_type  = #{operateType,jdbcType=VARCHAR},
+            log_type      = #{logType,jdbcType=VARCHAR},
+            config_before = #{configBefore,jdbcType=VARCHAR},
+            config_update = #{configUpdate,jdbcType=VARCHAR},
+            log_content   = #{logContent,jdbcType=VARCHAR},
+            operator_id   = #{operatorId,jdbcType=BIGINT},
+            operator_name = #{operatorName,jdbcType=VARCHAR},
+            create_time   = #{createTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.GridCruxInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="gridCruxInfoResultMap" type="com.kx.system.domain.grid.GridCruxInfo">
+        <id column="id" property="id" />
+        <result column="grid_message_id" property="gridMessageId" />
+        <result column="grid_code" property="gridCode" />
+        <result column="crux_name" property="cruxName" />
+        <result column="crux_sex" property="cruxSex" />
+        <result column="crux_phone" property="cruxPhone" />
+        <result column="crux_address" property="cruxAddress" />
+        <result column="crux_work" property="cruxWork" />
+        <result column="crux_identity" property="cruxIdentity" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="network_name" property="networkName" />
+        <result column="network_code" property="networkCode" />
+        <result column="network_address" property="networkAddress" />
+        <result column="bank_agency_name" property="bankAgencyName" />
+        <result column="bank_agency_code" property="bankAgencyCode" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="columns">
+        id, grid_message_id, grid_code, crux_name, crux_sex, crux_phone, crux_address, crux_work, crux_identity, create_time, update_time,network_name,network_code,network_address,bank_agency_name,bank_agency_code
+    </sql>
+
+    <!-- 查询列表 -->
+<!--    <select id="list" parameterType="com.kx.system.domain.grid.GridCruxInfo" resultMap="gridCruxInfoResultMap">-->
+<!--        select <include refid="columns"/>  from grid_crux_info-->
+<!--        <where>-->
+<!--            <if test=" gridMessageId!=null and gridMessageId !='' "> and grid_message_id = #{gridMessageId } </if>-->
+<!--            <if test=" gridCode!=null and gridCode !='' "> and grid_code = #{gridCode } </if>-->
+<!--            <if test=" cruxName!=null and cruxName !='' "> and crux_name = #{cruxName } </if>-->
+<!--            <if test=" cruxSex!=null and cruxSex !='' "> and crux_sex = #{cruxSex } </if>-->
+<!--            <if test=" cruxPhone!=null and cruxPhone !='' "> and crux_phone = #{cruxPhone } </if>-->
+<!--            <if test=" cruxAddress!=null and cruxAddress !='' "> and crux_address = #{cruxAddress } </if>-->
+<!--            <if test=" cruxWork!=null and cruxWork !='' "> and crux_work = #{cruxWork } </if>-->
+<!--            <if test=" cruxIdentity!=null and cruxIdentity !='' "> and crux_identity = #{cruxIdentity } </if>-->
+<!--            <if test=" createTime!=null"> and create_time = #{createTime } </if>-->
+<!--            <if test=" updateTime!=null "> and update_time = #{updateTime} </if>-->
+<!--        </where>-->
+<!--    </select>-->
+
+    <select id="list" parameterType="com.kx.system.domain.grid.GridCruxInfo" resultMap="gridCruxInfoResultMap">
+        select
+            p.customer_name as network_name,
+            p.customer_address as network_address,
+            p.bank_agency_name,
+            a.duty_phone,
+            a.duty_name
+        from performance_customer_info p
+        left join anchor_point a on p.customer_name = a.anchor_name
+        where customer_name not in (
+            select
+                case when  duty_network_name is null then ''
+                else duty_network_name end
+            from grid_message_info where grid_code = #{gridCode}
+        ) and belong_grid_code = #{gridCode}
+    </select>
+
+
+    <!-- 根据id查询 -->
+    <select id="getById"  resultMap="gridCruxInfoResultMap">
+        select <include refid="columns"/>  from grid_crux_info where id = #{id}
+    </select>
+
+    <!-- 根据id删除 -->
+    <delete id="deleteById">
+        delete from  grid_crux_info where  id= #{id}
+    </delete>
+
+    <!-- 新增 -->
+    <insert id="insertGridCruxInfo" parameterType="com.kx.system.domain.grid.GridCruxInfo" keyProperty="id" useGeneratedKeys="true">
+        insert into grid_crux_info(
+            grid_message_id,grid_code,crux_name,crux_sex,crux_phone,crux_address,crux_work,crux_identity,create_time,update_time
+        )values(
+             #{gridMessageId}, #{gridCode}, #{cruxName}, #{cruxSex}, #{cruxPhone}, #{cruxAddress}, #{cruxWork}, #{cruxIdentity}, #{createTime}, #{updateTime}
+        )
+    </insert>
+
+    <!-- 更新 -->
+    <update id="updateGridCruxInfo" parameterType="com.kx.system.domain.grid.GridCruxInfo">
+        update grid_crux_info
+    <trim prefix="SET" suffixOverrides=",">
+        <if test=" gridMessageId!=null and gridMessageId !='' ">  grid_message_id = #{gridMessageId } ,</if>
+        <if test=" gridCode!=null and gridCode !='' ">  grid_code = #{gridCode } ,</if>
+        <if test=" cruxName!=null and cruxName !='' ">  crux_name = #{cruxName } ,</if>
+        <if test=" cruxSex!=null and cruxSex !='' ">  crux_sex = #{cruxSex } ,</if>
+        <if test=" cruxPhone!=null and cruxPhone !='' ">  crux_phone = #{cruxPhone } ,</if>
+        <if test=" cruxAddress!=null and cruxAddress !='' ">  crux_address = #{cruxAddress } ,</if>
+        <if test=" cruxWork!=null and cruxWork !='' ">  crux_work = #{cruxWork } ,</if>
+        <if test=" cruxIdentity!=null and cruxIdentity !='' ">  crux_identity = #{cruxIdentity } ,</if>
+        <if test=" createTime!=null">  create_time = #{createTime } ,</if>
+        <if test=" updateTime!=null">  update_time = #{updateTime} </if>
+    </trim>
+     where id = #{id}
+    </update>
+
+</mapper>

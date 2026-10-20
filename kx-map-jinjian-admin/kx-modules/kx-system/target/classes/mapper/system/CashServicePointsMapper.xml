@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.CashServicePointsMapper">
+    <resultMap id="BaseResultMap" type="com.kx.system.domain.CashServicePoints">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="serve_bank" property="serveBank" jdbcType="VARCHAR"/>
+        <result column="serve_anchor" property="serveAnchor" jdbcType="VARCHAR"/>
+        <result column="serve_anchor_addr" property="serveAnchorAddr" jdbcType="VARCHAR"/>
+        <result column="service_type" property="serviceType" jdbcType="VARCHAR"/>
+        <result column="serve_point_name" property="servePointName" jdbcType="VARCHAR"/>
+        <result column="serve_point_addr" property="servePointAddr" jdbcType="VARCHAR"/>
+        <result column="chosen_position" property="chosenPosition" jdbcType="VARCHAR"/>
+        <result column="duty_name" property="dutyName" jdbcType="VARCHAR"/>
+        <result column="duty_phone" property="dutyPhone" jdbcType="VARCHAR"/>
+        <result column="constructing_mode" property="constructingMode" jdbcType="VARCHAR"/>
+        <result column="constructing_case" property="constructingCase" jdbcType="BIGINT"/>
+        <result column="start_time" property="startTime" jdbcType="VARCHAR"/>
+        <result column="service_mode" property="serviceMode" jdbcType="VARCHAR"/>
+        <result column="publishing_device" property="publishingDevice" jdbcType="VARCHAR"/>
+        <result column="grid_code" property="gridCode" jdbcType="VARCHAR"/>
+        <result column="grid_name" property="gridName" jdbcType="VARCHAR"/>
+        <result column="created_time" property="createdTime" jdbcType="TIMESTAMP"/>
+        <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="selectCashServicePoints">
+        select id,
+        serve_bank,
+        serve_anchor,
+        serve_anchor_addr,
+        service_type,
+        serve_point_name,
+        serve_point_addr,
+        chosen_position,
+        duty_name,
+        duty_phone,
+        constructing_mode,
+        constructing_case,
+        start_time,
+        service_mode,
+        publishing_device,
+        grid_code,
+        grid_name,
+        created_time,
+        updated_time,
+        lon,
+        lat,
+        exchange_money_count,
+        exchange_money_number,
+        money_total,
+        lqb_money_total,
+        strokes_total,
+        lqb_strokes_total,
+        money_total_accumulative,
+        lqb_money_total_accumulative,
+        scrapped_conversion_money,
+        a_scrapped_conversion_money,
+        remark
+        from cash_service_points
+    </sql>
+    <insert id="insert">
+        INSERT INTO cash_service_points
+        (serve_bank,
+        serve_anchor,
+        serve_anchor_addr,
+        service_type,
+        serve_point_name,
+        serve_point_addr,
+        chosen_position,
+        duty_name,
+        duty_phone,
+        constructing_mode,
+        constructing_case,
+        start_time,
+        service_mode,
+        publishing_device,
+        exchange_money_count,
+        exchange_money_number,
+        money_total,
+        lqb_money_total,
+        strokes_total,
+        lqb_strokes_total,
+        money_total_accumulative,
+        lqb_money_total_accumulative,
+        scrapped_conversion_money,
+        a_scrapped_conversion_money,
+        remark,
+        created_time,
+        updated_time)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.serveBank},
+            #{item.serveAnchor},
+            #{item.serveAnchorAddr},
+            #{item.serviceType},
+            #{item.servePointName},
+            #{item.servePointAddr},
+            #{item.chosenPosition},
+            #{item.dutyName},
+            #{item.dutyPhone},
+            #{item.constructingMode},
+            #{item.constructingCase},
+            #{item.startTime},
+            #{item.serviceMode},
+            #{item.publishingDevice},
+            #{item.exchangeMoneyCount},
+            #{item.exchangeMoneyNumber},
+            #{item.moneyTotal},
+            #{item.lqbMoneyTotal},
+            #{item.strokesTotal},
+            #{item.lqbStrokesTotal},
+            #{item.moneyTotalAccumulative},
+            #{item.lqbMoneyTotalAccumulative},
+            #{item.scrappedConversionMoney},
+            #{item.aScrappedConversionMoney},
+            #{item.remark},
+            now(),
+            now()
+            )
+        </foreach>
+    </insert>
+    <update id="updateCashServiceGridCode">
+        update cash_service_points
+        set grid_code = #{gridCode},
+            grid_name = #{gridName}
+        where id=#{id}
+    </update>
+
+    <select id="selectServiceMapper" resultType="com.kx.system.domain.CashServicePoints"
+            parameterType="com.kx.system.domain.dto.CashServicePointsDTO">
+        select
+        csp.id,
+        csp.serve_bank,
+        csp.serve_anchor,
+        csp.serve_anchor_addr,
+        csp.service_type,
+        csp.serve_point_name,
+        csp.serve_point_addr,
+        csp.chosen_position,
+        csp.duty_name,
+        csp.duty_phone,
+        csp.constructing_mode,
+        csp.constructing_case,
+        csp.start_time,
+        csp.service_mode,
+        csp.publishing_device,
+        csp.grid_code,
+        csp.grid_name,
+        csp.created_time,
+        csp.updated_time
+        from cash_service_points csp
+        left join pa_addr_info_type pait on csp.grid_code = pait.code
+        <where>
+            <if test="serveAnchor != null and serveAnchor != ''">
+                and serve_anchor like concat('%', #{serveAnchor}, '%')
+            </if>
+            <if test="serviceType != null and serviceType != ''">
+                and service_type = #{serviceType}
+            </if>
+            <if test="servePointName != null and servePointName != ''">
+                and serve_point_name like concat('%', #{servePointName}, '%')
+            </if>
+            <if test="constructingMode != null and constructingMode != ''">
+                and constructing_mode = #{constructingMode}
+            </if>
+            <if test="constructingCase != null and constructingCase != ''">
+                and constructing_case = #{constructingCase}
+            </if>
+            <if test="belongGridCodeList != null and belongGridCodeList.size > 0">
+                and (
+                <foreach collection="belongGridCodeList" item="item" separator=" or ">
+                    pait.ancestor_codes like concat('%,', #{item}, ',%')
+                </foreach>
+                )
+            </if>
+        </where>
+
+    </select>
+    <select id="selectCashDetails" resultType="com.kx.system.domain.CashServicePoints" parameterType="long">
+        <include refid="selectCashServicePoints"/>
+        where id = #{id}
+    </select>
+    <sql id="CashServicePointsInfo">
+        select  csp.a_scrapped_conversion_money,
+        csp.chosen_position,
+        csp.constructing_case,
+        csp.constructing_mode,
+        csp.created_time,
+        csp.duty_name,
+        csp.duty_phone,
+        csp.exchange_money_count,
+        csp.exchange_money_number,
+        csp.grid_code,
+        csp.grid_name,
+        csp.lat,
+        csp.lon,
+        csp.id,
+        csp.lqb_money_total,
+        csp.lqb_money_total_accumulative,
+        csp.lqb_strokes_total,
+        csp.money_total,
+        csp.money_total_accumulative,
+        csp.publishing_device,
+        csp.remark,
+        csp.scrapped_conversion_money,
+        csp.serve_anchor,
+        csp.serve_anchor_addr,
+        csp.serve_bank,
+        csp.serve_point_addr,
+        csp.serve_point_name,
+        csp.service_mode,
+        csp.service_type,
+        csp.start_time,
+        csp.strokes_total,
+        csp.updated_time
+    </sql>
+    <select id="getAnchorInfo" resultType="com.kx.system.domain.CashServicePoints">
+       <include refid="CashServicePointsInfo"/>
+        from cash_service_points csp
+        left join pa_addr_info_type pait on csp.grid_code = pait.code
+        where ancestor_codes like concat('%,', #{gridCode},',%')
+    </select>
+    <select id="selectAll" resultType="com.kx.system.domain.anchor.AnchorPoint">
+        select id, lat,lon from cash_service_points
+    </select>
+    <select id="selectCashServiceTotal" resultType="java.lang.String">
+        select count(1) as total from cash_service_points csp
+        left join pa_addr_info_type pait on csp.grid_code = pait.code
+        where
+            <if test="gridCode != null and gridCode =''">
+            ancestor_codes like concat('%,', #{gridCode},',%')
+            </if>
+    </select>
+    <select id="selectAnchorPointByAreaCodes" resultType="com.kx.system.domain.anchor.AnchorPoint">
+        select id, lat,lon from anchor_point
+    </select>
+    <select id="exportBatch" resultType="com.kx.system.domain.CashServicePointExport">
+        select
+        csp.serve_bank,
+        csp.serve_anchor,
+        csp.serve_anchor_addr,
+        csp.service_type,
+        csp.serve_point_name,
+        csp.serve_point_addr,
+        csp.chosen_position,
+        csp.duty_name,
+        csp.duty_phone,
+        csp.constructing_mode,
+        case csp.constructing_case
+            when 1 then '洽谈中'
+            when 2 then '建设中'
+            when 3 then '运行中'
+            end as constructingCase,
+        csp.start_time,
+        csp.service_mode,
+        csp.publishing_device,
+        csp.grid_name,
+        csp.exchange_money_count,
+        csp.exchange_money_number,
+        csp.money_total,
+        csp.lqb_money_total,
+        csp.strokes_total,
+        csp.lqb_strokes_total,
+        csp.money_total_accumulative,
+        csp.lqb_money_total_accumulative,
+        csp.scrapped_conversion_money,
+        csp.a_scrapped_conversion_money,
+        csp.remark
+        from cash_service_points csp
+        left join pa_addr_info_type pait on csp.grid_code = pait.code
+        <where>
+            <if test="serveAnchor != null and serveAnchor != ''">
+                and serve_anchor like concat('%', #{serveAnchor}, '%')
+            </if>
+            <if test="serviceType != null and serviceType != ''">
+                and service_type = #{serviceType}
+            </if>
+            <if test="servePointName != null and servePointName != ''">
+                and serve_point_name like concat('%', #{servePointName}, '%')
+            </if>
+            <if test="constructingMode != null and constructingMode != ''">
+                and constructing_mode = #{constructingMode}
+            </if>
+            <if test="constructingCase != null and constructingCase != ''">
+                and constructing_case = #{constructingCase}
+            </if>
+            <if test="belongGridCodeList != null and belongGridCodeList.size > 0">
+                and (
+                <foreach collection="belongGridCodeList" item="item" separator=" or ">
+                    pait.ancestor_codes like concat('%,', #{item}, ',%')
+                </foreach>
+                )
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

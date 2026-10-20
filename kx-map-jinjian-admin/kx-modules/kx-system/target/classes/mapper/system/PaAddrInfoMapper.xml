@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.PaAddrInfoMapper">
+
+    <resultMap type="com.kx.system.domain.PaAddrInfo" id="AddrInfoResult">
+        <result property="id"    column="id"    />
+        <result property="code"    column="code"    />
+        <result property="name"    column="name"    />
+        <result property="anotherName"    column="another_name"    />
+        <result property="parentCode"    column="parent_code"    />
+        <result property="belongNetworkId"    column="belong_network_code"    />
+        <result property="belongNetworkCode"    column="belong_network_code"    />
+        <result property="creditLevel"    column="credit_level"    />
+        <result property="isMaintained"    column="is_maintained"    />
+        <result property="boundaryPoints"    column="boundary_points"    />
+        <result property="centerPoint"    column="center_point"    />
+        <result property="coordinates"    column="coordinates"    />
+        <result property="addrLevel"    column="addr_level"    />
+        <result property="lon"    column="lon"    />
+        <result property="lat"    column="lat"    />
+        <result property="type" column="type" />
+        <result property="ancestorCodes" column="ancestor_codes" />
+    </resultMap>
+
+    <resultMap type="com.kx.system.domain.vo.LocationOfTownGovernmentVo" id="TownGovernmentResult">
+        <result property="code"    column="code"    />
+        <result property="name"    column="name"    />
+        <result property="lon"    column="lon"    />
+        <result property="lat"    column="lat"    />
+
+    </resultMap>
+
+    <resultMap type="com.kx.system.domain.Township" id="TownshipResult">
+        <result property="id"    column="id"    />
+        <result property="code"    column="code"    />
+        <result property="name"    column="name"    />
+    </resultMap>
+
+    <resultMap type="com.kx.system.domain.Village" id="VillageResult">
+        <result property="id"    column="id"    />
+        <result property="code"    column="code"    />
+        <result property="name"    column="name"    />
+        <result property="parentCode"    column="parent_code"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectAddrInfoVo">
+        select id, code, name,another_name, parent_code,is_maintained,lon,lat, update_time, belong_network_code,credit_level,boundary_points,addr_level, coordinates,ancestor_codes from pa_addr_info
+    </sql>
+
+    <sql id="selectTownVo">
+        select id, code, name from pa_addr_info
+    </sql>
+
+    <select id="selectAddrInfoList" parameterType="com.kx.system.domain.PaAddrInfo" resultMap="AddrInfoResult">
+        <include refid="selectAddrInfoVo"/>
+        <where>
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="name != null  and name != ''"> and name like ('%' + #{name} + '%')</if>
+            <if test="parentCode != null  and parentCode != ''"> and parent_code = #{parentCode}</if>
+        </where>
+    </select>
+
+    <select id="selectAddrInfoById" parameterType="Long" resultMap="AddrInfoResult">
+        <include refid="selectAddrInfoVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectAllTownList" resultMap="TownshipResult">
+        <include refid="selectTownVo"/>
+        where parent_code = '330329'
+    </select>
+
+    <select id="selectAllVillageList" resultMap="VillageResult">
+        <include refid="selectAddrInfoVo"/>
+        where parent_code is not null
+    </select>
+
+    <insert id="insertAddrInfo" parameterType="com.kx.system.domain.PaAddrInfo">
+        insert into pa_addr_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="code != null">code,</if>
+            <if test="name != null">name,</if>
+            <if test="anotherName != null">another_name,</if>
+            <if test="parentCode != null">parent_code,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="isMaintained != null">is_maintained,</if>
+            <if test="belongNetworkCode != null">belong_network_code,</if>
+            <if test="boundaryPoints != null">boundary_points,</if>
+            <if test="addrLevel != null">addr_level,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="code != null">#{code},</if>
+            <if test="name != null">#{name},</if>
+            <if test="anotherName != null">#{anotherName},</if>
+            <if test="parentCode != null">#{parentCode},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="isMaintained != null">#{isMaintained},</if>
+            <if test="belongNetworkCode != null">#{belongNetworkCode},</if>
+            <if test="boundaryPoints != null">#{boundaryPoints},</if>
+            <if test="addrLevel != null">#{addrLevel},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAddrInfo" parameterType="com.kx.system.domain.PaAddrInfo">
+        update pa_addr_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="code != null">code = #{code},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="anotherName != null">another_name = #{anotherName},</if>
+            <if test="parentCode != null">parent_code = #{parentCode},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="isMaintained != null">is_maintained = #{isMaintained},</if>
+            <if test="belongNetworkCode != null">belong_network_code = #{belongNetworkCode},</if>
+            <if test="boundaryPoints != null">boundary_points = #{boundaryPoints},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAddrInfoById" parameterType="Long">
+        delete from pa_addr_info where id = #{id}
+    </delete>
+
+    <delete id="deleteAddrInfoByIds" parameterType="String">
+        delete from pa_addr_info where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteAddrInfoByCode">
+        delete from pa_addr_info where code = #{code}
+    </delete>
+
+    <update id="deleteAreaDistribution">
+        update pa_addr_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="code != null">code = #{code},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="parentCode != null">parent_code = #{parentCode},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="isMaintained != null">is_maintained = #{isMaintained},</if>
+            belong_network_Code = #{belongNetworkCode}
+        </trim>
+        where id = #{id}
+    </update>
+
+    <select id="selectByCode" resultMap="AddrInfoResult">
+        select id, code, name,another_name, parent_code,is_maintained,lon,lat, update_time, belong_network_code,credit_level,boundary_points,addr_level, coordinates from pa_addr_info
+        where code = #{code} order by id desc limit 1
+    </select>
+
+    <select id="selectByName" resultMap="AddrInfoResult">
+        <include refid="selectAddrInfoVo"/>
+        where name = #{name}
+    </select>
+
+    <select id="selectByNames" resultMap="AddrInfoResult">
+        <include refid="selectAddrInfoVo"/>
+        <where>
+            <if test="list != null and list.size > 0">
+                name in
+                <foreach collection="list" item="name"  open="(" separator="," close=")">
+                    #{name}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByCodeList" resultMap="AddrInfoResult">
+        <include refid="selectAddrInfoVo"/>
+        where code in
+        <foreach item="code" collection="codeList" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </select>
+
+    <select id="selectByParentCodeList" resultMap="AddrInfoResult">
+        <include refid="selectAddrInfoVo"/>
+        where parent_code in
+        <foreach item="code" collection="codeList" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </select>
+
+    <select id="selectByParentCode" resultMap="AddrInfoResult">
+        <include refid="selectAddrInfoVo"/>
+        where parent_code = #{parentCode} and code is not null
+    </select>
+
+    <select id="selectByNetworkCode" resultMap="AddrInfoResult">
+        <include refid="selectAddrInfoVo"/>
+        where belong_network_Code = #{networkCode}
+    </select>
+
+    <select id="selectUnMaintainedList" resultMap="VillageResult">
+        <include refid="selectAddrInfoVo"/>
+        where parent_code is not null and is_maintained = 0
+    </select>
+    <select id="selectVillageListByNetworkCode" resultMap="VillageResult">
+        <include refid="selectAddrInfoVo"/>
+        where parent_code is not null and belong_network_code = #{networkCode} and is_maintained = '1'
+    </select>
+
+    <select id="selectByNotNetworkCode" resultMap="AddrInfoResult">
+        <include refid="selectAddrInfoVo"/>
+        where belong_network_code !=#{networkCode}
+    </select>
+
+    <select id="selectAllCode" resultMap="AddrInfoResult">
+        <include refid="selectAddrInfoVo"/>
+    </select>
+    <select id="checkArea" resultType="java.lang.Integer">
+        select count(id) from pa_addr_info where name = #{area}
+    </select>
+
+    <select id="selectCodeByName" resultType="java.lang.String">
+        select code from pa_addr_info where name = #{area}
+    </select>
+
+    <select id="selectCodeByNames" resultType="java.lang.String">
+        select code from pa_addr_info
+        <where>
+            <if test="list != null and list.size > 0" >
+                and name in
+                <foreach collection="list" item="name"  open="(" separator="," close=")">
+                    #{name}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByNetworkCodes" resultType="java.lang.String">
+        select code from pa_addr_info
+        <where>
+            is_maintained = 1
+            <if test="networkCodes != null">
+                <foreach item="networkCode" collection="networkCodes" open="and belong_network_code in (" separator="," close=")">
+                    #{networkCode}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="select" resultType="java.lang.String">
+         <include refid="selectAddrInfoVo"/>where parent_code = #{towncode} and name = #{area}
+    </select>
+    <select id="selectVillageListByParentCode" resultMap="AddrInfoResult">
+        <include refid="selectAddrInfoVo"/>
+        where parent_code = #{code}
+    </select>
+    <select id="getVillageByTownCode" resultType="com.kx.system.domain.PaAddrInfo">
+        select  code, name, pabi.village_general_income as villageGeneralIncome from pa_addr_info pa left JOIN  pa_addr_base_info  pabi on pa.code = pabi.addr_code
+        where parent_code = #{code}
+    </select>
+
+
+    <update id="updateCreditVillage">
+        update pa_addr_info set credit_level=#{s} where code = #{villageCode}
+    </update>
+    <select id="getTownGovernmentAddr" resultMap="TownGovernmentResult">
+       select code,name,lon,lat from pa_addr_info where (parent_code is null or parent_code ='') or parent_code = '330329'
+    </select>
+    <select id="getTownVillageStrByCodeList" resultType="java.lang.String">
+        SELECT
+            STUFF(
+                (SELECT ',' + p2.name+ '/' + p1.name name
+                  FROM pa_addr_info p1
+                  LEFT JOIN pa_addr_info p2 ON p1.parent_code = p2.code
+                    where p1.code in
+                    <foreach item="code" collection="codeList" open="(" separator="," close=")">
+                        #{code}
+                    </foreach>
+                    FOR XML PATH ( '' ),TYPE
+                ).value ( '.', 'NVARCHAR(MAX)' ),
+		1,1,'')
+    </select>
+    <select id="selectOneByName" resultType="com.kx.system.domain.PaAddrInfo">
+        select top 1 id, code, name, parent_code, update_time, belong_network_code,credit_level from pa_addr_info
+        where name = #{name}
+    </select>
+
+    <select id="selectOneByNameAndParentName" resultType="com.kx.system.domain.PaAddrInfo">
+        select top 1 p1.id, p1.code, p1.name, p1.parent_code, p1.update_time, p1.belong_network_code, p1.credit_level
+        from pa_addr_info p1
+        left join pa_addr_info p2 on p1.parent_code = p2.code
+        where p1.name = #{area} and p2.name = #{township}
+    </select>
+    <select id="selectNameListByIds" resultType="java.lang.String">
+        SELECT name FROM pa_addr_info WHERE code IN
+        <foreach collection="codeList" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </select>
+    <select id="listByName" resultType="com.kx.system.domain.vo.KpiTargetVO">
+        SELECT code id, name, parent_code parentId FROM pa_addr_info
+        WHERE LEN(code) >= 10
+        <if test="name != null and name != ''">
+            AND name like concat('%', #{name}, '%')
+        </if>
+    </select>
+    <select id="listByIds" resultType="com.kx.system.domain.vo.KpiTargetVO">
+        SELECT code id, name, parent_code parentId FROM pa_addr_info
+        WHERE code IN
+        <foreach collection="codeList" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </select>
+    <select id="selectParentCodeByCode" resultType="java.lang.String">
+        select top 1 parent_code
+        from pa_addr_info
+        where code = #{code,jdbcType=VARCHAR}
+    </select>
+    <select id="listByNameAndBelogNetworkCodes" resultType="com.kx.system.domain.vo.KpiTargetVO">
+        SELECT code id, name, parent_code parentId FROM pa_addr_info
+        WHERE LEN(code) >= 10
+        <if test="name != null and name != ''">
+            AND name like concat('%', #{name}, '%')
+        </if>
+        AND belong_network_code IN
+        <foreach collection="networkCodes" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </select>
+    <select id="listAllVillage" resultType="com.kx.system.domain.grid.AddrInfoDto">
+        SELECT
+            a.id, a.code, a.name,a.another_name as anotherName, a.parent_code as parentCode, a.update_time as updateTime,a.belong_network_code as belongNetworkCode,
+            a.credit_level as creditLevel,a.boundary_points as boundaryPoints,b.belong_manage_id as managerId,c.network_name as networkName,d.manager_name as managerName
+        FROM
+            pa_addr_info a
+                LEFT JOIN pa_manage_area b ON a.code = b.area_code
+                LEFT JOIN pa_network_base_info c on a.belong_network_code=c.network_code
+                LEFT JOIN pa_manager_base_info d on b.belong_manage_id=d.manager_code
+        <where>
+            <if test=" len!=null ">and len (a.parent_code)= #{len} </if>
+            <if test=" ParentCode!=null and ParentCode !='' ">and a.parent_code = #{ParentCode} </if>
+            <if test=" areaCode!=null and areaCode !='' ">and a.code like CONCAT(#{areaCode}, '%')</if>
+            <if test=" queryList!=null and queryList.size>0">and c.network_code in
+                <foreach item="item" collection="queryList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+<!--            <if test=" userList!=null and userList.size>0">and  c.network_code in-->
+<!--                <foreach item="item" collection="userList" open="(" separator="," close=")">-->
+<!--                    #{item}-->
+<!--                </foreach>-->
+<!--            </if>-->
+            <if test=" name!=null and name !='' ">and a.name like ('%' + #{name} + '%')</if>
+            <if test=" managerId!=null and managerId !='' ">and b.belong_manage_id = #{managerId}</if>
+        </where>
+        ORDER BY a.update_time DESC
+    </select>
+    <select id="getAreaManagers" resultType="com.kx.system.domain.vo.TaskSelectVo">
+        SELECT
+        b.belong_manage_id as code,d.manager_name as name
+        FROM
+        pa_addr_info a
+        LEFT JOIN pa_manage_area b ON a.code = b.area_code
+        LEFT JOIN pa_network_base_info c on a.belong_network_code=c.network_code
+        LEFT JOIN pa_manager_base_info d on b.belong_manage_id=d.manager_code
+        WHERE
+        b.del_flag = 0
+        AND len (a.parent_code) IN (12, 9)
+        <if test=" queryList!=null and queryList.size>0">and c.network_code in
+            <foreach item="item" collection="queryList" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test=" userList!=null and userList.size>0">and  c.network_code in
+            <foreach item="item" collection="userList" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test=" managerId!=null and managerId !='' ">
+          and (b.belong_manage_id like ('%' + #{managerId}+ '%') or d.manager_name like ('%' + #{managerId}+ '%') )
+        </if>
+        group by b.belong_manage_id,d.manager_name
+    </select>
+    <select id="selectAllGridList" resultMap="AddrInfoResult">
+        select * from pa_addr_info where len(parent_code)=12
+    </select>
+    <select id="selectByCodeAndJurisdiction" resultMap="AddrInfoResult">
+        select id, code, name, parent_code, update_time, belong_network_code,credit_level,center_point,boundary_points, coordinates,addr_level,type from pa_addr_info
+        <where>
+            <if test="jurisdiction!= null and jurisdiction == '0'.toString()">
+                code = #{code}
+            </if>
+            <if test="jurisdiction!= null and jurisdiction == '1'.toString()">
+                parent_code = #{code}
+            </if>
+            <if test="jurisdiction!= null and jurisdiction == '2'.toString()">
+                code = #{code} or parent_code = #{code}
+            </if>
+        </where>
+        order by addr_level, len(code)
+    </select>
+    <select id="selectCodeIsNull" resultMap="AddrInfoResult">
+        <include refid="selectAddrInfoVo"/>
+        where code is null and lon is not null and lat is not null
+    </select>
+    <select id="getAllAreaCoordinates" resultMap="AddrInfoResult">
+        select * from pa_addr_info where addr_level in(4,6) and code like '320581%' ORDER BY len(code)
+    </select>
+    <select id="getAreaCoordinatesByAreaCode" resultMap="AddrInfoResult">
+<!--        select * from pa_addr_info where addr_level in(4,6) and code like concat(#{areaCode},'%') ORDER BY len(code)-->
+        select * from pa_addr_info where addr_level = 6 and parent_code like concat(#{areaCode},'%') ORDER BY len(code)
+    </select>
+
+    <select id="selectByCodesAndJurisdiction" resultMap="AddrInfoResult">
+        select id, code, name, parent_code, update_time, belong_network_code,credit_level,center_point,boundary_points, coordinates,addr_level from pa_addr_info
+        <where>
+            <if test="jurisdiction!= null and jurisdiction == '0'.toString()">
+                code in
+                <foreach collection="codeList" item="code" open="(" separator="," close=")">
+                    #{code}
+                </foreach>
+            </if>
+            <if test="jurisdiction!= null and jurisdiction == '1'.toString()">
+                parent_code in
+                <foreach collection="codeList" item="code" open="(" separator="," close=")">
+                    #{code}
+                </foreach>
+            </if>
+            <if test="jurisdiction!= null and jurisdiction == '2'.toString()">
+                code in
+                <foreach collection="codeList" item="code" open="(" separator="," close=")">
+                #{code}
+                </foreach>
+                or parent_code in
+                <foreach collection="codeList" item="code" open="(" separator="," close=")">
+                    #{code}
+                </foreach>
+            </if>
+        </where>
+        order by addr_level, len(code)
+    </select>
+
+    <select id="selectByNameAndAreaCode" resultMap="AddrInfoResult">
+        select id, code, name, parent_code, lon, lat, center_point, coordinates, addr_level from pa_addr_info
+            where addr_level = 6 and name = #{name} and code like concat(#{areaCode}, '%')
+        ORDER BY len(code)
+    </select>
+
+    <select id="selectByCodeAndLevel" resultMap="AddrInfoResult">
+        select id, code, name,another_name, parent_code,is_maintained,lon,lat, update_time,
+               belong_network_code,credit_level,boundary_points,addr_level, coordinates from pa_addr_info
+        where code like concat(#{code}, '%') and addr_level = #{level}
+    </select>
+
+    <select id="selectRootAddr" resultType="com.kx.system.domain.vo.AddrInfoVO">
+        select code, name from pa_addr_info_type where addr_level =
+        (SELECT MIN(addr_level) FROM pa_addr_info_type)
+    </select>
+
+    <select id="selectByParentCodes" resultType="com.kx.system.domain.vo.AddrInfoVO">
+        select code, name, parent_code as parentCode from pa_addr_info_type where parent_code in
+        <foreach collection="parentCodes" item="parentCode" open="(" separator="," close=")">
+            #{parentCode}
+        </foreach>
+    </select>
+
+    <select id="selectRootAddrByTypeCode" resultType="com.kx.system.domain.vo.AddrInfoVO">
+        select code, name from pa_addr_info_type
+        where addr_level =
+        (SELECT MIN(addr_level) FROM pa_addr_info_type where  type_code = #{typeCode})
+        and type_code = #{typeCode}
+    </select>
+
+    <update id="batchUpdate">
+        <foreach collection="paAddrInfoList" item="paAddrInfo" separator=";" close=";">
+            update pa_addr_info
+            <trim prefix="SET" suffixOverrides=",">
+                <if test="paAddrInfo.ancestorCodes != null and paAddrInfo.ancestorCodes != ''">
+                    ancestor_codes = #{paAddrInfo.ancestorCodes}
+                </if>
+            </trim>
+            where id = #{paAddrInfo.id}
+
+        </foreach>
+    </update>
+</mapper>

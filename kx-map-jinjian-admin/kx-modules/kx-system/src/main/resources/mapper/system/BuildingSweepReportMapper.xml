@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.BuildingSweepReportMapper">
+
+    <resultMap id="BuildingSweepReportResult" type="com.kx.system.domain.buildingsweep.BuildingSweepReport">
+        <id property="id" column="id"/>
+        <result property="reportNo" column="report_no"/>
+        <result property="inspectionTime" column="inspection_time"/>
+        <result property="leadDeptCode" column="lead_dept_code"/>
+        <result property="leadDeptName" column="lead_dept_name"/>
+        <result property="participantDeptCodes" column="participant_dept_codes"/>
+        <result property="participantDeptNames" column="participant_dept_names"/>
+        <result property="participantPersonUserNames" column="participant_person_user_names"/>
+        <result property="participantPersonNames" column="participant_person_names"/>
+        <result property="provinceCode" column="province_code"/>
+        <result property="provinceName" column="province_name"/>
+        <result property="cityCode" column="city_code"/>
+        <result property="cityName" column="city_name"/>
+        <result property="districtCode" column="district_code"/>
+        <result property="districtName" column="district_name"/>
+        <result property="streetCode" column="street_code"/>
+        <result property="streetName" column="street_name"/>
+        <result property="communityCode" column="community_code"/>
+        <result property="communityName" column="community_name"/>
+        <result property="areaFullName" column="area_full_name"/>
+        <result property="detailAddress" column="detail_address"/>
+        <result property="subjectTypes" column="subject_types"/>
+        <result property="coveredSubjectCount" column="covered_subject_count"/>
+        <result property="inspectionPersonTimes" column="inspection_person_times"/>
+        <result property="issueSummary" column="issue_summary"/>
+        <result property="evidenceMaterials" column="evidence_materials"/>
+        <result property="reporterUserName" column="reporter_user_name"/>
+        <result property="reporterNickName" column="reporter_nick_name"/>
+        <result property="reviewStatus" column="review_status"/>
+        <result property="reviewOpinion" column="review_opinion"/>
+        <result property="reviewerUserName" column="reviewer_user_name"/>
+        <result property="reviewerNickName" column="reviewer_nick_name"/>
+        <result property="reviewTime" column="review_time"/>
+        <result property="relatedClueNo" column="related_clue_no"/>
+        <result property="reportTime" column="report_time"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectColumns">
+        id, report_no, inspection_time, lead_dept_code, lead_dept_name,
+        participant_dept_codes, participant_dept_names, participant_person_user_names, participant_person_names,
+        province_code, province_name, city_code, city_name, district_code, district_name,
+        street_code, street_name, community_code, community_name, area_full_name, detail_address,
+        subject_types, covered_subject_count, inspection_person_times, issue_summary, evidence_materials,
+        reporter_user_name, reporter_nick_name, review_status, review_opinion,
+        reviewer_user_name, reviewer_nick_name, review_time, related_clue_no, report_time,
+        del_flag, create_by, create_time, update_by, update_time
+    </sql>
+
+    <select id="selectBuildingSweepReportList" resultMap="BuildingSweepReportResult">
+        SELECT <include refid="selectColumns"/>
+        FROM building_sweep_report
+        <where>
+            del_flag = '0'
+            <if test="keyword != null and keyword != ''">
+                AND (report_no LIKE CONCAT('%', #{keyword}, '%')
+                    OR area_full_name LIKE CONCAT('%', #{keyword}, '%')
+                    OR detail_address LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+            <if test="inspectionTimeStart != null">
+                AND inspection_time <![CDATA[>=]]> #{inspectionTimeStart}
+            </if>
+            <if test="inspectionTimeEnd != null">
+                AND inspection_time <![CDATA[<=]]> #{inspectionTimeEnd}
+            </if>
+            <if test="reviewStatus != null">
+                AND review_status = #{reviewStatus}
+            </if>
+            <if test="streetName != null and streetName != ''">
+                AND street_name = #{streetName}
+            </if>
+            <if test="subjectType != null">
+                AND FIND_IN_SET(CAST(#{subjectType} AS CHAR), subject_types) > 0
+            </if>
+        </where>
+        ORDER BY report_time DESC, id DESC
+    </select>
+
+    <select id="selectBuildingSweepReportById" resultMap="BuildingSweepReportResult">
+        SELECT <include refid="selectColumns"/>
+        FROM building_sweep_report
+        WHERE id = #{id} AND del_flag = '0'
+    </select>
+
+    <insert id="insertBuildingSweepReport" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.kx.system.domain.buildingsweep.BuildingSweepReport">
+        INSERT INTO building_sweep_report (
+            report_no, inspection_time, lead_dept_code, lead_dept_name,
+            participant_dept_codes, participant_dept_names, participant_person_user_names, participant_person_names,
+            province_code, province_name, city_code, city_name, district_code, district_name,
+            street_code, street_name, community_code, community_name, area_full_name, detail_address,
+            subject_types, covered_subject_count, inspection_person_times, issue_summary, evidence_materials,
+            reporter_user_name, reporter_nick_name, review_status, related_clue_no, report_time,
+            del_flag, create_by, create_time, update_by, update_time
+        ) VALUES (
+            #{reportNo}, #{inspectionTime}, #{leadDeptCode}, #{leadDeptName},
+            #{participantDeptCodes}, #{participantDeptNames}, #{participantPersonUserNames}, #{participantPersonNames},
+            #{provinceCode}, #{provinceName}, #{cityCode}, #{cityName}, #{districtCode}, #{districtName},
+            #{streetCode}, #{streetName}, #{communityCode}, #{communityName}, #{areaFullName}, #{detailAddress},
+            #{subjectTypes}, #{coveredSubjectCount}, #{inspectionPersonTimes}, #{issueSummary}, #{evidenceMaterials},
+            #{reporterUserName}, #{reporterNickName}, #{reviewStatus}, #{relatedClueNo}, #{reportTime},
+            #{delFlag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}
+        )
+    </insert>
+
+    <update id="updateReportNo">
+        UPDATE building_sweep_report SET report_no = #{reportNo} WHERE id = #{id}
+    </update>
+
+    <update id="updateBuildingSweepReport" parameterType="com.kx.system.domain.buildingsweep.BuildingSweepReport">
+        UPDATE building_sweep_report
+        SET inspection_time = #{inspectionTime},
+            lead_dept_code = #{leadDeptCode},
+            lead_dept_name = #{leadDeptName},
+            participant_dept_codes = #{participantDeptCodes},
+            participant_dept_names = #{participantDeptNames},
+            participant_person_user_names = #{participantPersonUserNames},
+            participant_person_names = #{participantPersonNames},
+            province_code = #{provinceCode}, province_name = #{provinceName},
+            city_code = #{cityCode}, city_name = #{cityName},
+            district_code = #{districtCode}, district_name = #{districtName},
+            street_code = #{streetCode}, street_name = #{streetName},
+            community_code = #{communityCode}, community_name = #{communityName},
+            area_full_name = #{areaFullName}, detail_address = #{detailAddress},
+            subject_types = #{subjectTypes}, covered_subject_count = #{coveredSubjectCount},
+            inspection_person_times = #{inspectionPersonTimes}, issue_summary = #{issueSummary},
+            evidence_materials = #{evidenceMaterials}, update_by = #{updateBy}, update_time = #{updateTime}
+        WHERE id = #{id} AND review_status = 1 AND del_flag = '0'
+    </update>
+
+    <update id="reviewBuildingSweepReport" parameterType="com.kx.system.domain.buildingsweep.BuildingSweepReviewRequest">
+        UPDATE building_sweep_report
+        SET review_status = #{reviewResult}, review_opinion = #{reviewOpinion},
+            related_clue_no = #{relatedClueNo},
+            reviewer_user_name = #{reviewerUserName}, reviewer_nick_name = #{reviewerNickName},
+            review_time = NOW(), update_by = #{reviewerUserName}, update_time = NOW()
+        WHERE id = #{id} AND review_status = 1 AND del_flag = '0'
+    </update>
+
+    <select id="selectRelatedClueOptions" resultType="com.kx.system.domain.riskclue.RiskClueReport">
+        SELECT id, clue_no AS clueNo, clue_title AS clueTitle
+        FROM risk_clue_report
+        WHERE del_flag = '0' AND review_status &lt;&gt; 0
+        <if test="keyword != null and keyword != ''">
+            AND (clue_no LIKE CONCAT('%', #{keyword}, '%')
+              OR clue_title LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+        ORDER BY COALESCE(report_time, create_time) DESC, id DESC
+        LIMIT 50
+    </select>
+
+    <select id="countAvailableRelatedClue" resultType="int">
+        SELECT COUNT(1)
+        FROM risk_clue_report
+        WHERE clue_no = #{clueNo} AND del_flag = '0' AND review_status &lt;&gt; 0
+    </select>
+
+    <update id="resubmitBuildingSweepReport" parameterType="com.kx.system.domain.buildingsweep.BuildingSweepReport">
+        UPDATE building_sweep_report
+        SET inspection_time = #{inspectionTime}, lead_dept_code = #{leadDeptCode}, lead_dept_name = #{leadDeptName},
+            participant_dept_codes = #{participantDeptCodes},
+            participant_dept_names = #{participantDeptNames},
+            participant_person_user_names = #{participantPersonUserNames},
+            participant_person_names = #{participantPersonNames},
+            province_code = #{provinceCode}, province_name = #{provinceName}, city_code = #{cityCode}, city_name = #{cityName},
+            district_code = #{districtCode}, district_name = #{districtName}, street_code = #{streetCode}, street_name = #{streetName},
+            community_code = #{communityCode}, community_name = #{communityName}, area_full_name = #{areaFullName},
+            detail_address = #{detailAddress}, subject_types = #{subjectTypes},
+            covered_subject_count = #{coveredSubjectCount}, inspection_person_times = #{inspectionPersonTimes},
+            issue_summary = #{issueSummary}, evidence_materials = #{evidenceMaterials},
+            review_status = 1, review_opinion = NULL, reviewer_user_name = NULL,
+            reviewer_nick_name = NULL, review_time = NULL, report_time = #{reportTime},
+            update_by = #{updateBy}, update_time = #{updateTime}
+        WHERE id = #{id} AND review_status = 3 AND del_flag = '0'
+    </update>
+
+    <update id="deleteBuildingSweepReport">
+        UPDATE building_sweep_report
+        SET del_flag = '1', update_by = #{updateBy}, update_time = NOW()
+        WHERE id = #{id} AND review_status = 1 AND del_flag = '0'
+    </update>
+</mapper>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.LabelInfoMapper">
+
+    <resultMap type="com.kx.system.domain.label.LabelInfo" id="LabelInfoResult">
+        <result property="id"    column="id"    />
+        <result property="labelName"    column="label_name"    />
+        <result property="labelGroupId"    column="label_group_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectLabelInfoVo">
+        select id, label_name, label_group_id, create_by, create_time, update_by, update_time, del_flag from label_info
+    </sql>
+
+    <select id="selectLabelInfoList" parameterType="com.kx.system.domain.label.LabelInfo" resultMap="LabelInfoResult">
+        <include refid="selectLabelInfoVo"/>
+        <where>
+            <if test="labelName != null  and labelName != ''"> and label_name like concat('%', #{labelName}, '%')</if>
+            <if test="labelGroupId != null "> and label_group_id = #{labelGroupId}</if>
+        </where>
+    </select>
+
+    <select id="selectLabelInfoById" parameterType="Long" resultMap="LabelInfoResult">
+        <include refid="selectLabelInfoVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectLabelInfoByGroupId" parameterType="Long" resultType="com.kx.system.domain.label.LabelInfo">
+        select li.id, label_name, label_group_id, lg.type
+        from label_info li
+        left join label_group lg
+        on li.label_group_id = lg.id
+        where label_group_id = #{groupId} and li.del_flag = 0
+    </select>
+
+    <select id="selectExist" resultMap="LabelInfoResult">
+        <include refid="selectLabelInfoVo"/>
+        where label_name=#{labelName} and label_group_id = #{labelGroupId} AND del_flag = 0
+        <if test="id != null">
+            AND id != #{id}
+        </if>
+        LIMIT 1
+    </select>
+
+    <select id="queryListByIds" parameterType="Long" resultMap="LabelInfoResult">
+        <include refid="selectLabelInfoVo"/>
+        <where>
+            <if test=" ids!=null and ids.size>0">
+                and id in
+                <foreach item="item" collection="ids" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+
+    <select id="selectPageList"  resultMap="LabelInfoResult">
+        <include refid="selectLabelInfoVo"/>
+        <where>
+            del_flag = 0
+            <if test="labelName!=null and labelName!=''">
+                and label_name like concat('%', #{labelName}, '%')
+            </if>
+            <if test=" list!=null and list.size>0">
+                and label_group_id in
+                <foreach item="item" collection="list" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        order by create_time  desc ,label_group_id desc
+    </select>
+    <select id="selectCustomerLabels" resultType="java.lang.String">
+        select distinct label_name from label_info li
+            left join customer_label cl on cl.label_id = li.id
+        where cl.customer_nm = #{customerNm} and cl.label_type = 0
+        <if test="type != null">and cl.type = #{type}</if>
+        <if test="customerId != null">and cl.customer_id = #{customerId}</if>
+    </select>
+    <select id="selectLabelGroupById" resultType="com.kx.system.domain.label.LabelInfo">
+        select type from label_info li left join label_group lg on li.label_group_id = lg.id
+        where li.id = #{id}
+    </select>
+
+
+    <insert id="insertLabelInfo" parameterType="com.kx.system.domain.label.LabelInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into label_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="labelInfo.labelName != null">label_name,</if>
+            <if test="labelInfo.labelGroupId != null">label_group_id,</if>
+            <if test="labelInfo.createBy != null">create_by,</if>
+            <if test="labelInfo.createTime != null">create_time,</if>
+            <if test="labelInfo.updateBy != null">update_by,</if>
+            <if test="labelInfo.updateTime != null">update_time,</if>
+            <if test="labelInfo.delFlag != null">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="labelInfo.labelName != null">#{labelInfo.labelName},</if>
+            <if test="labelInfo.labelGroupId != null">#{labelInfo.labelGroupId},</if>
+            <if test="labelInfo.createBy != null">#{labelInfo.createBy},</if>
+            <if test="labelInfo.createTime != null">#{labelInfo.createTime},</if>
+            <if test="labelInfo.updateBy != null">#{labelInfo.updateBy},</if>
+            <if test="labelInfo.updateTime != null">#{labelInfo.updateTime},</if>
+            <if test="labelInfo.delFlag != null">#{labelInfo.delFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateLabelInfo" parameterType="com.kx.system.domain.label.LabelInfo">
+        update label_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="labelInfo.labelName != null">label_name = #{labelInfo.labelName},</if>
+            <if test="labelInfo.labelGroupId != null">label_group_id = #{labelInfo.labelGroupId},</if>
+            <if test="labelInfo.createBy != null">create_by = #{labelInfo.createBy},</if>
+            <if test="labelInfo.createTime != null">create_time = #{labelInfo.createTime},</if>
+            <if test="labelInfo.updateBy != null">update_by = #{labelInfo.updateBy},</if>
+            <if test="labelInfo.updateTime != null">update_time = #{labelInfo.updateTime},</if>
+            <if test="labelInfo.delFlag != null">del_flag = #{labelInfo.delFlag},</if>
+        </trim>
+        where id = #{labelInfo.id}
+    </update>
+
+
+    <update id="batchDeleteByIds" parameterType="com.kx.system.domain.label.LabelInfo">
+        update label_info SET del_flag = 1 ,update_by = #{updateBy}, update_time=NOW()
+        where id in
+        <foreach item="item" collection="ids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <delete id="deleteLabelInfoById" parameterType="Long">
+        delete from label_info where id = #{id}
+    </delete>
+
+    <delete id="deleteLabelInfoByIds" parameterType="String">
+        delete from label_info where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectByNameAndGroup" resultMap="LabelInfoResult">
+        select a.* from label_info a left join label_group b on a.label_group_id = b.id where a.label_name = #{name} and b.parent_id = #{parentId} limit 1
+    </select>
+</mapper>

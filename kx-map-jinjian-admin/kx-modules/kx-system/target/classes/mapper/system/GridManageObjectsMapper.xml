@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.GridManageObjectsMapper">
+
+    <!-- 结果集映射 -->
+    <resultMap id="BaseResultMap" type="com.kx.system.domain.grid.message.GridManageObjects">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="grid_code" property="gridCode" jdbcType="VARCHAR"/>
+        <result column="manager_name" property="managerName" jdbcType="VARCHAR"/>
+        <result column="manager_type" property="managerType" jdbcType="TINYINT"/>
+        <result column="manager_addr" property="managerAddr" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="create_name" property="createName" jdbcType="VARCHAR"/>
+        <result column="create_by" property="createBy" jdbcType="BIGINT"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="update_name" property="updateName" jdbcType="VARCHAR"/>
+        <result column="update_by" property="updateBy" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <!-- 新增记录 -->
+    <insert id="insertManageObjects" parameterType="com.kx.system.domain.grid.message.GridManageObjects">
+        INSERT INTO grid_manage_objects (grid_code, manager_name, manager_type, manager_addr,
+                                         create_time, create_name, create_by,
+                                         update_time, update_name, update_by)
+        VALUES (#{gridCode}, #{managerName}, #{managerType}, #{managerAddr},
+                #{createTime}, #{createName}, #{createBy},
+                #{updateTime}, #{updateName}, #{updateBy})
+    </insert>
+
+    <!-- 根据ID删除 -->
+    <delete id="deleteManageObjectsById" parameterType="java.lang.Long">
+        DELETE FROM grid_manage_objects WHERE id = #{id}
+    </delete>
+
+    <!-- 根据ID更新 -->
+    <update id="updateManageObjectsById" parameterType="com.kx.system.domain.grid.message.GridManageObjects">
+        UPDATE grid_manage_objects
+        <set>
+            <if test="gridCode != null">grid_code = #{gridCode},</if>
+            <if test="managerName != null">manager_name = #{managerName},</if>
+            <if test="managerType != null">manager_type = #{managerType},</if>
+            <if test="managerAddr != null">manager_addr = #{managerAddr},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateName != null">update_name = #{updateName},</if>
+            <if test="updateBy != null">update_by = #{updateBy}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据网格编码查询 -->
+    <select id="selectManageObjectsByGridCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT * FROM grid_manage_objects WHERE grid_code = #{gridCode}
+    </select>
+
+    <!-- 查询所有记录 -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT * FROM grid_manage_objects
+    </select>
+
+    <insert id="insert" parameterType="com.kx.system.domain.GridManageObjects2">
+        insert into grid_manage_objects(
+        grid_code,
+        import_name,
+        import_address,
+        create_time,
+        update_time
+        )values(
+        #{gridCode},
+        #{importName},
+        #{importAddress},
+        #{createTime},
+        #{updateTime}
+        )
+    </insert>
+
+    <update id="updateById" parameterType="com.kx.system.domain.GridManageObjects2">
+        UPDATE grid_manage_objects
+        SET import_name = #{importName},
+            import_address = #{importAddress},
+            update_time = #{updateTime}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="long">
+        delete from grid_manage_objects where id = #{id}
+    </delete>
+
+    <select id="selectByGridCode" resultType="com.kx.system.domain.GridManageObjects2"
+            parameterType="java.lang.String">
+        select * from grid_manage_objects where grid_code = #{gridCode}
+    </select>
+    <select id="allGridManageObjects" resultType="com.kx.system.domain.GridManageObjects2">
+        select * from grid_manage_objects
+    </select>
+</mapper>

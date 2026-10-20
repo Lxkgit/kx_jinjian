@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.CustomGroupMapper">
+
+    <resultMap type="com.kx.system.domain.group.CustomGroup" id="CustomGroupResult">
+        <result property="id" column="id"/>
+        <result property="customType" column="custom_type"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="customGroupCode" column="custom_group_code"/>
+        <result property="customGroupName" column="custom_group_name"/>
+        <result property="customMember" column="custom_member"/>
+        <result property="customNum" column="custom_num"/>
+        <result property="customGroupSource" column="custom_group_source"/>
+        <result property="groupDesc" column="group_desc"/>
+        <result property="groupStatus" column="group_status"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="labelIds" column="label_ids"/>
+        <result property="updateFlag" column="update_flag"/>
+        <result property="updateCycle" column="update_cycle"/>
+        <result property="createNum" column="create_num" />
+    </resultMap>
+
+    <sql id="selectCustomGroupDTO">
+        select id,
+               custom_type,
+               category_id,
+               custom_group_code,
+               custom_group_name,
+               label_ids,
+               update_flag,
+               update_cycle,
+               custom_member,
+               custom_num,
+               custom_group_source,
+               group_desc,
+               group_status,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               del_flag
+        from custom_group
+    </sql>
+
+    <select id="selectCustomGroupList" parameterType="com.kx.system.domain.req.CustomGroupPageReq"
+            resultMap="CustomGroupResult">
+        select id, custom_type, category_id, custom_group_code, custom_group_name,
+        label_ids,update_flag,update_cycle,custom_member, custom_num,
+        custom_group_source, group_desc, group_status, create_by, create_time,
+        update_by, update_time, del_flag,create_num
+        from custom_group cg
+        <where>
+            del_flag = 0
+            <if test="managerNum != null and managerNum != ''">
+                and create_num = #{managerNum}
+            </if>
+<!--            <if test="categoryId != null and categoryId != ''">-->
+<!--                and category_id = #{categoryId}-->
+<!--            </if>-->
+            <if test="customGroupName != null  and customGroupName != ''">
+                and custom_group_name like concat('%',#{customGroupName}, '%')
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectOneByCategoryId" parameterType="Long" resultMap="CustomGroupResult">
+        <include refid="selectCustomGroupDTO"/>
+        where category_id = #{categoryId} and del_flag =0 LIMIT 1
+    </select>
+
+    <select id="selectCustomGroupById" parameterType="Long" resultMap="CustomGroupResult">
+        <include refid="selectCustomGroupDTO"/>
+        where id = #{id}
+    </select>
+    <select id="selectCustomGroupByIds" resultType="java.lang.String">
+        select custom_member from custom_group
+        where id in
+        <foreach collection="customGroupIds" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </select>
+    <select id="getChildCustomGroup" resultType="com.kx.system.domain.group.CustomGroup">
+        <include refid="selectCustomGroupDTO"/>
+        where category_id = #{categoryId}
+    </select>
+    <select id="selectCustomGroupNameByIds" resultType="java.lang.String">
+        select custom_group_name from custom_group
+        where id in
+        <foreach collection="customGroupIds" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="selectGroupByType" resultType="com.kx.system.domain.group.CustomGroup">
+        select id, custom_group_name
+        from custom_group
+        where custom_type = #{type} and create_num = #{jobNo}
+          and del_flag = 0
+    </select>
+    <select id="getCountByLabelIds" resultType="java.lang.Integer">
+        select count(1) from custom_group where del_flag = 0 and
+        <foreach collection="ids" item="id" separator="or" open="(" close=")">
+            label_ids like concat('%',#{id},'%')
+        </foreach>
+    </select>
+
+    <insert id="insertCustomGroup" parameterType="com.kx.system.domain.group.CustomGroup" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into custom_group
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="customGroup.customType != null">custom_type,</if>
+            <if test="customGroup.categoryId != null">category_id,</if>
+            <if test="customGroup.customGroupCode != null">custom_group_code,</if>
+            <if test="customGroup.customGroupName != null">custom_group_name,</if>
+            <if test="customGroup.customMember != null">custom_member,</if>
+            <if test="customGroup.customNum != null">custom_num,</if>
+            <if test="customGroup.customGroupSource != null">custom_group_source,</if>
+            <if test="customGroup.groupDesc != null">group_desc,</if>
+            <if test="customGroup.groupStatus != null">group_status,</if>
+            <if test="customGroup.createBy != null">create_by,</if>
+            <if test="customGroup.createTime != null">create_time,</if>
+            <if test="customGroup.updateBy != null">update_by,</if>
+            <if test="customGroup.updateTime != null">update_time,</if>
+            <if test="customGroup.delFlag != null">del_flag,</if>
+            <if test="customGroup.updateFlag != null">update_flag,</if>
+            <if test="customGroup.labelIds != null">label_ids,</if>
+            <if test="customGroup.createNum">create_num,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="customGroup.customType != null">#{customGroup.customType},</if>
+            <if test="customGroup.categoryId != null">#{customGroup.categoryId},</if>
+            <if test="customGroup.customGroupCode != null">#{customGroup.customGroupCode},</if>
+            <if test="customGroup.customGroupName != null">#{customGroup.customGroupName},</if>
+            <if test="customGroup.customMember != null">#{customGroup.customMember},</if>
+            <if test="customGroup.customNum != null">#{customGroup.customNum},</if>
+            <if test="customGroup.customGroupSource != null">#{customGroup.customGroupSource},</if>
+            <if test="customGroup.groupDesc != null">#{customGroup.groupDesc},</if>
+            <if test="customGroup.groupStatus != null">#{customGroup.groupStatus},</if>
+            <if test="customGroup.createBy != null">#{customGroup.createBy},</if>
+            <if test="customGroup.createTime != null">#{customGroup.createTime},</if>
+            <if test="customGroup.updateBy != null">#{customGroup.updateBy},</if>
+            <if test="customGroup.updateTime != null">#{customGroup.updateTime},</if>
+            <if test="customGroup.delFlag != null">#{customGroup.delFlag},</if>
+            <if test="customGroup.updateFlag != null">#{customGroup.updateFlag},</if>
+            <if test="customGroup.labelIds != null">#{customGroup.labelIds},</if>
+            <if test="customGroup.createNum != null">#{customGroup.createNum},</if>
+        </trim>
+    </insert>
+
+    <update id="clearNum" parameterType="com.kx.system.domain.group.CustomGroup">
+        update custom_group set custom_num = 0 where id = #{customGroup.id}
+    </update>
+
+    <update id="updateCustomGroup" parameterType="com.kx.system.domain.group.CustomGroup">
+        update custom_group
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="customGroup.customType != null">custom_type = #{customGroup.customType},</if>
+            <if test="customGroup.categoryId != null">category_id = #{customGroup.categoryId},</if>
+            <if test="customGroup.customGroupCode != null">custom_group_code = #{customGroup.customGroupCode},</if>
+            <if test="customGroup.customGroupName != null">custom_group_name = #{customGroup.customGroupName},</if>
+            <if test="customGroup.customMember != null">custom_member = #{customGroup.customMember},</if>
+            <if test="customGroup.customNum != null">custom_num = #{customGroup.customNum},</if>
+            <if test="customGroup.customGroupSource != null">custom_group_source = #{customGroup.customGroupSource},</if>
+            <if test="customGroup.groupDesc != null">group_desc = #{customGroup.groupDesc},</if>
+            <if test="customGroup.groupStatus != null">group_status = #{customGroup.groupStatus},</if>
+            <if test="customGroup.updateBy != null">update_by = #{customGroup.updateBy},</if>
+            <if test="customGroup.updateTime != null">update_time = #{customGroup.updateTime},</if>
+            <if test="customGroup.delFlag != null">del_flag = #{customGroup.delFlag},</if>
+            <if test="customGroup.updateFlag != null">update_flag = #{customGroup.updateFlag},</if>
+            <if test="customGroup.labelIds != null">label_ids = #{customGroup.labelIds},</if>
+        </trim>
+        where id = #{customGroup.id}
+    </update>
+    <update id="updateCustomGroupList" parameterType="com.kx.system.domain.group.CustomGroup">
+        update custom_group
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="customGroup.customType != null">custom_type = #{customGroup.customType},</if>
+            <if test="customGroup.categoryId != null">category_id = #{customGroup.categoryId},</if>
+            <if test="customGroup.customGroupCode != null">custom_group_code = #{customGroup.customGroupCode},</if>
+            <if test="customGroup.customGroupName != null">custom_group_name = #{customGroup.customGroupName},</if>
+            <if test="customGroup.customMember != null">custom_member = #{customGroup.customMember},</if>
+            <if test="customGroup.customNum != null">custom_num = #{customGroup.customNum},</if>
+            <if test="customGroup.customGroupSource != null">custom_group_source = #{customGroup.customGroupSource},
+            </if>
+            <if test="customGroup.groupDesc != null">group_desc = #{customGroup.groupDesc},</if>
+            <if test="customGroup.groupStatus != null">group_status = #{customGroup.groupStatus},</if>
+            <if test="customGroup.updateBy != null">update_by = #{customGroup.updateBy},</if>
+            <if test="customGroup.updateTime != null">update_time = #{customGroup.updateTime},</if>
+            <if test="customGroup.delFlag != null">del_flag = #{customGroup.delFlag},</if>
+        </trim>
+        where id in
+        <foreach item="id" collection="customGroup.ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    <update id="updateStatusByGroupId">
+        update custom_group
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="customGroup.customType != null">custom_type = #{customGroup.customType},</if>
+            <if test="customGroup.categoryId != null">category_id = #{customGroup.categoryId},</if>
+            <if test="customGroup.customGroupCode != null">custom_group_code = #{customGroup.customGroupCode},</if>
+            <if test="customGroup.customGroupName != null">custom_group_name = #{customGroup.customGroupName},</if>
+            <if test="customGroup.customMember != null">custom_member = #{customGroup.customMember},</if>
+            <if test="customGroup.customNum != null">custom_num = #{customGroup.customNum},</if>
+            <if test="customGroup.customGroupSource != null">custom_group_source = #{customGroup.customGroupSource},
+            </if>
+            <if test="customGroup.groupDesc != null">group_desc = #{customGroup.groupDesc},</if>
+            <if test="customGroup.groupStatus != null">group_status = #{customGroup.groupStatus},</if>
+            <if test="customGroup.createBy != null">create_by = #{customGroup.createBy},</if>
+            <if test="customGroup.createTime != null">create_time = #{customGroup.createTime},</if>
+            <if test="customGroup.updateBy != null">update_by = #{customGroup.updateBy},</if>
+            <if test="customGroup.updateTime != null">update_time = #{customGroup.updateTime},</if>
+            <if test="customGroup.delFlag != null">del_flag = #{customGroup.delFlag},</if>
+        </trim>
+        where id = #{customGroup.id}
+    </update>
+
+    <delete id="deleteCustomGroupById" parameterType="Long">
+        delete
+        from custom_group
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteCustomGroupByIds" parameterType="String">
+        delete from custom_group where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.ComplaintInfoMapper">
+
+    <resultMap id="AnchorComplaintEventsMap" type="com.kx.system.domain.AnchorComplaintEvents">
+        <id property="id" column="id" />
+        <result property="anchorId" column="anchor_id" />
+        <result property="anchorName" column="anchor_name" />
+        <result property="complaintSource" column="complaint_source" />
+        <result property="complaintTime" column="complaint_time" />
+        <result property="createTime" column="create_time" />
+        <result property="updateTime" column="update_time" />
+        <result property="complainant" column="complainant" />
+        <result property="complainantPhone" column="complainant_phone" />
+        <result property="industry" column="industry" />
+        <result property="scene" column="scene" />
+        <result property="isCashRejection" column="is_cash_rejection" />
+        <result property="specificReason" column="specific_reason" />
+        <result property="disposalSituation" column="disposal_situation" />
+        <result property="branchLiaison" column="branch_liaison" />
+        <result property="branchLiaisonPhone" column="branch_liaison_phone" />
+        <result property="superiorsName" column="superiors_name" />
+        <result property="superiorPhone" column="superior_phone" />
+        <result property="leadSource" column="lead_source" />
+    </resultMap>
+    <insert id="insert" parameterType="com.kx.system.domain.AnchorComplaintEvents">
+        INSERT INTO anchor_complaint_events (
+            anchor_id, anchor_name, complaint_source, complaint_time, create_time, update_time,
+            complainant, complainant_phone, industry, scene, is_cash_rejection, specific_reason,
+            disposal_situation, branch_liaison, branch_liaison_phone, superiors_name, superior_phone, lead_source
+        ) VALUES (
+                     #{anchorId}, #{anchorName}, #{complaintSource}, #{complaintTime}, #{createTime}, #{updateTime},
+                     #{complainant}, #{complainantPhone}, #{industry}, #{scene}, #{isCashRejection}, #{specificReason},
+                     #{disposalSituation}, #{branchLiaison}, #{branchLiaisonPhone}, #{superiorsName}, #{superiorPhone}, #{leadSource}
+                 )
+    </insert>
+
+    <select id="findByAnchorName" resultMap="AnchorComplaintEventsMap">
+        SELECT * FROM anchor_complaint_events WHERE anchor_name = #{anchorName}
+    </select>
+
+    <select id="findLatestByAnchorName" resultMap="AnchorComplaintEventsMap">
+        SELECT * FROM anchor_complaint_events WHERE anchor_name = #{anchorName} ORDER BY complaint_time DESC LIMIT 1
+    </select>
+
+    <select id="findById" resultMap="AnchorComplaintEventsMap">
+        SELECT * FROM anchor_complaint_events WHERE id = #{id}
+    </select>
+
+
+
+</mapper>

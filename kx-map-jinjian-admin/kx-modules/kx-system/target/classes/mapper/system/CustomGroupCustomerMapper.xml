@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.CustomGroupCustomerMapper">
+
+    <resultMap type="com.kx.system.domain.group.CustomGroupCustomer" id="CustomGroupCustomerResult">
+        <result property="id"    column="id"    />
+        <result property="customGroupId"    column="custom_group_id"    />
+        <result property="customerId"    column="customer_id"    />
+    </resultMap>
+
+    <sql id="selectCustomGroupCustomerVo">
+        select id, custom_group_id, customer_id from custom_group_customer
+    </sql>
+
+    <select id="selectCustomGroupCustomerCount" parameterType="com.kx.system.domain.group.CustomGroupCustomer" resultType="int">
+        select count(1) from custom_group_customer
+        <where>
+            <if test="customGroupId != null "> and custom_group_id = #{customGroupId}</if>
+            <if test="customerId != null "> and customer_id = #{customerId}</if>
+        </where>
+    </select>
+
+    <select id="selectCustomGroupCustomerList" parameterType="com.kx.system.domain.group.CustomGroupCustomer" resultMap="CustomGroupCustomerResult">
+        <include refid="selectCustomGroupCustomerVo"/>
+        <where>
+            <if test="customGroupId != null "> and custom_group_id = #{customGroupId}</if>
+            <if test="customerId != null "> and customer_id = #{customerId}</if>
+        </where>
+    </select>
+
+    <select id="selectCustomGroupCustomerById" parameterType="Long" resultMap="CustomGroupCustomerResult">
+        <include refid="selectCustomGroupCustomerVo"/>
+        where id = #{id}
+    </select>
+
+    <update id="updateCustomGroupCustomer" parameterType="com.kx.system.domain.group.CustomGroupCustomer">
+        update custom_group_customer
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="customGroupId != null">custom_group_id = #{customGroupId},</if>
+            <if test="customerId != null">customer_id = #{customerId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAlll" parameterType="com.kx.system.domain.group.CustomGroupCustomer">
+        delete from custom_group_customer where custom_group_id = #{customGroupCustomer.customGroupId}
+    </delete>
+
+    <delete id="deleteCustomGroupCustomerById" parameterType="Long">
+        delete from custom_group_customer where id = #{id}
+    </delete>
+
+    <delete id="deleteCustomGroupCustomerByIds" parameterType="String">
+        delete from custom_group_customer where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="insert" parameterType="com.kx.system.domain.group.CustomGroupCustomer">
+        INSERT INTO custom_group_customer (custom_group_id, customer_id)
+        VALUES
+        (#{customGroupId}, #{customerId})
+    </insert>
+
+    <insert id="saveBatch" parameterType="com.kx.system.domain.group.CustomGroupCustomer">
+        INSERT INTO custom_group_customer (custom_group_id, customer_id)
+        VALUES
+        <foreach collection="customGroupCustomerList" item="customGroupCustomer" index="index" separator=",">
+            (#{customGroupCustomer.customGroupId}, #{customGroupCustomer.customerId})
+        </foreach>
+    </insert>
+
+	<insert id="insertCustomGroupCustomer" parameterType="com.kx.system.domain.group.CustomGroupCustomer">
+        INSERT INTO custom_group_customer (custom_group_id, customer_id)
+        VALUES
+        <foreach collection="customGroupCustomer.customerIds" item="customerId" index="index" separator=",">
+            (#{customGroupCustomer.customGroupId}, #{customerId})
+        </foreach>
+    </insert>
+
+    <delete id="deleteCustomGroupCustomer">
+        delete from custom_group_customer
+        <where>
+            <if test="customGroupId != null" > custom_group_id = #{customGroupId} AND</if>
+            <if test="customerIds != null ">
+                customer_id in
+                <foreach collection="customerIds" item="customerId" index="index" separator="," open="(" close=")">
+                    #{customerId}
+                </foreach>
+            </if>
+        </where>
+    </delete>
+
+    <select id="selectCustomer" resultType="java.lang.Long" parameterType="com.kx.system.domain.group.CustomGroupCustomer">
+        SELECT customer_id
+        FROM custom_group_customer
+        <where>
+        <if test="customGroupId != null "> custom_group_id = #{customGroupId}</if>
+        </where>
+    </select>
+
+    <select id="selectCustomerByCustomGroups" resultType="com.kx.system.api.domain.SysDept">
+        select <if test="type == 3">sd.dept_id,filing_org_name as deptName</if>
+               <if test="type != 3">dept_id,branch_bank as deptName</if> from custom_group_customer cgc
+        left join
+        <if test="type == 1">performance_customer_info pci on cgc.customer_id = pci.id</if>
+        <if test="type == 2">credit_customer_info cci on cgc.customer_id = cci.id</if>
+        <if test="type == 3">filing_customer_info fci on cgc.customer_id = fci.id left join sys_dept sd on fci.filing_org_code = sd.org_num</if>
+        where cgc.custom_group_id in
+        <foreach collection="customGroups" item="customGroupId" separator="," open="(" close=")">
+            #{customGroupId}
+        </foreach>
+        and <if test="type == 3">filing_org_code</if>
+            <if test="type != 3">dept_id</if> is not null
+        GROUP BY
+        <if test="type == 3">filing_org_code,filing_org_name</if>
+        <if test="type != 3">dept_id,branch_bank</if>
+    </select>
+
+<!--    <select id="selectCustomIdByGroupIds" resultType="com.kx.system.domain.task.PaTaskDetail">-->
+<!--        select-->
+<!--        <if test="type == 1">pci.id as clientId,</if>-->
+<!--        <if test="type == 2">cci.id as clientId,</if>-->
+<!--        <if test="type == 3">fci.id as clientId,</if>-->
+
+<!--        customer_nm,customer_name,customer_identity,-->
+<!--        <if test="type == 3">sd.dept_id as dept_id,filing_org_name as deptName,filing_manager_code as managerJobNumber,filing_manager_name as managerName,separate_bank,customer_type</if>-->
+<!--        <if test="type != 3">sd.dept_id,branch_bank as deptName,credit_manager as managerName,credit_manager_job_number as managerJobNumber,separate_bank,customer_type</if>-->
+<!--        from custom_group_customer cgc-->
+<!--        left join-->
+<!--        <if test="type == 1">performance_customer_info pci on cgc.customer_id = pci.id left join sys_user su on su.manager_num = pci.credit_manager_job_number left join sys_dept sd on sd.dept_id = su.dept_id</if>-->
+<!--        <if test="type == 2">credit_customer_info cci on cgc.customer_id = cci.id  left join sys_dept sd on  sd.dept_id = cci.dept_id </if>-->
+<!--        <if test="type == 3">filing_customer_info fci on cgc.customer_id = fci.id left join sys_dept sd on fci.filing_org_code = sd.org_num </if>-->
+<!--        where cgc.custom_group_id in-->
+<!--        <foreach collection="customGroupIds" item="customGroupId" separator="," open="(" close=")">-->
+<!--            #{customGroupId}-->
+<!--        </foreach>-->
+<!--    </select>-->
+</mapper>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.GridCommunitySupervisorsMapper">
+
+    <!-- 通用resultMap -->
+    <resultMap id="BaseResultMap" type="com.kx.system.domain.grid.message.GridCommunitySupervisors">
+        <id column="id" property="id"/>
+        <result column="grid_code" property="gridCode"/>
+        <result column="supervisor_name" property="supervisorName"/>
+        <result column="supervisor_phone" property="supervisorPhone"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_name" property="createName"/>
+        <result column="create_by" property="createBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_name" property="updateName"/>
+        <result column="update_by" property="updateBy"/>
+    </resultMap>
+
+    <!-- 新增 -->
+    <insert id="insertCommunitySupervisors" parameterType="com.kx.system.domain.grid.message.GridCommunitySupervisors"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO grid_community_supervisors (grid_code, supervisor_name, supervisor_phone,
+                                                create_time, create_name, create_by,
+                                                update_time, update_name, update_by)
+        VALUES (#{gridCode}, #{supervisorName}, #{supervisorPhone},
+                #{createTime}, #{createName}, #{createBy},
+                #{updateTime}, #{updateName}, #{updateBy})
+    </insert>
+
+    <!-- 根据ID删除 -->
+    <delete id="deleteCommunitySupervisorsById" parameterType="Long">
+        DELETE
+        FROM grid_community_supervisors
+        WHERE id = #{id}
+    </delete>
+
+    <!-- 动态更新字段 -->
+    <update id="updateCommunitySupervisors" parameterType="com.kx.system.domain.grid.message.GridCommunitySupervisors">
+        UPDATE grid_community_supervisors
+        <set>
+            <if test="gridCode != null and gridCode != ''">grid_code = #{gridCode},</if>
+            <if test="supervisorName != null and supervisorName != ''">supervisor_name = #{supervisorName},</if>
+            <if test="supervisorPhone != null and supervisorPhone != ''">supervisor_phone = #{supervisorPhone},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateName != null and updateName != ''">update_name = #{updateName},</if>
+            <if test="updateBy != null">update_by = #{updateBy}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据网格编码查询 -->
+    <select id="selectCommunitySupervisorsByGridCode" parameterType="String" resultMap="BaseResultMap">
+        SELECT *
+        FROM grid_community_supervisors
+        WHERE grid_code = #{gridCode}
+    </select>
+
+        <resultMap id="GridCommunitySupervisorsResultMap" type="com.kx.system.domain.GridCommunitySupervisors2">
+            <id property="gridCode" column="grid_code" />
+            <result property="supervisorName" column="supervisor_name" />
+            <result property="supervisorPhone" column="supervisor_phone" />
+            <result property="createTime" column="create_time" />
+            <result property="updateTime" column="update_time" />
+        </resultMap>
+
+        <insert id="insert" parameterType="com.kx.system.domain.GridCommunitySupervisors2">
+            INSERT INTO grid_community_supervisors (grid_code, supervisor_name, supervisor_phone, create_time, update_time)
+            VALUES (#{gridCode}, #{supervisorName}, #{supervisorPhone}, #{createTime}, #{updateTime})
+        </insert>
+
+        <update id="update" parameterType="com.kx.system.domain.GridCommunitySupervisors2">
+            UPDATE grid_community_supervisors
+            SET supervisor_name = #{supervisorName}, supervisor_phone = #{supervisorPhone}, update_time = #{updateTime}
+            WHERE id = #{id}
+        </update>
+        <delete id="delete">
+            DELETE FROM grid_community_supervisors
+            WHERE id = #{id}
+        </delete>
+
+
+        <select id="selectByGridCode" resultType="com.kx.system.domain.GridCommunitySupervisors2">
+            SELECT  id, grid_code, supervisor_name, supervisor_phone, create_time, update_time FROM grid_community_supervisors
+            WHERE grid_code = #{gridCode}
+        </select>
+
+        <select id="selectAll" resultMap="GridCommunitySupervisorsResultMap">
+            SELECT id, grid_code, supervisor_name, supervisor_phone, create_time, update_time FROM grid_community_supervisors
+        </select>
+
+</mapper>

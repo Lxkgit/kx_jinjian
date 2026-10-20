@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.CustomerInfoMapper">
+
+    <resultMap type="com.kx.system.domain.customer.CustomerInfo" id="CustomerInfoResult">
+        <result property="id"    column="id"    />
+        <result property="customerType"    column="customer_type"    />
+        <result property="bankInterFlag"    column="bank_inter_flag"    />
+        <result property="commonPoolFlag"    column="common_pool_flag"    />
+        <result property="customerName"    column="customer_name"    />
+        <result property="customerCategory"    column="customer_category"    />
+        <result property="cardType"    column="card_type"    />
+        <result property="cardNum"    column="card_num"    />
+        <result property="contactPhone"    column="contact_phone"    />
+        <result property="customerInterNum"    column="customer_inter_num"    />
+        <result property="customerAddress"    column="customer_address"    />
+        <result property="belongGrid"    column="belong_grid"    />
+        <result property="dutyDeptId"    column="duty_dept_id"    />
+        <result property="gridUserId"    column="grid_user_id"    />
+        <result property="businessManageUser"    column="business_manage_user"    />
+        <result property="filesStatus"    column="files_status"    />
+        <result property="creditCode"    column="credit_code"    />
+        <result property="merchantManager"    column="merchant_manager"    />
+        <result property="legalPerson"    column="legal_person"    />
+        <result property="legalPersonPhone"    column="legal_person_phone"    />
+        <result property="legalPersonCardNum"    column="legal_person_card_num"    />
+        <result property="customerSex"    column="customer_sex"    />
+        <result property="customerAge"    column="customer_age"    />
+        <result property="career"    column="career"    />
+        <result property="householderFlag"    column="householder_flag"    />
+        <result property="marriageFlag"    column="marriage_flag"    />
+        <result property="citizensFlag"    column="citizens_flag"    />
+        <result property="workAddress"    column="work_address"    />
+        <result property="businessLicenseImage"    column="business_license_image"    />
+        <result property="businessPlaceType"    column="business_place_type"    />
+        <result property="incomeYear"    column="income_year"    />
+        <result property="registerCapital"    column="register_capital"    />
+    </resultMap>
+
+    <sql id="selectCustomerInfoVo">
+        select id, customer_type, bank_inter_flag, common_pool_flag, customer_name, customer_category, card_type, card_num, contact_phone, customer_inter_num, customer_address, belong_grid, duty_dept_id, grid_user_id, business_manage_user, files_status, credit_code, merchant_manager, legal_person, legal_person_phone, legal_person_card_num, customer_sex, customer_age, career, householder_flag, marriage_flag, citizens_flag, work_address, business_license_image, business_place_type, income_year, register_capital from customer_info
+    </sql>
+
+    <select id="selectCustomerInfoList" parameterType="com.kx.system.domain.customer.CustomerInfo" resultMap="CustomerInfoResult">
+        <include refid="selectCustomerInfoVo"/>
+        <where>
+            <if test="customerType != null "> and customer_type = #{customerType}</if>
+            <if test="bankInterFlag != null "> and bank_inter_flag = #{bankInterFlag}</if>
+            <if test="commonPoolFlag != null "> and common_pool_flag = #{commonPoolFlag}</if>
+            <if test="customerName != null  and customerName != ''"> and customer_name like concat('%', #{customerName}, '%')</if>
+            <if test="customerCategory != null "> and customer_category = #{customerCategory}</if>
+            <if test="cardType != null "> and card_type = #{cardType}</if>
+            <if test="cardNum != null  and cardNum != ''"> and card_num = #{cardNum}</if>
+            <if test="contactPhone != null  and contactPhone != ''"> and contact_phone = #{contactPhone}</if>
+            <if test="customerInterNum != null  and customerInterNum != ''"> and customer_inter_num = #{customerInterNum}</if>
+            <if test="customerAddress != null  and customerAddress != ''"> and customer_address = #{customerAddress}</if>
+            <if test="belongGrid != null "> and belong_grid = #{belongGrid}</if>
+            <if test="dutyDeptId != null "> and duty_dept_id = #{dutyDeptId}</if>
+            <if test="gridUserId != null "> and grid_user_id = #{gridUserId}</if>
+            <if test="businessManageUser != null  and businessManageUser != ''"> and business_manage_user = #{businessManageUser}</if>
+            <if test="filesStatus != null "> and files_status = #{filesStatus}</if>
+            <if test="creditCode != null  and creditCode != ''"> and credit_code = #{creditCode}</if>
+            <if test="merchantManager != null  and merchantManager != ''"> and merchant_manager = #{merchantManager}</if>
+            <if test="legalPerson != null  and legalPerson != ''"> and legal_person = #{legalPerson}</if>
+            <if test="legalPersonPhone != null  and legalPersonPhone != ''"> and legal_person_phone = #{legalPersonPhone}</if>
+            <if test="legalPersonCardNum != null  and legalPersonCardNum != ''"> and legal_person_card_num = #{legalPersonCardNum}</if>
+            <if test="customerSex != null "> and customer_sex = #{customerSex}</if>
+            <if test="customerAge != null "> and customer_age = #{customerAge}</if>
+            <if test="career != null  and career != ''"> and career = #{career}</if>
+            <if test="householderFlag != null "> and householder_flag = #{householderFlag}</if>
+            <if test="marriageFlag != null "> and marriage_flag = #{marriageFlag}</if>
+            <if test="citizensFlag != null "> and citizens_flag = #{citizensFlag}</if>
+            <if test="workAddress != null  and workAddress != ''"> and work_address = #{workAddress}</if>
+            <if test="businessLicenseImage != null  and businessLicenseImage != ''"> and business_license_image = #{businessLicenseImage}</if>
+            <if test="businessPlaceType != null "> and business_place_type = #{businessPlaceType}</if>
+            <if test="incomeYear != null "> and income_year = #{incomeYear}</if>
+            <if test="registerCapital != null  and registerCapital != ''"> and register_capital = #{registerCapital}</if>
+        </where>
+    </select>
+
+    <select id="selectCustomerGroupInfoList" parameterType="com.kx.system.domain.customer.CustomerInfo" resultMap="CustomerInfoResult">
+        <include refid="selectCustomerInfoVo"/>
+        <where>
+            <if test="customerInfo.customerType != null "> and customer_type = #{customerInfo.customerType}</if>
+            <if test="customerInfo.bankInterFlag != null "> and bank_inter_flag = #{customerInfo.bankInterFlag}</if>
+            <if test="customerInfo.commonPoolFlag != null "> and common_pool_flag = #{customerInfo.commonPoolFlag}</if>
+            <if test="customerInfo.customerName != null  and customerInfo.customerName != ''"> and customer_name like concat('%', #{customerInfo.customerName}, '%')</if>
+            <if test="customerInfo.customerCategory != null "> and customer_category = #{customerInfo.customerCategory}</if>
+            <if test="customerInfo.cardType != null "> and card_type = #{customerInfo.cardType}</if>
+            <if test="customerInfo.cardNum != null  and customerInfo.cardNum != ''"> and card_num = #{customerInfo.cardNum}</if>
+            <if test="customerInfo.contactPhone != null  and customerInfo.contactPhone != ''"> and contact_phone = #{customerInfo.contactPhone}</if>
+            <if test="customerInfo.customerInterNum != null  and customerInfo.customerInterNum != ''"> and customer_inter_num = #{customerInfo.customerInterNum}</if>
+            <if test="customerInfo.customerAddress != null  and customerInfo.customerAddress != ''"> and customer_address = #{customerInfo.customerAddress}</if>
+            <if test="customerInfo.belongGrid != null "> and belong_grid = #{customerInfo.belongGrid}</if>
+            <if test="customerInfo.dutyDeptId != null "> and duty_dept_id = #{customerInfo.dutyDeptId}</if>
+            <if test="customerInfo.gridUserId != null "> and grid_user_id = #{customerInfo.gridUserId}</if>
+            <if test="customerInfo.businessManageUser != null  and customerInfo.businessManageUser != ''"> and business_manage_user = #{customerInfo.businessManageUser}</if>
+            <if test="customerInfo.filesStatus != null "> and files_status = #{customerInfo.filesStatus}</if>
+            <if test="customerInfo.creditCode != null  and customerInfo.creditCode != ''"> and credit_code = #{customerInfo.creditCode}</if>
+            <if test="customerInfo.merchantManager != null  and customerInfo.merchantManager != ''"> and merchant_manager = #{customerInfo.merchantManager}</if>
+            <if test="customerInfo.legalPerson != null  and customerInfo.legalPerson != ''"> and legal_person = #{customerInfo.legalPerson}</if>
+            <if test="customerInfo.legalPersonPhone != null  and customerInfo.legalPersonPhone != ''"> and legal_person_phone = #{customerInfo.legalPersonPhone}</if>
+            <if test="customerInfo.legalPersonCardNum != null  and customerInfo.legalPersonCardNum != ''"> and legal_person_card_num = #{customerInfo.legalPersonCardNum}</if>
+            <if test="customerInfo.customerSex != null "> and customer_sex = #{customerInfo.customerSex}</if>
+            <if test="customerInfo.customerAge != null "> and customer_age = #{customerInfo.customerAge}</if>
+            <if test="customerInfo.career != null  and customerInfo.career != ''"> and career = #{customerInfo.career}</if>
+            <if test="customerInfo.householderFlag != null "> and householder_flag = #{customerInfo.householderFlag}</if>
+            <if test="customerInfo.marriageFlag != null "> and marriage_flag = #{customerInfo.marriageFlag}</if>
+            <if test="customerInfo.citizensFlag != null "> and citizens_flag = #{customerInfo.citizensFlag}</if>
+            <if test="customerInfo.workAddress != null  and customerInfo.workAddress != ''"> and work_address = #{customerInfo.workAddress}</if>
+            <if test="customerInfo.businessLicenseImage != null  and customerInfo.businessLicenseImage != ''"> and business_license_image = #{customerInfo.businessLicenseImage}</if>
+            <if test="customerInfo.businessPlaceType != null "> and business_place_type = #{customerInfo.businessPlaceType}</if>
+            <if test="customerInfo.incomeYear != null "> and income_year = #{customerInfo.incomeYear}</if>
+            <if test="customerInfo.registerCapital != null  and customerInfo.registerCapital != ''"> and register_capital = #{customerInfo.registerCapital}</if>
+             and id in
+            <foreach item="id" collection="ids" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </where>
+    </select>
+
+    <select id="selectCustomerInfoById" parameterType="Long" resultMap="CustomerInfoResult">
+        <include refid="selectCustomerInfoVo"/>
+        where id = #{customerId}
+    </select>
+    <select id="selectDeptIdByCustomerIds" resultType="com.kx.system.domain.DeptList">
+        select DISTINCT duty_dept_id as dept_id, dept_name from customer_info ci
+        left join sys_dept sd on sd.dept_id = ci.duty_dept_id
+        <where> id in
+            <foreach collection="customerIdList" item="customerId" open="(" close=")" separator=",">
+                #{customerId}
+            </foreach>
+        </where>
+    </select>
+    <select id="queryBusinessManage" resultType="com.kx.system.domain.vo.TaskManagerVO">
+        select concat(nick_name,user_name) as business_manage_user,user_name as manager_num from sys_user
+        <where>
+            <if test="deptIdReq.managerName != null and deptIdReq.managerName != '' ">
+                nick_name like concat('%', #{deptIdReq.managerName}, '%') or manager_num like concat('%', #{deptIdReq.managerName}, '%')
+            </if>
+            <if test="deptIdReq.deptIdList != null and !deptIdReq.deptIdList.isEmpty()">
+                duty_dept_id in
+                <foreach collection="deptIdReq.deptIdList" item="deptId" open="(" close=")" separator=",">
+                    #{deptId}
+                </foreach>
+            </if>
+        </where>
+        limit 10
+    </select>
+    <select id="selectBelongGridName" resultType="java.lang.String">
+        select distinct belong_grid_name from customer_info
+        where belong_grid = #{belongGridCode}
+    </select>
+
+
+    <insert id="insertCustomerInfo" parameterType="com.kx.system.domain.customer.CustomerInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into customer_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="customerType != null">customer_type,</if>
+            <if test="bankInterFlag != null">bank_inter_flag,</if>
+            <if test="commonPoolFlag != null">common_pool_flag,</if>
+            <if test="customerName != null and customerName != ''">customer_name,</if>
+            <if test="customerCategory != null">customer_category,</if>
+            <if test="cardType != null">card_type,</if>
+            <if test="cardNum != null">card_num,</if>
+            <if test="contactPhone != null">contact_phone,</if>
+            <if test="customerInterNum != null">customer_inter_num,</if>
+            <if test="customerAddress != null">customer_address,</if>
+            <if test="belongGrid != null">belong_grid,</if>
+            <if test="dutyDeptId != null">duty_dept_id,</if>
+            <if test="gridUserId != null">grid_user_id,</if>
+            <if test="businessManageUser != null">business_manage_user,</if>
+            <if test="filesStatus != null">files_status,</if>
+            <if test="creditCode != null">credit_code,</if>
+            <if test="merchantManager != null">merchant_manager,</if>
+            <if test="legalPerson != null">legal_person,</if>
+            <if test="legalPersonPhone != null">legal_person_phone,</if>
+            <if test="legalPersonCardNum != null">legal_person_card_num,</if>
+            <if test="customerSex != null">customer_sex,</if>
+            <if test="customerAge != null">customer_age,</if>
+            <if test="career != null">career,</if>
+            <if test="householderFlag != null">householder_flag,</if>
+            <if test="marriageFlag != null">marriage_flag,</if>
+            <if test="citizensFlag != null">citizens_flag,</if>
+            <if test="workAddress != null">work_address,</if>
+            <if test="businessLicenseImage != null">business_license_image,</if>
+            <if test="businessPlaceType != null">business_place_type,</if>
+            <if test="incomeYear != null">income_year,</if>
+            <if test="registerCapital != null">register_capital,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="customerType != null">#{customerType},</if>
+            <if test="bankInterFlag != null">#{bankInterFlag},</if>
+            <if test="commonPoolFlag != null">#{commonPoolFlag},</if>
+            <if test="customerName != null and customerName != ''">#{customerName},</if>
+            <if test="customerCategory != null">#{customerCategory},</if>
+            <if test="cardType != null">#{cardType},</if>
+            <if test="cardNum != null">#{cardNum},</if>
+            <if test="contactPhone != null">#{contactPhone},</if>
+            <if test="customerInterNum != null">#{customerInterNum},</if>
+            <if test="customerAddress != null">#{customerAddress},</if>
+            <if test="belongGrid != null">#{belongGrid},</if>
+            <if test="dutyDeptId != null">#{dutyDeptId},</if>
+            <if test="gridUserId != null">#{gridUserId},</if>
+            <if test="businessManageUser != null">#{businessManageUser},</if>
+            <if test="filesStatus != null">#{filesStatus},</if>
+            <if test="creditCode != null">#{creditCode},</if>
+            <if test="merchantManager != null">#{merchantManager},</if>
+            <if test="legalPerson != null">#{legalPerson},</if>
+            <if test="legalPersonPhone != null">#{legalPersonPhone},</if>
+            <if test="legalPersonCardNum != null">#{legalPersonCardNum},</if>
+            <if test="customerSex != null">#{customerSex},</if>
+            <if test="customerAge != null">#{customerAge},</if>
+            <if test="career != null">#{career},</if>
+            <if test="householderFlag != null">#{householderFlag},</if>
+            <if test="marriageFlag != null">#{marriageFlag},</if>
+            <if test="citizensFlag != null">#{citizensFlag},</if>
+            <if test="workAddress != null">#{workAddress},</if>
+            <if test="businessLicenseImage != null">#{businessLicenseImage},</if>
+            <if test="businessPlaceType != null">#{businessPlaceType},</if>
+            <if test="incomeYear != null">#{incomeYear},</if>
+            <if test="registerCapital != null">#{registerCapital},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCustomerInfo" parameterType="com.kx.system.domain.customer.CustomerInfo">
+        update customer_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="customerType != null">customer_type = #{customerType},</if>
+            <if test="bankInterFlag != null">bank_inter_flag = #{bankInterFlag},</if>
+            <if test="commonPoolFlag != null">common_pool_flag = #{commonPoolFlag},</if>
+            <if test="customerName != null and customerName != ''">customer_name = #{customerName},</if>
+            <if test="customerCategory != null">customer_category = #{customerCategory},</if>
+            <if test="cardType != null">card_type = #{cardType},</if>
+            <if test="cardNum != null">card_num = #{cardNum},</if>
+            <if test="contactPhone != null">contact_phone = #{contactPhone},</if>
+            <if test="customerInterNum != null">customer_inter_num = #{customerInterNum},</if>
+            <if test="customerAddress != null">customer_address = #{customerAddress},</if>
+            <if test="belongGrid != null">belong_grid = #{belongGrid},</if>
+            <if test="dutyDeptId != null">duty_dept_id = #{dutyDeptId},</if>
+            <if test="gridUserId != null">grid_user_id = #{gridUserId},</if>
+            <if test="businessManageUser != null">business_manage_user = #{businessManageUser},</if>
+            <if test="filesStatus != null">files_status = #{filesStatus},</if>
+            <if test="creditCode != null">credit_code = #{creditCode},</if>
+            <if test="merchantManager != null">merchant_manager = #{merchantManager},</if>
+            <if test="legalPerson != null">legal_person = #{legalPerson},</if>
+            <if test="legalPersonPhone != null">legal_person_phone = #{legalPersonPhone},</if>
+            <if test="legalPersonCardNum != null">legal_person_card_num = #{legalPersonCardNum},</if>
+            <if test="customerSex != null">customer_sex = #{customerSex},</if>
+            <if test="customerAge != null">customer_age = #{customerAge},</if>
+            <if test="career != null">career = #{career},</if>
+            <if test="householderFlag != null">householder_flag = #{householderFlag},</if>
+            <if test="marriageFlag != null">marriage_flag = #{marriageFlag},</if>
+            <if test="citizensFlag != null">citizens_flag = #{citizensFlag},</if>
+            <if test="workAddress != null">work_address = #{workAddress},</if>
+            <if test="businessLicenseImage != null">business_license_image = #{businessLicenseImage},</if>
+            <if test="businessPlaceType != null">business_place_type = #{businessPlaceType},</if>
+            <if test="incomeYear != null">income_year = #{incomeYear},</if>
+            <if test="registerCapital != null">register_capital = #{registerCapital},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+
+    <update id="updateCustomerInfos" parameterType="com.kx.system.domain.customer.CustomerInfo">
+        update customer_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="belongGrid != null">belong_grid = #{belongGrid},</if>
+            <if test="belongGrid != null">common_pool_flag = 0,</if>
+            <if test="dutyDeptId != null">duty_dept_id = #{dutyDeptId},</if>
+            <if test="dutyDeptId != null">common_pool_flag = 1,</if>
+        </trim>
+        where id in
+        <foreach item="id" collection="customerIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <delete id="deleteCustomerInfoById" parameterType="Long">
+        delete from customer_info where id = #{id}
+    </delete>
+
+    <delete id="deleteCustomerInfoByIds" parameterType="String">
+        delete from customer_info where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

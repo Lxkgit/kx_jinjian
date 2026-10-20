@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.PaViewDepositModuleManagerGridMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="paViewDepositModuleManagerGridResultMap" type="com.kx.system.domain.small.PaViewDepositModule">
+        <id column="deposit_module_id" property="depositModuleId"/>
+        <result column="manager_code" property="managerCode"/>
+        <result column="grid_code" property="gridCode"/>
+        <result column="customer_type" property="customerType"/>
+        <result column="save_ftp" property="saveFtp"/>
+        <result column="save_balance" property="saveBalance"/>
+        <result column="save_balance_last_month" property="saveBalanceLastMonth"/>
+        <result column="save_balance_begin_year" property="saveBalanceBeginYear"/>
+        <result column="save_day_avg" property="saveDayAvg"/>
+        <result column="save_day_avg_last_month" property="saveDayAvgLastMonth"/>
+        <result column="save_day_avg_begin_year" property="saveDayAvgBeginYear"/>
+        <result column="deposit_save_balance" property="depositSaveBalance"/>
+        <result column="deposit_save_balance_last_month" property="depositSaveBalanceLastMonth"/>
+        <result column="deposit_save_balance_begin_year" property="depositSaveBalanceBeginYear"/>
+        <result column="deposit_save_day_avg" property="depositSaveDayAvg"/>
+        <result column="deposit_save_day_avg_last_month" property="depositSaveDayAvgLastMonth"/>
+        <result column="deposit_save_day_avg_begin_year" property="depositSaveDayAvgBeginYear"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="columns">
+        deposit_module_id, manager_code, grid_code, customer_type, save_ftp, save_balance, save_balance_last_month, save_balance_begin_year, save_day_avg, save_day_avg_last_month, save_day_avg_begin_year, deposit_save_balance, deposit_save_balance_last_month, deposit_save_balance_begin_year, deposit_save_day_avg, deposit_save_day_avg_last_month, deposit_save_day_avg_begin_year, create_time, update_time
+    </sql>
+
+    <sql id="querySumColumns">
+            deposit_module_id as depositModuleId,
+            manager_code as managerCode,
+            grid_code as gridCode,
+            customer_type as customerType,
+            SUM(save_ftp) as save_ftp,
+            SUM(save_balance) as save_balance,
+            SUM(save_balance_last_month) as save_balance_last_month,
+            SUM(save_balance_begin_year) as save_balance_begin_year,
+            SUM(save_day_avg) as save_day_avg,
+            SUM(save_day_avg_last_month) as save_day_avg_last_month,
+            SUM(save_day_avg_begin_year) as save_day_avg_begin_year,
+            SUM(deposit_save_balance) as deposit_save_balance,
+            SUM(deposit_save_balance_last_month) as deposit_save_balance_last_month,
+            SUM(deposit_save_balance_begin_year) as deposit_save_balance_begin_year,
+            SUM(deposit_save_day_avg) as deposit_save_day_avg,
+            SUM(deposit_save_day_avg_last_month) as deposit_save_day_avg_last_month,
+            SUM(deposit_save_day_avg_begin_year) as deposit_save_day_avg_begin_year
+    </sql>
+
+    <!-- 查询列表 -->
+    <select id="list" parameterType="com.kx.system.domain.small.PaViewDepositModule"
+            resultMap="paViewDepositModuleManagerGridResultMap">
+        select
+        <include refid="columns"/>
+        from pa_view_deposit_module_manager_grid
+        <where>
+            <if test=" managerCode!=null and managerCode !='' ">and manager_code = #{managerCode }</if>
+            <if test=" gridCode!=null and gridCode !='' ">and grid_code = #{gridCode }</if>
+            <if test=" customerType!=null and customerType !='' ">and customer_type = #{customerType }</if>
+            <if test=" saveFtp!=null and saveFtp !='' ">and save_ftp = #{saveFtp }</if>
+            <if test=" saveBalance!=null and saveBalance !='' ">and save_balance = #{saveBalance }</if>
+            <if test=" saveBalanceLastMonth!=null and saveBalanceLastMonth !='' ">and save_balance_last_month =
+                #{saveBalanceLastMonth }
+            </if>
+            <if test=" saveBalanceBeginYear!=null and saveBalanceBeginYear !='' ">and save_balance_begin_year =
+                #{saveBalanceBeginYear }
+            </if>
+            <if test=" saveDayAvg!=null and saveDayAvg !='' ">and save_day_avg = #{saveDayAvg }</if>
+            <if test=" saveDayAvgLastMonth!=null and saveDayAvgLastMonth !='' ">and save_day_avg_last_month =
+                #{saveDayAvgLastMonth }
+            </if>
+            <if test=" saveDayAvgBeginYear!=null and saveDayAvgBeginYear !='' ">and save_day_avg_begin_year =
+                #{saveDayAvgBeginYear }
+            </if>
+            <if test=" depositSaveBalance!=null and depositSaveBalance !='' ">and deposit_save_balance =
+                #{depositSaveBalance }
+            </if>
+            <if test=" depositSaveBalanceLastMonth!=null and depositSaveBalanceLastMonth !='' ">and
+                deposit_save_balance_last_month = #{depositSaveBalanceLastMonth }
+            </if>
+            <if test=" depositSaveBalanceBeginYear!=null and depositSaveBalanceBeginYear !='' ">and
+                deposit_save_balance_begin_year = #{depositSaveBalanceBeginYear }
+            </if>
+            <if test=" depositSaveDayAvg!=null and depositSaveDayAvg !='' ">and deposit_save_day_avg =
+                #{depositSaveDayAvg }
+            </if>
+            <if test=" depositSaveDayAvgLastMonth!=null and depositSaveDayAvgLastMonth !='' ">and
+                deposit_save_day_avg_last_month = #{depositSaveDayAvgLastMonth }
+            </if>
+            <if test=" depositSaveDayAvgBeginYear!=null and depositSaveDayAvgBeginYear !='' ">and
+                deposit_save_day_avg_begin_year = #{depositSaveDayAvgBeginYear }
+            </if>
+            <if test=" createTime!=null and createTime !='' ">and create_time = #{createTime }</if>
+            <if test=" updateTime!=null and updateTime !='' ">and update_time = #{updateTime }</if>
+        </where>
+    </select>
+
+    <!-- 根据id查询 -->
+    <select id="getById" resultMap="paViewDepositModuleManagerGridResultMap">
+        select
+        <include refid="columns"/>
+        from pa_view_deposit_module_manager_grid where deposit_module_id = #{id}
+    </select>
+
+    <!-- 根据id删除 -->
+    <delete id="deleteById">
+        delete from  pa_view_deposit_module_manager_grid where  deposit_module_id= #{id}
+    </delete>
+
+    <!-- 新增 -->
+    <insert id="insertPaViewDepositModuleManagerGrid" parameterType="com.kx.system.domain.small.PaViewDepositModule"
+            keyProperty="id" useGeneratedKeys="true">
+        insert into pa_view_deposit_module_manager_grid(
+            manager_code,grid_code,customer_type,save_ftp,save_balance,save_balance_last_month,save_balance_begin_year,save_day_avg,save_day_avg_last_month,save_day_avg_begin_year,deposit_save_balance,deposit_save_balance_last_month,deposit_save_balance_begin_year,deposit_save_day_avg,deposit_save_day_avg_last_month,deposit_save_day_avg_begin_year,create_time,update_time,
+        )values(
+             #{managerCode}, #{gridCode}, #{customerType}, #{saveFtp}, #{saveBalance}, #{saveBalanceLastMonth}, #{saveBalanceBeginYear}, #{saveDayAvg}, #{saveDayAvgLastMonth}, #{saveDayAvgBeginYear}, #{depositSaveBalance}, #{depositSaveBalanceLastMonth}, #{depositSaveBalanceBeginYear}, #{depositSaveDayAvg}, #{depositSaveDayAvgLastMonth}, #{depositSaveDayAvgBeginYear}, #{createTime}, #{updateTime},
+        )
+    </insert>
+    <insert id="batchInsert">
+        insert into pa_view_deposit_module_manager_grid(
+        manager_code,grid_code,customer_type,save_ftp,save_balance,save_balance_last_month,save_balance_begin_year,save_day_avg,save_day_avg_last_month,save_day_avg_begin_year,deposit_save_balance,deposit_save_balance_last_month,deposit_save_balance_begin_year,deposit_save_day_avg,deposit_save_day_avg_last_month,deposit_save_day_avg_begin_year,create_time,update_time
+        ) values
+        <foreach collection="paViewDepositModules" item="c" separator=",">
+            (
+            #{c.managerCode}, #{c.gridCode}, #{c.customerType}, #{c.saveFtp}, #{c.saveBalance},
+            #{c.saveBalanceLastMonth}, #{c.saveBalanceBeginYear}, #{c.saveDayAvg}, #{c.saveDayAvgLastMonth},
+            #{c.saveDayAvgBeginYear}, #{c.depositSaveBalance}, #{c.depositSaveBalanceLastMonth},
+            #{c.depositSaveBalanceBeginYear}, #{c.depositSaveDayAvg}, #{c.depositSaveDayAvgLastMonth},
+            #{c.depositSaveDayAvgBeginYear}, now(), now()
+            )
+        </foreach>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="updatePaViewDepositModuleManagerGrid" parameterType="com.kx.system.domain.small.PaViewDepositModule">
+        update pa_view_deposit_module_manager_grid
+        <trim prefix="SET" suffixOverrides=",">
+            <if test=" managerCode!=null and managerCode !='' ">manager_code = #{managerCode } ,</if>
+            <if test=" gridCode!=null and gridCode !='' ">grid_code = #{gridCode } ,</if>
+            <if test=" customerType!=null and customerType !='' ">customer_type = #{customerType } ,</if>
+            <if test=" saveFtp!=null and saveFtp !='' ">save_ftp = #{saveFtp } ,</if>
+            <if test=" saveBalance!=null and saveBalance !='' ">save_balance = #{saveBalance } ,</if>
+            <if test=" saveBalanceLastMonth!=null and saveBalanceLastMonth !='' ">save_balance_last_month =
+                #{saveBalanceLastMonth } ,
+            </if>
+            <if test=" saveBalanceBeginYear!=null and saveBalanceBeginYear !='' ">save_balance_begin_year =
+                #{saveBalanceBeginYear } ,
+            </if>
+            <if test=" saveDayAvg!=null and saveDayAvg !='' ">save_day_avg = #{saveDayAvg } ,</if>
+            <if test=" saveDayAvgLastMonth!=null and saveDayAvgLastMonth !='' ">save_day_avg_last_month =
+                #{saveDayAvgLastMonth } ,
+            </if>
+            <if test=" saveDayAvgBeginYear!=null and saveDayAvgBeginYear !='' ">save_day_avg_begin_year =
+                #{saveDayAvgBeginYear } ,
+            </if>
+            <if test=" depositSaveBalance!=null and depositSaveBalance !='' ">deposit_save_balance =
+                #{depositSaveBalance } ,
+            </if>
+            <if test=" depositSaveBalanceLastMonth!=null and depositSaveBalanceLastMonth !='' ">
+                deposit_save_balance_last_month = #{depositSaveBalanceLastMonth } ,
+            </if>
+            <if test=" depositSaveBalanceBeginYear!=null and depositSaveBalanceBeginYear !='' ">
+                deposit_save_balance_begin_year = #{depositSaveBalanceBeginYear } ,
+            </if>
+            <if test=" depositSaveDayAvg!=null and depositSaveDayAvg !='' ">deposit_save_day_avg = #{depositSaveDayAvg }
+                ,
+            </if>
+            <if test=" depositSaveDayAvgLastMonth!=null and depositSaveDayAvgLastMonth !='' ">
+                deposit_save_day_avg_last_month = #{depositSaveDayAvgLastMonth } ,
+            </if>
+            <if test=" depositSaveDayAvgBeginYear!=null and depositSaveDayAvgBeginYear !='' ">
+                deposit_save_day_avg_begin_year = #{depositSaveDayAvgBeginYear } ,
+            </if>
+            <if test=" createTime!=null and createTime !='' ">create_time = #{createTime } ,</if>
+            <if test=" updateTime!=null and updateTime !='' ">update_time = #{updateTime } ,</if>
+        </trim>
+        where deposit_module_id = #{id}
+    </update>
+    <update id="truncate">
+        truncate table pa_view_deposit_module_manager_grid
+    </update>
+
+    <select id="getByQuery" parameterType="com.kx.system.domain.param.PaViewSmallParam"
+            resultMap="paViewDepositModuleManagerGridResultMap">
+        select
+        <include refid="querySumColumns"/>
+        from pa_view_deposit_module_manager_grid
+        <where>
+            <if test=" gridCode!=null and gridCode !='' and  gridCodes==null ">and grid_code = #{gridCode }</if>
+            <if test=" customerType!=null and customerType !='' ">and customer_type = #{customerType }</if>
+            <if test=" managerCodes!=null and managerCodes.size>0">
+                and manager_code in
+                <foreach item="item" collection="managerCodes" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test=" gridCodes!=null and gridCodes.size>0">
+                and grid_code in
+                <foreach item="item" collection="gridCodes" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

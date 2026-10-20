@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.SysDeptMapper">
+
+    <resultMap type="com.kx.system.api.domain.SysDept" id="SysDeptResult">
+        <id property="deptId" column="dept_id"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="ancestors" column="ancestors"/>
+        <result property="deptName" column="dept_name"/>
+        <result property="orderNum" column="order_num"/>
+        <result property="orgNum" column="org_num"/>
+        <result property="leader" column="leader"/>
+        <result property="phone" column="phone"/>
+        <result property="email" column="email"/>
+        <result property="status" column="status"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="hasChildren" column="has_children"/>
+        <result property="parentName" column="parent_name"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="parentOrgNum" column="parent_org_num"/>
+        <result property="parentName" column="parnet_org_name"/>
+        <result property="address" column="address"/>
+        <result property="areaCode" column="area_code"/>
+        <result property="lat" column="lat"/>
+        <result property="lng" column="lng"/>
+        <result property="bankAgencyName" column="bank_agency_name"/>
+        <result property="dutyName" column="duty_name"/>
+        <result property="dutyCode" column="duty_code"/>
+        <result property="dutyPhone" column="duty_phone"/>
+        <result property="dutyTelephone" column="duty_telephone"/>
+    </resultMap>
+
+    <sql id="selectDeptVo">
+        select d.dept_id,
+               d.parent_id,
+               d.ancestors,
+               d.dept_name,
+               d.order_num,
+               d.org_num,
+               d.leader,
+               d.phone,
+               d.email,
+               d.status,
+               d.del_flag,
+               d.create_by,
+               d.create_time,
+               d.area_code,
+               d.address,
+               d.lng,
+               d.lat,
+               d.bank_agency_name,
+               d.duty_name,
+               d.duty_code,
+               d.duty_phone,
+               d.duty_telephone,
+               pd.org_num   parent_org_num,
+               pd.dept_name parnet_org_name
+        from sys_dept d
+                 left join sys_dept pd on d.parent_id = pd.dept_id
+    </sql>
+
+    <select id="selectDeptList" parameterType="com.kx.system.api.domain.SysDept" resultMap="SysDeptResult">
+        <include refid="selectDeptVo"/>
+        where d.del_flag = '0'
+        <if test="deptId != null and deptId != 0">
+            AND d.dept_id = #{deptId}
+        </if>
+        <if test="parentId != null and parentId != 0">
+            AND d.parent_id = #{parentId}
+        </if>
+        <if test="deptName != null and deptName != ''">
+            AND d.dept_name like concat('%', #{deptName}, '%')
+        </if>
+        <if test="orgNum != null and orgNum != ''">
+            AND d.org_num like concat('%', #{orgNum}, '%')
+        </if>
+        <if test="status != null and status != ''">
+            AND d.status = #{status}
+        </if>
+        <if test="orgNumList != null and orgNumList.size != 0">
+            AND d.org_num in
+            <foreach collection="orgNumList" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <!-- 数据范围过滤 -->
+        <!--        ${params.dataScope}-->
+        order by d.parent_id, d.order_num
+    </select>
+
+    <select id="selectDeptListByRoleId" resultType="Long">
+        select d.dept_id
+        from sys_dept d
+        left join sys_role_dept rd on d.dept_id = rd.dept_id
+        where rd.role_id = #{roleId}
+        <if test="deptCheckStrictly">
+            and d.dept_id not in (select d.parent_id from sys_dept d inner join sys_role_dept rd on d.dept_id =
+            rd.dept_id and rd.role_id = #{roleId})
+        </if>
+        order by d.parent_id, d.order_num
+    </select>
+
+    <select id="selectDeptById" parameterType="Long" resultMap="SysDeptResult">
+        <include refid="selectDeptVo"/>
+        where d.dept_id = #{deptId}
+    </select>
+
+
+    <select id="selectDeptIdByCode" parameterType="java.lang.Long" resultType="java.lang.Long">
+        select dept_id from sys_dept
+        <where>
+            org_num in
+            <foreach collection="orgList" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </where>
+    </select>
+
+    <select id="selectDeptByIds" parameterType="java.lang.Long" resultMap="SysDeptResult">
+        select * from sys_dept
+        <where>
+            <foreach collection="ids" item="item" separator="or">
+                ancestors like concat('%,', #{item} ,',%')
+            </foreach>
+        </where>
+    </select>
+
+    <select id="checkDeptExistUser" parameterType="Long" resultType="int">
+        select count(1)
+        from sys_user
+        where dept_id = #{deptId}
+          and del_flag = '0'
+    </select>
+
+    <select id="hasChildByDeptId" parameterType="Long" resultType="int">
+        select count(1)
+        from sys_dept
+        where del_flag = '0'
+          and parent_id = #{deptId} limit 1
+    </select>
+
+    <select id="selectChildrenDeptById" parameterType="Long" resultMap="SysDeptResult">
+        select *
+        from sys_dept
+        where ancestors like concat('%,', #{deptId}, ',%')
+    </select>
+
+    <select id="selectNormalChildrenDeptById" parameterType="Long" resultType="int">
+        select count(*)
+        from sys_dept
+        where status = 0
+          and del_flag = '0'
+          and ancestors like concat('%,', #{deptId}, ',%')
+    </select>
+
+    <select id="checkDeptNameUnique" resultMap="SysDeptResult">
+        <include refid="selectDeptVo"/>
+        where d.dept_name=#{deptName} and d.parent_id = #{parentId} and d.del_flag = '0' limit 1
+    </select>
+    <select id="selectAll" resultType="com.kx.system.api.domain.SysDept">
+        select d.dept_id,
+               d.parent_id,
+               d.ancestors,
+               d.dept_name,
+               d.order_num,
+               d.org_num,
+               d.leader,
+               d.phone,
+               d.email,
+               d.status,
+               d.del_flag,
+               d.create_by,
+               d.create_time
+        from sys_dept d
+        order by dept_id asc
+    </select>
+    <select id="selectDeptNameById" resultType="java.lang.String">
+        SELECT dept_name
+        FROM sys_dept
+        WHERE dept_id = CONVERT(#{creditManagerBranchBank}, UNSIGNED)
+    </select>
+
+    <select id="selectSelfAndParent" resultType="java.lang.String">
+        select org_num
+        from sys_dept
+        where dept_id = #{deptId}
+           or ancestors like concat('%,', #{deptId}, ',%')
+    </select>
+
+    <select id="getSelfDefinition" resultType="java.lang.String">
+        select distinct org_num
+        from sys_dept a left join sys_role_dept b on a.dept_id = b.dept_id
+        where role_id in
+        <foreach collection="roleIdList" item="roleId" separator="," open="(" close=")">
+            #{roleId}
+        </foreach>
+    </select>
+    <select id="listDirectChildrenDept" resultType="com.kx.system.api.domain.SysDept">
+        select *
+        from sys_dept
+        where parent_id = #{deptId}
+    </select>
+
+    <select id="selectEnabledDeptByIds" resultMap="SysDeptResult">
+        <include refid="selectDeptVo"/>
+        WHERE d.del_flag = '0' AND d.status = '0'
+          AND d.dept_id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="selectLazyDeptOptions" resultMap="SysDeptResult">
+        SELECT d.dept_id, d.parent_id, d.dept_name, d.org_num,
+               CASE WHEN EXISTS (
+                   SELECT 1 FROM sys_dept child
+                   WHERE child.parent_id = d.dept_id
+                     AND child.del_flag = '0' AND child.status = '0'
+               ) THEN 1 ELSE 0 END AS has_children
+        FROM sys_dept d
+        WHERE d.del_flag = '0' AND d.status = '0'
+        <choose>
+            <when test="parentId != null and parentId != 0">
+                AND d.parent_id = #{parentId}
+            </when>
+            <otherwise>
+                AND (d.parent_id IS NULL OR d.parent_id = 0)
+            </otherwise>
+        </choose>
+        ORDER BY d.order_num, d.dept_id
+    </select>
+
+    <select id="listDeptByCode" resultMap="SysDeptResult">
+        <include refid="selectDeptVo"/>
+        where d.org_num in
+        <foreach collection="orgCodes" item="orgCode" separator="," open="(" close=")">
+            #{orgCode}
+        </foreach>
+    </select>
+    <select id="selectDeptByCode" resultMap="SysDeptResult">
+        <include refid="selectDeptVo"/>
+        where d.org_num = #{orgCode}
+    </select>
+    <select id="selectParentByNum" resultType="com.kx.system.api.domain.SysDept">
+        select IFNULL(sd2.dept_id, sd1.dept_id) as dept_id, IFNULL(sd2.dept_name, sd1.dept_name) as dept_name
+        from sys_dept sd1
+                 left join sys_dept sd2 on sd1.parent_id = sd2.dept_id
+        where sd1.org_num = #{orgNum}
+    </select>
+
+    <insert id="insertDept" parameterType="com.kx.system.api.domain.SysDept">
+        insert into sys_dept(
+        <if test="deptId != null and deptId != 0">dept_id,</if>
+        <if test="parentId != null and parentId != 0">parent_id,</if>
+        <if test="deptName != null and deptName != ''">dept_name,</if>
+        <if test="ancestors != null and ancestors != ''">ancestors,</if>
+        <if test="orderNum != null">order_num,</if>
+        <if test="orgNum != null">org_num,</if>
+        <if test="leader != null and leader != ''">leader,</if>
+        <if test="phone != null and phone != ''">phone,</if>
+        <if test="email != null and email != ''">email,</if>
+        <if test="status != null">status,</if>
+        <if test="createBy != null and createBy != ''">create_by,</if>
+        create_time
+        )values(
+        <if test="deptId != null and deptId != 0">#{deptId},</if>
+        <if test="parentId != null and parentId != 0">#{parentId},</if>
+        <if test="deptName != null and deptName != ''">#{deptName},</if>
+        <if test="ancestors != null and ancestors != ''">#{ancestors},</if>
+        <if test="orderNum != null">#{orderNum},</if>
+        <if test="orgNum != null">#{orgNum},</if>
+        <if test="leader != null and leader != ''">#{leader},</if>
+        <if test="phone != null and phone != ''">#{phone},</if>
+        <if test="email != null and email != ''">#{email},</if>
+        <if test="status != null">#{status},</if>
+        <if test="createBy != null and createBy != ''">#{createBy},</if>
+        sysdate()
+        )
+    </insert>
+
+    <update id="updateDept" parameterType="com.kx.system.api.domain.SysDept">
+        update sys_dept
+        <set>
+            <if test="parentId != null and parentId != 0">parent_id = #{parentId},</if>
+            <if test="deptName != null and deptName != ''">dept_name = #{deptName},</if>
+            <if test="ancestors != null and ancestors != ''">ancestors = #{ancestors},</if>
+            <if test="orderNum != null">order_num = #{orderNum},</if>
+            <if test="orgNum != null">org_num = #{orgNum},</if>
+            <if test="leader != null">leader = #{leader},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </set>
+        where dept_id = #{deptId}
+    </update>
+
+    <update id="updateDeptChildren" parameterType="java.util.List">
+        update sys_dept set ancestors =
+        <foreach collection="depts" item="item" index="index"
+                 separator=" " open="case dept_id" close="end">
+            when #{item.deptId} then #{item.ancestors}
+        </foreach>
+        where dept_id in
+        <foreach collection="depts" item="item" index="index"
+                 separator="," open="(" close=")">
+            #{item.deptId}
+        </foreach>
+    </update>
+
+    <update id="updateDeptStatusNormal" parameterType="Long">
+        update sys_dept set status = '0' where dept_id in
+        <foreach collection="array" item="deptId" open="(" separator="," close=")">
+            #{deptId}
+        </foreach>
+    </update>
+    <update id="createBackupTable">
+        CREATE TABLE IF NOT EXISTS sys_dept_${date} LIKE sys_dept
+    </update>
+    <update id="truncateTable">
+        TRUNCATE TABLE sys_dept
+    </update>
+    <insert id="batchInsert" useGeneratedKeys="true" keyProperty="deptId">
+        insert into sys_dept(
+        parent_id,
+        dept_name,
+        ancestors,
+        order_num,
+        org_num,
+        leader,
+        phone,
+        email,
+        status,
+        create_by,
+        create_time
+        )values
+        <foreach collection="batchList" item="d" separator=",">
+            (
+            #{d.parentId},
+            #{d.deptName},
+            #{d.ancestors},
+            #{d.orderNum},
+            #{d.orgNum},
+            #{d.leader},
+            #{d.phone},
+            #{d.email},
+            #{d.status},
+            #{d.createBy}
+            ,sysdate())
+        </foreach>
+    </insert>
+
+    <delete id="deleteDeptById" parameterType="Long">
+        update sys_dept
+        set del_flag = '2'
+        where dept_id = #{deptId}
+    </delete>
+
+    <select id="selectByAreaCode" resultMap="SysDeptResult">
+        <include refid="selectDeptVo"/>
+        <where>
+            ${sysDept.params.dataScope}
+            <if test="sysDept.areaCode != null and sysDept.areaCode != ''">
+                and d.area_code = #{sysDept.areaCode}
+            </if>
+        </where>
+    </select>
+    <select id="selectDeptIdByCodes" parameterType="java.util.List" resultType="java.lang.Long">
+        select dept_id from sys_dept where org_num in
+        <foreach collection="orgCodes" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+
+    <resultMap type="com.kx.system.api.domain.SysDeptExcel" id="ExcelResult">
+        <id property="deptName" column="dept_name" jdbcType="VARCHAR"/>
+        <id property="bankAgencyName" column="bank_agency_name" jdbcType="VARCHAR"/>
+        <id property="dutyName" column="duty_name" jdbcType="VARCHAR"/>
+        <id property="dutyPhone" column="duty_phone" jdbcType="VARCHAR"/>
+        <id property="dutyTelephone" column="duty_telephone" jdbcType="VARCHAR"/>
+        <id property="serviceType" column="service_type" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="selectAllByRenHang" resultMap="ExcelResult">
+        select a.dept_name,
+               a.bank_agency_name,
+               a.duty_name,
+               a.duty_phone,
+               a.duty_telephone,
+               b.service_type
+        from sys_dept a
+                 left join performance_customer_info b
+                           on a.dept_name = b.customer_name
+    </select>
+
+    <update id="UpdateBatchByDeptName" parameterType="List">
+        <foreach collection="cachedDataList" item="item" separator=";" close=";">
+            update sys_dept
+            <set>
+                duty_name = #{item.dutyName},
+                duty_telephone = #{item.dutyTelephone},
+                duty_phone = #{item.dutyPhone}
+            </set>
+            where dept_name = #{item.deptName}
+        </foreach>
+    </update>
+    <update id="updateDotTapy">
+        update sys_dept
+        set dot_type = #{dotType}
+        where dept_name = #{anchorName}
+    </update>
+    <select id="selectDotTapy" resultType="java.lang.String" parameterType="java.lang.String">
+        select dot_type
+        from sys_dept
+        where dept_name = #{anchorName}
+    </select>
+    <select id="getDeptClassify" resultType="java.lang.String">
+        select dept_classify
+        from sys_dept
+        where dept_classify is not null
+        group by dept_classify;
+    </select>
+
+
+    <select id="getDeptInfoByGridCode" resultType="com.kx.system.api.domain.SysDept">
+        SELECT sd.dept_id,
+               sd.dept_name,
+               sd.org_num,
+               sd.area_code,
+               pait.ancestor_codes
+        FROM sys_dept sd
+                 JOIN
+             pa_addr_info_type pait ON pait.code = sd.area_code
+                 JOIN
+                 (SELECT area_code FROM sys_dept WHERE org_num = #{orgNum} AND dot_type = 1 LIMIT 1) base
+                 ON pait.ancestor_codes LIKE CONCAT('%', base.area_code, '%')
+        WHERE sd.dot_type = 2;
+    </select>
+
+</mapper>

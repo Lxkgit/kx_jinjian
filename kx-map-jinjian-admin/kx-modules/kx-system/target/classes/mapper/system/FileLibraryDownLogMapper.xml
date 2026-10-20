@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.FileLibraryDownLogMapper">
+  <resultMap id="BaseResultMap" type="com.kx.system.domain.FileLibraryDownLog">
+    <!--@mbg.generated-->
+    <!--@Table file_library_down_log-->
+    <id column="id" property="id" />
+    <result column="file_library_id" property="fileLibraryId" />
+    <result column="down_time" property="downTime" />
+    <result column="down_user_num" property="downUserNum" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, file_library_id, down_time, down_user_num
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select
+    <include refid="Base_Column_List" />
+    from file_library_down_log
+    where id = #{id}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--@mbg.generated-->
+    delete from file_library_down_log
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.kx.system.domain.FileLibraryDownLog">
+    <!--@mbg.generated-->
+    insert into file_library_down_log (id, file_library_id, down_time, down_user_num)
+    values (#{id}, #{fileLibraryId}, #{downTime}, #{downUserNum})
+  </insert>
+  <insert id="insertSelective" parameterType="com.kx.system.domain.FileLibraryDownLog">
+    <!--@mbg.generated-->
+    insert into file_library_down_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="fileLibraryId != null">
+        file_library_id,
+      </if>
+      <if test="downTime != null">
+        down_time,
+      </if>
+      <if test="downUserNum != null and downUserNum != ''">
+        down_user_num,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id},
+      </if>
+      <if test="fileLibraryId != null">
+        #{fileLibraryId},
+      </if>
+      <if test="downTime != null">
+        #{downTime},
+      </if>
+      <if test="downUserNum != null and downUserNum != ''">
+        #{downUserNum},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kx.system.domain.FileLibraryDownLog">
+    <!--@mbg.generated-->
+    update file_library_down_log
+    <set>
+      <if test="fileLibraryId != null">
+        file_library_id = #{fileLibraryId},
+      </if>
+      <if test="downTime != null">
+        down_time = #{downTime},
+      </if>
+      <if test="downUserNum != null and downUserNum != ''">
+        down_user_num = #{downUserNum},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kx.system.domain.FileLibraryDownLog">
+    <!--@mbg.generated-->
+    update file_library_down_log
+    set file_library_id = #{fileLibraryId},
+      down_time = #{downTime},
+      down_user_num = #{downUserNum}
+    where id = #{id}
+  </update>
+
+  <select id="selectCount" resultType="int">
+    select count(1) from file_library_down_log where file_library_id = #{fileLibraryId}
+    </select>
+</mapper>

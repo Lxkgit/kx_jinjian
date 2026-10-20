@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.ProductBusStatisticsManagerMapper">
+  <resultMap id="BaseResultMap" type="com.kx.system.domain.ProductBusStatisticsManager">
+    <!--@mbg.generated-->
+    <!--@Table product_bus_statistics_manager-->
+    <id column="id" property="id" />
+    <result column="product_id" property="productId" />
+    <result column="product_nm" property="productNm" />
+    <result column="manager_name" property="managerName" />
+    <result column="manager_nm" property="managerNm" />
+    <result column="person_bus_total" property="personBusTotal" />
+    <result column="scan_total" property="scanTotal" />
+    <result column="scan_bus_total" property="scanBusTotal" />
+    <result column="bus_conversion_ratio" property="busConversionRatio" />
+    <result column="etl_dt" property="etlDt" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, product_id, product_nm, manager_name, manager_nm, person_bus_total, scan_total,
+    scan_bus_total, bus_conversion_ratio, etl_dt
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select
+    <include refid="Base_Column_List" />
+    from product_bus_statistics_manager
+    where id = #{id}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--@mbg.generated-->
+    delete from product_bus_statistics_manager
+    where id = #{id}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.kx.system.domain.ProductBusStatisticsManager" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into product_bus_statistics_manager (product_id, product_nm, manager_name, manager_nm, person_bus_total,
+      scan_total, scan_bus_total, bus_conversion_ratio, etl_dt)
+    values (#{productId}, #{productNm}, #{managerName}, #{managerNm}, #{personBusTotal},
+      #{scanTotal}, #{scanBusTotal}, #{busConversionRatio}, #{etlDt})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.kx.system.domain.ProductBusStatisticsManager" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into product_bus_statistics_manager
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="productId != null">
+        product_id,
+      </if>
+      <if test="productNm != null and productNm != ''">
+        product_nm,
+      </if>
+      <if test="managerName != null and managerName != ''">
+        manager_name,
+      </if>
+      <if test="managerNm != null and managerNm != ''">
+        manager_nm,
+      </if>
+      <if test="personBusTotal != null">
+        person_bus_total,
+      </if>
+      <if test="scanTotal != null">
+        scan_total,
+      </if>
+      <if test="scanBusTotal != null">
+        scan_bus_total,
+      </if>
+      <if test="busConversionRatio != null">
+        bus_conversion_ratio,
+      </if>
+      <if test="etlDt != null">
+        etl_dt,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="productId != null">
+        #{productId},
+      </if>
+      <if test="productNm != null and productNm != ''">
+        #{productNm},
+      </if>
+      <if test="managerName != null and managerName != ''">
+        #{managerName},
+      </if>
+      <if test="managerNm != null and managerNm != ''">
+        #{managerNm},
+      </if>
+      <if test="personBusTotal != null">
+        #{personBusTotal},
+      </if>
+      <if test="scanTotal != null">
+        #{scanTotal},
+      </if>
+      <if test="scanBusTotal != null">
+        #{scanBusTotal},
+      </if>
+      <if test="busConversionRatio != null">
+        #{busConversionRatio},
+      </if>
+      <if test="etlDt != null">
+        #{etlDt},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kx.system.domain.ProductBusStatisticsManager">
+    <!--@mbg.generated-->
+    update product_bus_statistics_manager
+    <set>
+      <if test="productId != null">
+        product_id = #{productId},
+      </if>
+      <if test="productNm != null and productNm != ''">
+        product_nm = #{productNm},
+      </if>
+      <if test="managerName != null and managerName != ''">
+        manager_name = #{managerName},
+      </if>
+      <if test="managerNm != null and managerNm != ''">
+        manager_nm = #{managerNm},
+      </if>
+      <if test="personBusTotal != null">
+        person_bus_total = #{personBusTotal},
+      </if>
+      <if test="scanTotal != null">
+        scan_total = #{scanTotal},
+      </if>
+      <if test="scanBusTotal != null">
+        scan_bus_total = #{scanBusTotal},
+      </if>
+      <if test="busConversionRatio != null">
+        bus_conversion_ratio = #{busConversionRatio},
+      </if>
+      <if test="etlDt != null">
+        etl_dt = #{etlDt},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kx.system.domain.ProductBusStatisticsManager">
+    <!--@mbg.generated-->
+    update product_bus_statistics_manager
+    set product_id = #{productId},
+      product_nm = #{productNm},
+      manager_name = #{managerName},
+      manager_nm = #{managerNm},
+      person_bus_total = #{personBusTotal},
+      scan_total = #{scanTotal},
+      scan_bus_total = #{scanBusTotal},
+      bus_conversion_ratio = #{busConversionRatio},
+      etl_dt = #{etlDt}
+    where id = #{id}
+  </update>
+
+  <select id="selectPage" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from product_bus_statistics_manager
+    <where>
+      <if test="productId != null">
+        and product_id = #{productId}
+      </if>
+      <if test="query != null and query != ''">
+        and (
+            manager_name like concat('%',#{query}, '%')
+            or
+            manager_nm like concat('%',#{query}, '%')
+        )
+      </if>
+    </where>
+  </select>
+</mapper>

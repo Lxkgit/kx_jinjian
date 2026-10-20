@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.ActCustLogMapper">
+  <resultMap id="BaseResultMap" type="com.kx.system.domain.ActCustLog">
+    <!--@mbg.generated-->
+    <!--@Table act_cust_log-->
+    <id column="id" property="id" />
+    <result column="act_id" property="actId" />
+    <result column="customer_name" property="customerName" />
+    <result column="customer_phone" property="customerPhone" />
+    <result column="customer_identity" property="customerIdentity" />
+    <result column="is_scan" property="isScan" />
+    <result column="scan_time" property="scanTime" />
+    <result column="is_fill_in" property="isFillIn" />
+    <result column="fill_in_time" property="fillInTime" />
+    <result column="is_info_effect" property="isInfoEffect" />
+    <result column="is_buiness" property="isBuiness" />
+    <result column="buiness_time" property="buinessTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, act_id, customer_name, customer_phone, customer_identity, is_scan, scan_time,
+    is_fill_in, fill_in_time, is_info_effect, is_buiness, buiness_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select
+    <include refid="Base_Column_List" />
+    from act_cust_log
+    where id = #{id}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--@mbg.generated-->
+    delete from act_cust_log
+    where id = #{id}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.kx.system.domain.ActCustLog" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into act_cust_log (act_id, customer_name, customer_phone, customer_identity, is_scan,
+      scan_time, is_fill_in, fill_in_time, is_info_effect, is_buiness, buiness_time
+      )
+    values (#{actId}, #{customerName}, #{customerPhone}, #{customerIdentity}, #{isScan},
+      #{scanTime}, #{isFillIn}, #{fillInTime}, #{isInfoEffect}, #{isBuiness}, #{buinessTime}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.kx.system.domain.ActCustLog" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into act_cust_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="actId != null">
+        act_id,
+      </if>
+      <if test="customerName != null and customerName != ''">
+        customer_name,
+      </if>
+      <if test="customerPhone != null and customerPhone != ''">
+        customer_phone,
+      </if>
+      <if test="customerIdentity != null and customerIdentity != ''">
+        customer_identity,
+      </if>
+      <if test="isScan != null and isScan != ''">
+        is_scan,
+      </if>
+      <if test="scanTime != null">
+        scan_time,
+      </if>
+      <if test="isFillIn != null and isFillIn != ''">
+        is_fill_in,
+      </if>
+      <if test="fillInTime != null">
+        fill_in_time,
+      </if>
+      <if test="isInfoEffect != null and isInfoEffect != ''">
+        is_info_effect,
+      </if>
+      <if test="isBuiness != null and isBuiness != ''">
+        is_buiness,
+      </if>
+      <if test="buinessTime != null">
+        buiness_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="actId != null">
+        #{actId},
+      </if>
+      <if test="customerName != null and customerName != ''">
+        #{customerName},
+      </if>
+      <if test="customerPhone != null and customerPhone != ''">
+        #{customerPhone},
+      </if>
+      <if test="customerIdentity != null and customerIdentity != ''">
+        #{customerIdentity},
+      </if>
+      <if test="isScan != null and isScan != ''">
+        #{isScan},
+      </if>
+      <if test="scanTime != null">
+        #{scanTime},
+      </if>
+      <if test="isFillIn != null and isFillIn != ''">
+        #{isFillIn},
+      </if>
+      <if test="fillInTime != null">
+        #{fillInTime},
+      </if>
+      <if test="isInfoEffect != null and isInfoEffect != ''">
+        #{isInfoEffect},
+      </if>
+      <if test="isBuiness != null and isBuiness != ''">
+        #{isBuiness},
+      </if>
+      <if test="buinessTime != null">
+        #{buinessTime},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kx.system.domain.ActCustLog">
+    <!--@mbg.generated-->
+    update act_cust_log
+    <set>
+      <if test="actId != null">
+        act_id = #{actId},
+      </if>
+      <if test="customerName != null and customerName != ''">
+        customer_name = #{customerName},
+      </if>
+      <if test="customerPhone != null and customerPhone != ''">
+        customer_phone = #{customerPhone},
+      </if>
+      <if test="customerIdentity != null and customerIdentity != ''">
+        customer_identity = #{customerIdentity},
+      </if>
+      <if test="isScan != null and isScan != ''">
+        is_scan = #{isScan},
+      </if>
+      <if test="scanTime != null">
+        scan_time = #{scanTime},
+      </if>
+      <if test="isFillIn != null and isFillIn != ''">
+        is_fill_in = #{isFillIn},
+      </if>
+      <if test="fillInTime != null">
+        fill_in_time = #{fillInTime},
+      </if>
+      <if test="isInfoEffect != null and isInfoEffect != ''">
+        is_info_effect = #{isInfoEffect},
+      </if>
+      <if test="isBuiness != null and isBuiness != ''">
+        is_buiness = #{isBuiness},
+      </if>
+      <if test="buinessTime != null">
+        buiness_time = #{buinessTime},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kx.system.domain.ActCustLog">
+    <!--@mbg.generated-->
+    update act_cust_log
+    set act_id = #{actId},
+      customer_name = #{customerName},
+      customer_phone = #{customerPhone},
+      customer_identity = #{customerIdentity},
+      is_scan = #{isScan},
+      scan_time = #{scanTime},
+      is_fill_in = #{isFillIn},
+      fill_in_time = #{fillInTime},
+      is_info_effect = #{isInfoEffect},
+      is_buiness = #{isBuiness},
+      buiness_time = #{buinessTime}
+    where id = #{id}
+  </update>
+
+  <select id="selectByActId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from act_cust_log
+    where act_id = #{actId}
+    </select>
+
+  <insert id="batchInsert">
+    <foreach collection="list" item="actCustLog" separator=";" close=";" >
+      insert into act_cust_log
+      <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="actCustLog.actId != null">
+          act_id,
+        </if>
+        <if test="actCustLog.customerName != null and actCustLog.customerName != ''">
+          customer_name,
+        </if>
+        <if test="actCustLog.customerPhone != null and actCustLog.customerPhone != ''">
+          customer_phone,
+        </if>
+        <if test="actCustLog.customerIdentity != null and actCustLog.customerIdentity != ''">
+          customer_identity,
+        </if>
+        <if test="actCustLog.isScan != null and actCustLog.isScan != ''">
+          is_scan,
+        </if>
+        <if test="actCustLog.scanTime != null">
+          scan_time,
+        </if>
+        <if test="actCustLog.isFillIn != null and actCustLog.isFillIn != ''">
+          is_fill_in,
+        </if>
+        <if test="actCustLog.fillInTime != null">
+          fill_in_time,
+        </if>
+        <if test="actCustLog.isInfoEffect != null and actCustLog.isInfoEffect != ''">
+          is_info_effect,
+        </if>
+        <if test="actCustLog.isBuiness != null and actCustLog.isBuiness != ''">
+          is_buiness,
+        </if>
+        <if test="actCustLog.buinessTime != null">
+          buiness_time,
+        </if>
+      </trim>
+      <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <if test="actCustLog.actId != null">
+          #{actCustLog.actId},
+        </if>
+        <if test="actCustLog.customerName != null and actCustLog.customerName != ''">
+          #{actCustLog.customerName},
+        </if>
+        <if test="actCustLog.customerPhone != null and actCustLog.customerPhone != ''">
+          #{actCustLog.customerPhone},
+        </if>
+        <if test="actCustLog.customerIdentity != null and actCustLog.customerIdentity != ''">
+          #{actCustLog.customerIdentity},
+        </if>
+        <if test="actCustLog.isScan != null and actCustLog.isScan != ''">
+          #{actCustLog.isScan},
+        </if>
+        <if test="actCustLog.scanTime != null">
+          #{actCustLog.scanTime},
+        </if>
+        <if test="actCustLog.isFillIn != null and actCustLog.isFillIn != ''">
+          #{actCustLog.isFillIn},
+        </if>
+        <if test="actCustLog.fillInTime != null">
+          #{actCustLog.fillInTime},
+        </if>
+        <if test="actCustLog.isInfoEffect != null and actCustLog.isInfoEffect != ''">
+          #{actCustLog.isInfoEffect},
+        </if>
+        <if test="actCustLog.isBuiness != null and actCustLog.isBuiness != ''">
+          #{actCustLog.isBuiness},
+        </if>
+        <if test="actCustLog.buinessTime != null">
+          #{actCustLog.buinessTime},
+        </if>
+      </trim>
+    </foreach>
+  </insert>
+</mapper>

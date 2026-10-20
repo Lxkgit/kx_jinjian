@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.LabelGroupMapper">
+
+    <resultMap type="com.kx.system.domain.label.LabelGroup" id="LabelGroupResult">
+        <result property="id"    column="id"    />
+        <result property="labelGroupName"    column="label_group_name"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="isMultiple" column="is_multiple" />
+        <result property="type" column="type" />
+        <result property="delFlag" column="del_flag" />
+    </resultMap>
+
+    <sql id="selectLabelGroupVo">
+        select id, label_group_name, parent_id, is_multiple, type, del_flag from label_group
+    </sql>
+
+    <select id="selectLabelGroupList" parameterType="com.kx.system.domain.label.LabelGroup" resultMap="LabelGroupResult">
+        <include refid="selectLabelGroupVo"/>
+        <where>
+            <if test="labelGroupName != null  and labelGroupName != ''"> and label_group_name like concat('%', #{labelGroupName}, '%')</if>
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+        </where>
+    </select>
+
+    <select id="selectAll" parameterType="com.kx.system.domain.label.LabelGroup" resultMap="LabelGroupResult">
+        <include refid="selectLabelGroupVo"/>
+        <where>
+            del_flag = 0
+        </where>
+    </select>
+
+    <select id="selectLabelGroupById" parameterType="Long" resultMap="LabelGroupResult">
+        <include refid="selectLabelGroupVo"/>
+         where del_flag = 0 and id = #{id}
+    </select>
+
+
+    <select id="queryListByParentId" parameterType="Long" resultType="Long">
+        select id from label_group
+        where del_flag = 0 and parent_id = #{labelGroupId}
+    </select>
+
+    <select id="queryQuote" parameterType="Long" resultType="INTEGER">
+        select count(1) from label_info
+        where del_flag = 0 and label_group_id IN
+        <if test=" ids!=null and ids.size>0">
+            <foreach item="item" collection="ids" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="queryList" parameterType="Long" resultType="com.kx.system.domain.label.LabelGroup">
+        select * from label_group
+        <if test=" ids!=null and ids.size>0">
+            where del_flag = 0 and id IN
+            <foreach item="item" collection="ids" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+    <select id="selectLabelGroupByParentId" resultType="com.kx.system.domain.dto.LabelGroupDTO">
+        select id, label_group_name, is_multiple, parent_id from label_group
+        where del_flag = 0 and parent_id = #{id} and type = 0
+        <if test="type != null">and type = #{type}</if>
+    </select>
+    <select id="selectGridLabel" resultMap="LabelGroupResult" >
+        <include refid="selectLabelGroupVo"/>
+        <where>
+            del_flag = 0 and type = 0
+        </where>
+    </select>
+
+    <insert id="insertLabelGroup" parameterType="com.kx.system.domain.label.LabelGroup" useGeneratedKeys="true" keyProperty="id">
+        insert into label_group
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="labelGroupName != null">label_group_name,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="isMultiple != null">is_multiple,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="type != null">type,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="labelGroupName != null">#{labelGroupName},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="isMultiple != null">#{isMultiple},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="type != null">#{type},</if>
+        </trim>
+    </insert>
+
+    <update id="updateLabelGroup" parameterType="com.kx.system.domain.label.LabelGroup">
+        update label_group
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="labelGroupName != null">label_group_name = #{labelGroupName},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="isMultiple != null">is_multiple = #{isMultiple},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="delLabelGroups" parameterType="collection" >
+        update label_group set del_flag = 1
+        where id in
+        <if test=" ids!=null and ids.size>0">
+            <foreach item="item" collection="ids" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </update>
+
+
+
+    <delete id="deleteLabelGroupById" parameterType="Long">
+        delete from label_group where id IN
+        <if test=" ids!=null and ids.size>0">
+            <foreach item="item" collection="ids" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </delete>
+
+    <delete id="deleteLabelGroupByIds" parameterType="String">
+        delete from label_group where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

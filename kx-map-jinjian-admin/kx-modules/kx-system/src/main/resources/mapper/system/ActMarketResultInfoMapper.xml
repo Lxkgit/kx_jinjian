@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.ActMarketResultInfoMapper">
+  <resultMap id="BaseResultMap" type="com.kx.system.domain.ActMarketResultInfo">
+    <!--@mbg.generated-->
+    <!--@Table act_market_result_info-->
+    <id column="id" property="id" />
+    <result column="act_id" property="actId" />
+    <result column="photo" property="photo" />
+    <result column="checkIn_addr" property="checkinAddr" />
+    <result column="act_feedback" property="actFeedback" />
+    <result column="scan_code_num" property="scanCodeNum" />
+    <result column="info_collect_num" property="infoCollectNum" />
+    <result column="info_collect_effect_num" property="infoCollectEffectNum" />
+    <result column="bus_proc_num" property="busProcNum" />
+    <result column="create_time" property="createTime" />
+    <result column="create_by" property="createBy" />
+    <result column="create_manager_num" property="createManagerNum" />
+    <result column="create_dept_name" property="createDeptName" />
+    <result column="create_org_num" property="createOrgNum" />
+    <result column="del_flag" property="delFlag" />
+    <result column="info_collect_effect_rate" property="infoCollectEffectRate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, act_id, photo, checkIn_addr, act_feedback, scan_code_num, info_collect_num, info_collect_effect_num,
+    bus_proc_num, create_time, create_by, create_manager_num, create_dept_name, create_org_num,
+    del_flag,info_collect_effect_rate
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select
+    <include refid="Base_Column_List" />
+    from act_market_result_info
+    where id = #{id}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--@mbg.generated-->
+    delete from act_market_result_info
+    where id = #{id}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.kx.system.domain.ActMarketResultInfo" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into act_market_result_info (act_id, photo, checkIn_addr, act_feedback, scan_code_num, info_collect_num,
+      info_collect_effect_num, bus_proc_num, create_time, create_by, create_manager_num,
+      create_dept_name, create_org_num, del_flag)
+    values (#{actId}, #{photo}, #{checkinAddr}, #{actFeedback}, #{scanCodeNum}, #{infoCollectNum},
+      #{infoCollectEffectNum}, #{busProcNum}, #{createTime}, #{createBy}, #{createManagerNum},
+      #{createDeptName}, #{createOrgNum}, #{delFlag})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.kx.system.domain.ActMarketResultInfo" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into act_market_result_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="actId != null">
+        act_id,
+      </if>
+      <if test="photo != null and photo != ''">
+        photo,
+      </if>
+      <if test="checkinAddr != null and checkinAddr != ''">
+        checkIn_addr,
+      </if>
+      <if test="actFeedback != null and actFeedback != ''">
+        act_feedback,
+      </if>
+      <if test="scanCodeNum != null">
+        scan_code_num,
+      </if>
+      <if test="infoCollectNum != null">
+        info_collect_num,
+      </if>
+      <if test="infoCollectEffectNum != null">
+        info_collect_effect_num,
+      </if>
+      <if test="busProcNum != null">
+        bus_proc_num,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createBy != null and createBy != ''">
+        create_by,
+      </if>
+      <if test="createManagerNum != null and createManagerNum != ''">
+        create_manager_num,
+      </if>
+      <if test="createDeptName != null and createDeptName != ''">
+        create_dept_name,
+      </if>
+      <if test="createOrgNum != null and createOrgNum != ''">
+        create_org_num,
+      </if>
+      <if test="delFlag != null">
+        del_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="actId != null">
+        #{actId},
+      </if>
+      <if test="photo != null and photo != ''">
+        #{photo},
+      </if>
+      <if test="checkinAddr != null and checkinAddr != ''">
+        #{checkinAddr},
+      </if>
+      <if test="actFeedback != null and actFeedback != ''">
+        #{actFeedback},
+      </if>
+      <if test="scanCodeNum != null">
+        #{scanCodeNum},
+      </if>
+      <if test="infoCollectNum != null">
+        #{infoCollectNum},
+      </if>
+      <if test="infoCollectEffectNum != null">
+        #{infoCollectEffectNum},
+      </if>
+      <if test="busProcNum != null">
+        #{busProcNum},
+      </if>
+      <if test="createTime != null">
+        #{createTime},
+      </if>
+      <if test="createBy != null and createBy != ''">
+        #{createBy},
+      </if>
+      <if test="createManagerNum != null and createManagerNum != ''">
+        #{createManagerNum},
+      </if>
+      <if test="createDeptName != null and createDeptName != ''">
+        #{createDeptName},
+      </if>
+      <if test="createOrgNum != null and createOrgNum != ''">
+        #{createOrgNum},
+      </if>
+      <if test="delFlag != null">
+        #{delFlag},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kx.system.domain.ActMarketResultInfo">
+    <!--@mbg.generated-->
+    update act_market_result_info
+    <set>
+      <if test="actId != null">
+        act_id = #{actId},
+      </if>
+      <if test="photo != null and photo != ''">
+        photo = #{photo},
+      </if>
+      <if test="checkinAddr != null and checkinAddr != ''">
+        checkIn_addr = #{checkinAddr},
+      </if>
+      <if test="actFeedback != null and actFeedback != ''">
+        act_feedback = #{actFeedback},
+      </if>
+      <if test="scanCodeNum != null">
+        scan_code_num = #{scanCodeNum},
+      </if>
+      <if test="infoCollectNum != null">
+        info_collect_num = #{infoCollectNum},
+      </if>
+      <if test="infoCollectEffectNum != null">
+        info_collect_effect_num = #{infoCollectEffectNum},
+      </if>
+      <if test="busProcNum != null">
+        bus_proc_num = #{busProcNum},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime},
+      </if>
+      <if test="createBy != null and createBy != ''">
+        create_by = #{createBy},
+      </if>
+      <if test="createManagerNum != null and createManagerNum != ''">
+        create_manager_num = #{createManagerNum},
+      </if>
+      <if test="createDeptName != null and createDeptName != ''">
+        create_dept_name = #{createDeptName},
+      </if>
+      <if test="createOrgNum != null and createOrgNum != ''">
+        create_org_num = #{createOrgNum},
+      </if>
+      <if test="delFlag != null">
+        del_flag = #{delFlag},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kx.system.domain.ActMarketResultInfo">
+    <!--@mbg.generated-->
+    update act_market_result_info
+    set act_id = #{actId},
+      photo = #{photo},
+      checkIn_addr = #{checkinAddr},
+      act_feedback = #{actFeedback},
+      scan_code_num = #{scanCodeNum},
+      info_collect_num = #{infoCollectNum},
+      info_collect_effect_num = #{infoCollectEffectNum},
+      bus_proc_num = #{busProcNum},
+      create_time = #{createTime},
+      create_by = #{createBy},
+      create_manager_num = #{createManagerNum},
+      create_dept_name = #{createDeptName},
+      create_org_num = #{createOrgNum},
+      del_flag = #{delFlag}
+    where id = #{id}
+  </update>
+</mapper>

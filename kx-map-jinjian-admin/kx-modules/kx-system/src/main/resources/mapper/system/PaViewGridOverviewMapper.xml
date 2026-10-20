@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kx.system.mapper.PaViewGridOverviewMapper">
+    <delete id="truncate">
+        truncate table pa_view_grid_overview
+    </delete>
+    <select id="batchInsert">
+        INSERT INTO pa_view_grid_overview
+        (
+        grid_code,
+        grid_name,
+        grid_user_name,
+        grid_level,
+        org_code,
+        org_name,
+        level_four_grid_num,
+        level_five_grid_num,
+        grid_people_num,
+        gdp,
+        village_num,
+        village_people_num,
+        industrial_park_num,
+        company_num,
+        financial_institution_num,
+        business_area_num,
+        create_time
+        ) VALUES
+        <foreach collection="views" item="v" separator=",">
+            (
+            #{v.gridCode},
+            #{v.gridName},
+            #{v.gridUserName},
+            #{v.gridLevel},
+            #{v.orgCode},
+            #{v.orgName},
+            #{v.levelFourGridNum},
+            #{v.levelFiveGridNum},
+            #{v.gridPeopleNum},
+            #{v.gdp},
+            #{v.villageNum},
+            #{v.villagePeopleNum},
+            #{v.industrialParkNum},
+            #{v.companyNum},
+            #{v.financialInstitutionNum},
+            #{v.businessAreaNum},
+            now()
+            )
+        </foreach>
+    </select>
+    <select id="selectByCode" resultType="com.kx.system.domain.small.PaViewGridOverview">
+        SELECT
+            grid_code,
+            grid_name,
+            grid_user_name,
+            grid_level,
+            org_code,
+            org_name,
+            level_four_grid_num,
+            level_five_grid_num,
+            grid_people_num,
+            gdp,
+            village_num,
+            village_people_num,
+            industrial_park_num,
+            company_num,
+            financial_institution_num,
+            business_area_num,
+            create_time
+        FROM pa_view_grid_overview WHERE grid_code = #{gridCode}
+    </select>
+    <select id="groupByCodes" resultType="com.kx.system.domain.small.PaViewGridOverview">
+        SELECT
+        SUM(level_four_grid_num) as level_four_grid_num,
+        SUM(level_five_grid_num) as level_five_grid_num,
+        SUM(grid_people_num) as grid_people_num,
+        SUM(gdp) as gdp,
+        SUM(village_num) as village_num,
+        SUM(village_people_num) as village_people_num,
+        SUM(industrial_park_num) as industrial_park_num,
+        SUM(company_num) as company_num,
+        SUM(financial_institution_num) as financial_institution_num,
+        SUM(business_area_num) as business_area_num
+        FROM pa_view_grid_overview WHERE grid_code IN
+        <foreach collection="gridCodes" item="c" open="(" separator="," close=")">
+            #{c}
+        </foreach>
+    </select>
+</mapper>

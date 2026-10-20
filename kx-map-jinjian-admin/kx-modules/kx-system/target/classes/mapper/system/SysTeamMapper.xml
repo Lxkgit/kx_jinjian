@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kx.system.mapper.SysTeamMapper">
+    <insert id="batchInsertSysTeams">
+        insert into F_OCRM_F_CM_MKT_TEAM
+        (
+        mkt_team_id,
+        mkt_team_name,
+        org_id,
+        team_leader,
+        create_date,
+        lead_telephone,
+        team_status,
+        create_user_id,
+        create_user_name,
+        create_user_org_id,
+        team_leader_id,
+        three_org_id,
+        org_name,
+        deptfirst,
+        deptsecond,
+        last_modify_date,
+        last_modify_user,
+        if_check
+        )
+        values
+        <foreach collection="sysTeamVos" item="t" separator=",">
+            (
+            #{t.mktTeamId},
+            #{t.mktTeamName},
+            #{t.orgId},
+            #{t.teamLeader},
+            #{t.createDate},
+            #{t.leadTelephone},
+            #{t.teamStatus},
+            #{t.createUserId},
+            #{t.createUserName},
+            #{t.createUserOrgId},
+            #{t.teamLeaderId},
+            #{t.threeOrgId},
+            #{t.orgName},
+            #{t.deptfirst},
+            #{t.deptsecond},
+            #{t.lastModifyDate},
+            #{t.lastModify_user},
+            #{t.ifCheck}
+            )
+        </foreach>
+    </insert>
+    <insert id="batchInsertSysTeamMembers">
+        insert into F_OCRM_F_CM_TEAM_CUST_MANAGER
+        (
+        id,
+        join_date,
+        user_id,
+        mkt_team_id,
+        is_leader,
+        create_user_id,
+        last_modify_date,
+        last_modify_user,
+        position,
+        enterdate
+        )
+        values
+        <foreach collection="sysTeamMemberVos" item="t" separator=",">
+            (
+            #{t.id},
+            #{t.joinDate},
+            #{t.userId},
+            #{t.mktTeamId},
+            #{t.isLeader},
+            #{t.createUserId},
+            #{t.lastModifyDate},
+            #{t.lastModifyUser},
+            #{t.position},
+            #{t.enterdate}
+            )
+        </foreach>
+    </insert>
+    <delete id="trancateSysTeams">
+        TRUNCATE TABLE F_OCRM_F_CM_MKT_TEAM
+    </delete>
+    <delete id="trancateSysTeamMembers">
+        TRUNCATE TABLE F_OCRM_F_CM_TEAM_CUST_MANAGER
+    </delete>
+</mapper>

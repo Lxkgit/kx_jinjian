@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.CustomerLabelMapper">
+
+    <resultMap type="com.kx.system.domain.customer.CustomerLabel" id="CustomerLabelResult">
+        <result property="id"    column="id"    />
+        <result property="customerId"    column="customer_id"    />
+        <result property="labelId"    column="label_id"    />
+        <result property="labelType"    column="label_type"    />
+    </resultMap>
+
+    <sql id="selectCustomerLabelVo">
+        select id, customer_id, label_id, label_type from customer_label
+    </sql>
+
+    <select id="selectCustomerLabelList" parameterType="com.kx.system.domain.customer.CustomerLabel" resultMap="CustomerLabelResult">
+        <include refid="selectCustomerLabelVo"/>
+        <where>
+            <if test="customerId != null "> and customer_id = #{customerId}</if>
+            <if test="labelId != null "> and label_id = #{labelId}</if>
+            <if test="labelType != null "> and label_type = #{labelType}</if>
+        </where>
+    </select>
+
+    <select id="selectCustomerLabelById" parameterType="Long" resultMap="CustomerLabelResult">
+        <include refid="selectCustomerLabelVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="queryList" parameterType="Long" resultMap="CustomerLabelResult">
+        <include refid="selectCustomerLabelVo"/>
+        where customer_id = #{customerId}
+    </select>
+
+    <select id="queryListAndLabel" parameterType="com.kx.system.domain.req.CustomGroupReq" resultMap="CustomerLabelResult">
+        SELECT
+        c.customer_id,
+        COUNT(c.label_id) as myCount
+        FROM
+        customer_label c
+        <if test="req.customType == 1">
+            left join performance_customer_info p on p.id = c.customer_id
+            left join sys_user u on p.credit_manager_job_number = u.manager_num
+        </if>
+        <if test="req.customType == 2">
+            left join credit_customer_info p on p.id = c.customer_id
+            left join sys_user u on p.credit_manager_job_number = u.manager_num
+        </if>
+        <if test="req.customType == 3">
+            left join filing_customer_info p on p.id = c.customer_id
+            left join sys_user u on p.filing_manager_code = u.manager_num
+        </if>
+        <where>
+            ${req.params.dataScope}
+            AND c.type = #{req.customType}
+            AND p.id IS NOT NULL
+            AND c.label_id IN
+            <foreach collection="req.labelIds" item="labelId" open="(" separator="," close=")">
+                #{labelId}
+            </foreach>
+        </where>
+        GROUP BY p.id
+        HAVING myCount = #{req.size}
+    </select>
+
+    <select id="queryListOrLabel" parameterType="com.kx.system.domain.req.CustomGroupReq" resultMap="CustomerLabelResult">
+        SELECT
+            distinct
+            c.customer_id
+        FROM
+            customer_label c
+        <if test="req.customType == 1">
+            left join performance_customer_info p on p.id = c.customer_id
+            left join sys_user u on p.credit_manager_job_number = u.manager_num
+        </if>
+        <if test="req.customType == 2">
+            left join credit_customer_info p on p.id = c.customer_id
+            left join sys_user u on p.credit_manager_job_number = u.manager_num
+        </if>
+        <if test="req.customType == 3">
+            left join filing_customer_info p on p.id = c.customer_id
+            left join sys_user u on p.filing_manager_code = u.manager_num
+        </if>
+        <where>
+            ${req.params.dataScope}
+            AND c.type = #{req.customType}
+            AND p.id is not null
+            AND c.label_id IN
+            <foreach collection="req.labelIds" item="labelId" open="(" separator="," close=")">
+                #{labelId}
+            </foreach>
+        </where>
+    </select>
+    <select id="getUsedCount" resultType="java.lang.Long">
+        select count(*) from customer_label where label_id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <insert id="insertCustomerLabel" parameterType="com.kx.system.domain.customer.CustomerLabel" useGeneratedKeys="true" keyProperty="id">
+        insert into customer_label
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="customerId != null">customer_id,</if>
+            <if test="labelId != null">label_id,</if>
+            <if test="labelType != null">label_type,</if>
+            <if test="type != null">type,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="customerId != null">#{customerId},</if>
+            <if test="labelId != null">#{labelId},</if>
+            <if test="labelType != null">#{labelType},</if>
+            <if test="type != null">#{type},</if>
+        </trim>
+    </insert>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        insert into customer_label (customer_nm,label_id,type,label_type,customer_id) values
+        <foreach collection="customerLabels" item="customerLabel" separator=",">
+            (#{customerLabel.customerNm},#{customerLabel.labelId},#{customerLabel.type},#{customerLabel.labelType},#{customerLabel.customerId})
+        </foreach>
+    </insert>
+
+
+    <update id="updateCustomerLabel" parameterType="com.kx.system.domain.customer.CustomerLabel">
+        update customer_label
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="customerId != null">customer_id = #{customerId},</if>
+            <if test="labelId != null">label_id = #{labelId},</if>
+            <if test="labelType != null">label_type = #{labelType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="updatePerCustomerIdByNmAndType">
+        update customer_label cl, performance_customer_info pci set cl.customer_id = pci.id where cl.customer_id is null and cl.customer_nm = pci.customer_nm and cl.type = 1
+    </update>
+    <update id="updateCreCustomerIdByNmAndType">
+        update customer_label cl, credit_customer_info cci set cl.customer_id = cci.id where cl.customer_id is null and cl.customer_nm = cci.customer_nm and cl.type = 2
+    </update>
+
+    <delete id="deleteCustomerLabelById" parameterType="Long">
+        delete from customer_label where id = #{id}
+    </delete>
+
+    <delete id="delLabels" parameterType="String">
+        delete from customer_label where customer_id = #{customerId} and label_id in
+        <foreach item="id" collection="delLabelIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteByCustomerIdAndCustomerType">
+        delete from customer_label where customer_id = #{customerId} and type = #{customerType}
+    </delete>
+
+    <delete id="deleteByNmsAndType">
+        delete from customer_label where type = #{type} and  label_type = 1 and customer_nm in
+        <foreach collection="nms" item="nm" open="(" separator="," close=")">
+            #{nm}
+        </foreach>
+    </delete>
+
+
+</mapper>

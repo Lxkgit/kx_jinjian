@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.PaAddrBaseInfoMapper">
+
+    <resultMap id="PaAddrBaseInfo" type="com.kx.system.domain.vo.PaAddrBaseInfo">
+        <id property="id"    column="id"    />
+        <result property="addrCode"    column="addr_code"    />
+        <result property="addrName"    column="addr_name"    />
+        <result property="networkCode"    column="network_code"    />
+        <result property="networkName"    column="network_name"    />
+        <result property="managerCode"    column="manager_code"    />
+        <result property="managerName"    column="manager_name"    />
+        <result property="householdsNum"    column="households_num"    />
+        <result property="populactionNum"    column="populaction_num"    />
+        <result property="townshipNum"    column="township_num"    />
+        <result property="villageCommunity"    column="village_community"    />
+        <result property="lowIncomeFramers"    column="low_income_framers"    />
+        <result property="companyNum"    column="company_num"    />
+        <result property="GDP"    column="GDP"    />
+        <result property="revenue"    column="revenue"    />
+        <result property="perCapitaIncome"    column="per_capita_income"    />
+        <result property="counryFinancialOrg"    column="counry_financial_org"    />
+        <result property="countyDepositBalance"    column="county_deposit_balance"    />
+        <result property="countyLoanBalance"    column="county_loan_balance"    />
+        <result property="networkNum"    column="network_num"    />
+        <result property="staffNum"    column="staff_num"    />
+        <result property="fieldNum"    column="field_num"    />
+        <result property="villageCollectiveIncome"    column="village_collective_income"    />
+        <result property="characteristicsIntroduce"    column="characteristics_introduce"    />
+        <result property="majorProjectOne"    column="major_project_one"    />
+        <result property="majorProjectOneDate"    column="major_project_one_date"    />
+        <result property="majorProjectTwo"    column="major_project_two"    />
+        <result property="majorProjectTwoDate"    column="major_project_two_date"    />
+        <result property="majorProjectThree"    column="major_project_three"    />
+        <result property="majorProjectThreeDate"    column="major_project_three_date"    />
+        <result property="depositMarketShare"    column="deposit_market_share"    />
+        <result property="socialSecurityCardsShare"    column="social_security_cards_share"    />
+        <result property="villageGeneralIncome"    column="village_general_income"    />
+        <result property="creditLevelTownNum"    column="credit_level_town_num"    />
+        <result property="creditLevelVillageNum"    column="credit_level_village_num"    />
+        <result property="majorProjectOneDetail"    column="major_project_one_detail"    />
+        <result property="majorProjectTwoDetail"    column="major_project_two_detail"    />
+        <result property="majorProjectThreeDetail"    column="major_project_three_detail"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+    <insert id="insertPaAddrBaseInfo">
+        insert into pa_addr_base_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="addrCode != null">addr_code,</if>
+            <if test="addrName != null">addr_name,</if>
+            <if test="networkCode != null">network_code,</if>
+            <if test="networkName != null">network_name,</if>
+            <if test="managerCode != null">manager_code,</if>
+            <if test="managerName != null">manager_name,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="addrCode != null">#{addrCode},</if>
+            <if test="addrName != null">#{addrName},</if>
+            <if test="networkCode != null">#{networkCode},</if>
+            <if test="networkName != null">#{networkName},</if>
+            <if test="managerCode != null">#{managerCode},</if>
+            <if test="managerName != null">#{managerName},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBaseInfoManagerCodeByCode" parameterType="com.kx.system.domain.vo.PaAddrBaseInfo">
+        update pa_addr_base_info set manager_code = #{managerCode},manager_name = #{managerName}
+        where addr_code = #{addrCode}
+    </update>
+
+    <update id="updateBaseInfoNetWorkByCode" parameterType="com.kx.system.domain.vo.PaAddrBaseInfo">
+        update pa_addr_base_info set network_code = #{networkCode},network_name = #{networkName}
+        where addr_code = #{addrCode}
+    </update>
+    <update id="updatePaAddrBaseInfoByAddrCode">
+        update pa_addr_base_info set network_code = #{networkCode},network_name = #{networkName},manager_code=#{managerCode},manager_name=#{managerName}
+        where addr_code = #{addrCode}
+    </update>
+    <delete id="deletePaAddrBaseInfoByCode">
+        delete from pa_addr_base_info where addr_code = #{addrCode}
+    </delete>
+
+    <select id="selectBaseInfoByCode" resultMap="PaAddrBaseInfo">
+        select id, addr_code, addr_name, network_code, network_name, manager_code, manager_name,
+            households_num, populaction_num, township_num, village_community, low_income_framers,
+            company_num, GDP, revenue, per_capita_income, counry_financial_org, county_deposit_balance,
+            county_loan_balance, network_num, staff_num, field_num, village_collective_income,
+            characteristics_introduce, major_project_one, major_project_two, major_project_three,
+            deposit_market_share, major_project_one_date, major_project_two_date, major_project_three_date,
+            social_security_cards_share,village_general_income,credit_level_town_num,credit_level_village_num,
+            major_project_one_detail,major_project_two_detail,major_project_three_detail,update_time
+        from pa_addr_base_info
+        where addr_code = #{addrCode}
+    </select>
+    <select id="selectBelongManagerUserJobNum" resultType="java.lang.String">
+        select manager_code from pa_addr_base_info where addr_code in
+        <foreach collection="codeList" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </select>
+    <select id="selectCodeListByName" resultType="java.lang.Long">
+        SELECT addr_code FROM pa_addr_base_info WHERE addr_name like CONCAT('%',#{addrName},'%')
+    </select>
+    <select id="selectManagersByCode" resultType="java.lang.String">
+        select b.manager_code from pa_addr_info a LEFT JOIN pa_addr_base_info b on a.code=b.addr_code
+        <where>
+           b.manager_code is not null
+           <if test="addrCode!=null and addrCode!=''">
+              and  (a.code=#{addrCode} or a.parent_code=#{addrCode})
+           </if>
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.PaCustomMessageMapper">
+
+    <resultMap type="com.kx.system.domain.PaCustomMessage" id="PaCustomMessageResult">
+        <result property="id"    column="id"    />
+        <result property="nm"    column="nm"    />
+        <result property="messageType"    column="message_type"    />
+        <result property="messageTitle"    column="message_title"    />
+        <result property="messageSources"    column="message_sources"    />
+        <result property="notifyObject"    column="notify_object"    />
+        <result property="notifyTime"    column="notify_time"    />
+        <result property="priority"    column="priority"    />
+        <result property="messageState"    column="message_state"    />
+        <result property="messageReadState"    column="message_read_state"    />
+        <result property="messageStar"    column="message_star"    />
+        <result property="messageRemark"    column="message_remark"    />
+        <result property="messageDetails"    column="message_details"    />
+        <result property="networkCode"    column="network_code"    />
+        <result property="managerId"    column="manager_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <resultMap type="com.kx.system.domain.vo.PaCustomMessageStatisticsVo" id="PaCustomMessageStatisticsResult">
+        <result property="messageType"    column="message_type"    />
+        <result property="clientQuantity"    column="clientQuantity"    />
+        <result property="alreadyClientQuantity"    column="alreadyClientQuantity"    />
+        <result property="notClientQuantity"    column="notClientQuantity"    />
+        <result property="completionRate"    column="completionRate"    />
+    </resultMap>
+
+    <sql id="selectPaCustomMessageVo">
+        select id, nm, message_type, message_title, message_sources, notify_object, notify_time, priority, message_state,message_read_state, message_star, message_remark, message_details, network_code, manager_id, create_by, create_time, update_by, update_time, del_flag from pa_custom_message
+    </sql>
+
+    <select id="selectPaCustomMessageList" parameterType="com.kx.system.domain.dto.PaCustomMessageDTO" resultMap="PaCustomMessageResult">
+        <include refid="selectPaCustomMessageVo"/>
+        <where>
+
+            <if test="messageType != null  and messageType != ''"> and message_type = #{messageType}</if>
+            <if test="messageTitle != null  and messageTitle != ''"> and message_title like concat('%' , #{messageTitle} , '%')</if>
+            <if test="messageSources != null  and messageSources != ''"> and message_sources = #{messageSources}</if>
+            <if test="notifyObject != null and notifyObject != ''">and notify_object = #{notifyObject} </if>
+            <if test="notifyTime != null and notifyTime != ''">and notify_time like concat( #{notifyTime} , '%' ) </if>
+            <if test="endDate != null  and endDate != ''" >and concat(#{endDate},' 23:59:59') >= notify_time </if>
+            <if test="startDate != null  and startDate != ''"> and notify_time >= #{startDate} </if>
+            <if test="messageState != null  and messageState != ''"> and message_state = #{messageState}</if>
+            <if test="messageReadState != null  and messageReadState != ''"> and message_read_state = #{messageReadState}</if>
+            <if test="messageStar != null  and messageStar != ''"> and message_star = #{messageStar}</if>
+            <if test="networkCode != null  and networkCode != ''"> and network_code like concat( #{networkCode} , '%' ) </if>
+            <if test="managerId != null  and managerId != ''"> and manager_id = #{managerId}</if>
+        </where>
+        order by notify_time desc
+    </select>
+
+    <select id="selectPaCustomMessageByNotifyObject" parameterType="String" resultMap="PaCustomMessageResult">
+        select  id, nm, message_type, message_title, message_sources, notify_object, notify_time, priority, message_state,message_read_state, message_star, message_remark, message_details, network_code, manager_id, create_by, create_time, update_by, update_time, del_flag from pa_custom_message
+        where notify_object = #{notifyObject} and del_flag = 0 and message_read_state = '0'  order by notify_time desc
+        limit 4
+    </select>
+
+    <select id="selectCountNotReadMessage" resultType="Integer">
+        SELECT
+            count( 1 )
+        FROM
+            pa_custom_message
+        WHERE
+            message_read_state = '0'
+          and notify_object = #{notifyObject}
+          AND del_flag = 0
+    </select>
+
+    <select id="selectPaCustomMessageById" parameterType="Long" resultMap="PaCustomMessageResult">
+        <include refid="selectPaCustomMessageVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPaCustomMessage" parameterType="com.kx.system.domain.PaCustomMessage"  keyProperty="id" useGeneratedKeys="true">
+        insert into pa_custom_message
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="nm != null">nm,</if>
+            <if test="messageType != null">message_type,</if>
+            <if test="messageTitle != null">message_title,</if>
+            <if test="messageSources != null">message_sources,</if>
+            <if test="notifyObject != null">notify_object,</if>
+            <if test="notifyTime != null">notify_time,</if>
+            <if test="priority != null">priority,</if>
+            <if test="messageState != null">message_state,</if>
+            <if test="messageReadState != null">message_read_state,</if>
+            <if test="messageStar != null">message_star,</if>
+            <if test="messageRemark != null">message_remark,</if>
+            <if test="messageDetails != null">message_details,</if>
+            <if test="networkCode != null">network_code,</if>
+            <if test="managerId != null">manager_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="nm != null">#{nm},</if>
+            <if test="messageType != null">#{messageType},</if>
+            <if test="messageTitle != null">#{messageTitle},</if>
+            <if test="messageSources != null">#{messageSources},</if>
+            <if test="notifyObject != null">#{notifyObject},</if>
+            <if test="notifyTime != null">#{notifyTime},</if>
+            <if test="priority != null">#{priority},</if>
+            <if test="messageState != null">#{messageState},</if>
+            <if test="messageReadState != null">#{messageReadState},</if>
+            <if test="messageStar != null">#{messageStar},</if>
+            <if test="messageRemark != null">#{messageRemark},</if>
+            <if test="messageDetails != null">#{messageDetails},</if>
+            <if test="networkCode != null">#{networkCode},</if>
+            <if test="managerId != null">#{managerId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <insert id="batchInsertPaCustomMessage" parameterType="com.kx.system.domain.PaCustomMessage">
+        insert into pa_custom_message
+            (nm,message_type,message_title,message_sources,notify_object,
+             notify_time,priority,message_state,message_read_state,message_star,
+             message_remark,message_details,network_code,manager_id,create_by,
+             create_time,update_by,update_time,del_flag) values
+        <foreach item="item" index="index" collection="paCustomMessages" separator=",">
+            <trim prefix=" (" suffix=")" suffixOverrides=",">
+                #{item.nm},
+                #{item.messageType},
+                #{item.messageTitle},
+                #{item.messageSources},
+                #{item.notifyObject},
+                #{item.notifyTime},
+                #{item.priority},
+                #{item.messageState},
+                #{item.messageReadState},
+                #{item.messageStar},
+                #{item.messageRemark},
+                #{item.messageDetails},
+                #{item.networkCode},
+                #{item.managerId},
+                #{item.createBy},
+                #{item.createTime},
+                #{item.updateBy},
+                #{item.updateTime},
+                #{item.delFlag}
+            </trim>
+        </foreach>
+    </insert>
+
+    <update id="updatePaCustomMessage" parameterType="com.kx.system.domain.PaCustomMessage">
+        update pa_custom_message
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="nm != null">nm = #{nm},</if>
+            <if test="messageType != null">message_type = #{messageType},</if>
+            <if test="messageTitle != null">message_title = #{messageTitle},</if>
+            <if test="messageSources != null">message_sources = #{messageSources},</if>
+            <if test="notifyObject != null">notify_object = #{notifyObject},</if>
+            <if test="notifyTime != null">notify_time = #{notifyTime},</if>
+            <if test="priority != null">priority = #{priority},</if>
+            <if test="messageState != null">message_state = #{messageState},</if>
+            <if test="messageReadState != null">message_read_state = #{messageReadState},</if>
+            <if test="messageStar != null">message_star = #{messageStar},</if>
+            <if test="messageRemark != null">message_remark = #{messageRemark},</if>
+            <if test="messageDetails != null">message_details = #{messageDetails},</if>
+            <if test="networkCode != null">network_code = #{networkCode},</if>
+            <if test="managerId != null">manager_id = #{managerId},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePaCustomMessageById" parameterType="Long">
+        delete from pa_custom_message where id = #{id}
+    </delete>
+
+    <update id="updateMessageReadState" parameterType="String">
+        update pa_custom_message set message_read_state = '1' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="updateMessageState" parameterType="String">
+        update pa_custom_message set message_state = #{messageState},manager_id = #{managerId}
+        where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="updateMessageStar" parameterType="String">
+        update pa_custom_message set
+        message_star = #{messageStar} where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <select id="countPaCustomMessageByNotifyObject" resultType="java.lang.Integer">
+        select count(1) from pa_custom_message
+        <where>
+            <if test="messageType != null  and messageType != ''"> and message_type = #{messageType}</if>
+            <if test="messageTitle != null  and messageTitle != ''"> and message_title like ('%' + #{messageTitle} + '%')</if>
+            <if test="messageSources != null  and messageSources != ''"> and message_sources = #{messageSources}</if>
+            <if test="notifyObject != null and notifyObject != ''">and notify_object = #{notifyObject} </if>
+            <if test="endDate != null  and endDate != ''" ><![CDATA[and notify_time <= #{endDate}]]></if>
+            <if test="startDate != null  and startDate != ''"> and notify_time > #{startDate} </if>
+            <if test="messageState != null  and messageState != ''"> and message_state = #{messageState}</if>
+            <if test="messageReadState != null  and messageReadState != ''"> and message_read_state = #{messageReadState}</if>
+            <if test="messageStar != null  and messageStar != ''"> and message_star = #{messageStar}</if>
+            <if test="networkCode != null  and networkCode != ''"> and network_code = #{networkCode}</if>
+            <if test="managerId != null  and managerId != ''"> and manager_id = #{managerId}</if>
+        </where>
+    </select>
+    <select id="getOverdueLoanCustomersByNotifyTime" resultMap="PaCustomMessageResult">
+        select * from  pa_custom_message where del_flag=0 and  message_type in (2,3) and  create_time  between  #{startTime}  and  #{endTime}
+    </select>
+
+</mapper>

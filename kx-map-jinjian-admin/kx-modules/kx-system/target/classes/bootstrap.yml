@@ -1,0 +1,29 @@
+# Tomcat
+server:
+  port: 9201
+
+# Spring
+spring:
+  application:
+    # 应用名称
+    name: kangxu-system-jinjian-dev
+  profiles:
+    # 环境配置
+    active: jinjian-dev
+  cloud:
+    nacos:
+      discovery:
+        # 服务注册地址
+        server-addr: 10.1.200.26:8748
+        namespace: jinjian-dev
+      config:
+        # 配置中心地址
+        server-addr: 10.1.200.26:8748
+        # 热加载
+        refresh-enabled: true
+        # 配置文件格式
+        file-extension: yml
+        # 共享配置
+        shared-configs:
+          - application-jinjian-dev.yml
+        namespace: jinjian-dev

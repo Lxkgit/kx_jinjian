@@ -1,0 +1,898 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.PerformanceCustomerInfoMapper">
+
+    <resultMap type="com.kx.system.domain.customer.PerformanceCustomerInfo" id="PerformanceCustomerInfoResult">
+        <result property="id" column="id"/>
+        <result property="customerNm" column="customer_nm"/>
+        <result property="customerName" column="customer_name"/>
+        <result property="customerPhone" column="customer_phone"/>
+        <result property="customerIdentity" column="customer_identity"/>
+        <result property="customerType" column="customer_type"/>
+        <result property="customerLevel" column="customer_level"/>
+        <result property="customerAddress" column="customer_address"/>
+        <result property="workUnit" column="work_unit"/>
+        <result property="job" column="job"/>
+        <result property="deposit" column="deposit"/>
+        <result property="loan" column="loan"/>
+        <result property="finance" column="finance"/>
+        <result property="property" column="property"/>
+        <result property="belongGridCode" column="belong_grid_code"/>
+        <result property="belongGridName" column="belong_grid_name"/>
+        <result property="gridManager" column="grid_manager"/>
+        <result property="branchBank" column="branch_bank"/>
+        <result property="separateBank" column="separate_bank"/>
+        <result property="creditManager" column="credit_manager"/>
+        <result property="creditManagerJobNumber" column="credit_manager_job_number"/>
+        <result property="gender" column="gender"/>
+        <result property="birthday" column="birthday"/>
+        <result property="age" column="age"/>
+        <result property="maritalStatus" column="marital_status"/>
+        <result property="legalPersonIdentityNum" column="legal_person_identity_num"/>
+        <result property="legalPersonName" column="legal_person_name"/>
+        <result property="legalPersonPhone" column="legal_person_phone"/>
+        <result property="businessAddress" column="business_address"/>
+        <result property="gridManagerName" column="grid_manager_name"/>
+        <result property="gridMainManagerName" column="grid_main_manager_name"/>
+        <result property="dutyName" column="duty_name"/>
+        <result property="dutyPhone" column="duty_phone"/>
+        <result property="bankAgencyName" column="bank_agency_name"/>
+        <result property="dotType" column="dot_type"/>
+        <result property="dotIntroduce" column="dot_introduce"/>
+    </resultMap>
+    <resultMap type="com.kx.system.domain.customer.BankType" id="BankResult">
+        <result property="count" column="count"/>
+        <result property="bankAgencyName" column="bank_agency_name"/>
+    </resultMap>
+
+
+    <resultMap type="com.kx.system.domain.es.EsPerMemberDto" id="PerMemberResult">
+        <result property="id" column="id"/>
+        <result property="customerNm" column="customer_nm"/>
+        <result property="customerName" column="customer_name"/>
+        <result property="customerPhone" column="customer_phone"/>
+        <result property="customerIdentity" column="customer_identity"/>
+        <result property="customerType" column="customer_type"/>
+        <result property="customerLevel" column="customer_level"/>
+        <result property="customerAddress" column="customer_address"/>
+        <result property="workUnit" column="work_unit"/>
+        <result property="job" column="job"/>
+        <result property="deposit" column="deposit"/>
+        <result property="loan" column="loan"/>
+        <result property="finance" column="finance"/>
+        <result property="property" column="property"/>
+        <result property="belongGridCode" column="belong_grid_code"/>
+        <result property="belongGridName" column="belong_grid_name"/>
+        <result property="gridManager" column="grid_manager"/>
+        <result property="branchBank" column="branch_bank"/>
+        <result property="separateBank" column="separate_bank"/>
+        <result property="creditManager" column="credit_manager"/>
+        <result property="creditManagerJobNumber" column="credit_manager_job_number"/>
+        <result property="gender" column="gender"/>
+        <result property="birthday" column="birthday"/>
+        <result property="age" column="age"/>
+        <result property="maritalStatus" column="marital_status"/>
+        <result property="legalPersonIdentityNum" column="legal_person_identity_num"/>
+        <result property="legalPersonName" column="legal_person_name"/>
+        <result property="legalPersonPhone" column="legal_person_phone"/>
+        <result property="businessAddress" column="business_address"/>
+        <result property="gridManagerName" column="grid_manager_name"/>
+        <result property="userDeptId" column="dept_id"/>
+        <result property="userId" column="user_id" />
+        <result property="gridManagerName" column="nick_name" />
+        <result property="ancestorsId" column="ancestors" />
+        <result property="ancestorCodes" column="ancestor_codes" />
+        <result property="groupId" column="custom_group_id" />
+    </resultMap>
+    <sql id="selectPerformanceCustomerInfoVo">
+        select id, customer_nm, customer_name, customer_phone, customer_identity, customer_type, customer_level, customer_address, work_unit, job, deposit, loan, finance, property, belong_grid_code, belong_grid_name, grid_manager, branch_bank, separate_bank, credit_manager, credit_manager_job_number, gender, birthday, age, marital_status, legal_person_identity_num, legal_person_name, legal_person_phone, business_address, point from performance_customer_info
+    </sql>
+
+    <select id="selectPerformanceCustomerCount" parameterType="com.kx.system.domain.group.CustomGroupCustomer"
+            resultType="int">
+        SELECT
+        count(1)
+        FROM
+        performance_customer_info a
+        left join custom_group_customer c on a.id = c.customer_id
+        <where>
+            <if test="performanceCustomerInfo.customerIdentity != null and performanceCustomerInfo.customerIdentity != '' ">
+                and a.customer_identity like concat('%', #{performanceCustomerInfo.customerIdentity}, '%')
+            </if>
+            <if test="performanceCustomerInfo.customerName != null and performanceCustomerInfo.customerName != '' ">and
+                a.customer_name like concat('%', #{performanceCustomerInfo.customerName}, '%')
+            </if>
+            <if test="performanceCustomerInfo.customerPhone != null and performanceCustomerInfo.customerPhone != '' ">
+                and a.customer_phone like concat('%', #{performanceCustomerInfo.customerPhone}, '%')
+            </if>
+            <if test="performanceCustomerInfo.creditManager != null and performanceCustomerInfo.creditManager != '' ">
+                and a.credit_manager like concat('%', #{performanceCustomerInfo.creditManager}, '%')
+            </if>
+            <if test="performanceCustomerInfo.customGroupId != null and performanceCustomerInfo.customGroupId != '' ">
+                and c.custom_group_id like concat('%', #{performanceCustomerInfo.customGroupId}, '%')
+            </if>
+            <if test="performanceCustomerInfo.belongGridCodeArr != null and performanceCustomerInfo.belongGridCodeArr.size > 0 ">
+                and
+                <foreach collection="performanceCustomerInfo.belongGridCodeArr" item="belongGridCode" separator="or"
+                         open="(" close=")">
+                    a.belong_grid_code in (select code from pa_addr_info_type where ancestor_codes like
+                    concat('%',#{belongGridCode},'%'))
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectPerformanceCustomerList" parameterType="com.kx.system.domain.group.CustomGroupCustomer"
+            resultMap="PerformanceCustomerInfoResult">
+        SELECT
+        a.id,
+        a.customer_nm,
+        a.customer_name,
+        a.customer_phone,
+        a.customer_identity,
+        a.customer_type,
+        a.customer_level,
+        a.customer_address,
+        a.work_unit,
+        a.job,
+        a.deposit,
+        a.loan,
+        a.finance,
+        a.property,
+        a.belong_grid_code,
+        a.belong_grid_name,
+        a.grid_manager,
+        a.branch_bank,
+        a.separate_bank,
+        a.credit_manager,
+        a.credit_manager_job_number,
+        a.gender,
+        a.birthday,
+        a.age,
+        a.marital_status,
+        a.legal_person_identity_num,
+        a.legal_person_name,
+        a.legal_person_phone,
+        a.business_address,
+        a.point
+        FROM
+        performance_customer_info a
+        left join custom_group_customer c on a.id = c.customer_id
+        <where>
+            <if test="performanceCustomerInfo.customerIdentity != null and performanceCustomerInfo.customerIdentity != '' ">
+                and a.customer_identity like concat('%', #{performanceCustomerInfo.customerIdentity}, '%')
+            </if>
+            <if test="performanceCustomerInfo.customerName != null and performanceCustomerInfo.customerName != '' ">and
+                a.customer_name like concat('%', #{performanceCustomerInfo.customerName}, '%')
+            </if>
+            <if test="performanceCustomerInfo.customerPhone != null and performanceCustomerInfo.customerPhone != '' ">
+                and a.customer_phone like concat('%', #{performanceCustomerInfo.customerPhone}, '%')
+            </if>
+            <if test="performanceCustomerInfo.creditManager != null and performanceCustomerInfo.creditManager != '' ">
+                and a.credit_manager like concat('%', #{performanceCustomerInfo.creditManager}, '%')
+            </if>
+            <if test="performanceCustomerInfo.customGroupId != null and performanceCustomerInfo.customGroupId != '' ">
+                and c.custom_group_id like concat('%', #{performanceCustomerInfo.customGroupId}, '%')
+            </if>
+            <if test="performanceCustomerInfo.belongGridCodeArr != null and performanceCustomerInfo.belongGridCodeArr.size > 0 ">
+                and
+                <foreach collection="performanceCustomerInfo.belongGridCodeArr" item="belongGridCode" separator="or"
+                         open="(" close=")">
+                    a.belong_grid_code in (select code from pa_addr_info_type where ancestor_codes like
+                    concat('%',#{belongGridCode},'%'))
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectPerformanceCustomerInfoList" parameterType="com.kx.system.domain.customer.PerformanceCustomerInfo"
+            resultMap="PerformanceCustomerInfoResult">
+        select
+        <if test="groupIdList == null or groupIdList.size == 0">
+            id,
+        </if>
+        <if test="groupIdList != null and groupIdList.size > 0">
+            c.id,
+        </if>
+        customer_nm, customer_name, customer_phone, customer_identity, customer_type, customer_level,
+        customer_address, work_unit, job, deposit, loan, finance, property, belong_grid_code, belong_grid_name,
+        grid_manager,u2.nick_name as grid_manager_name , branch_bank, separate_bank, credit_manager,
+        credit_manager_job_number, gender, birthday, age,
+        marital_status, legal_person_identity_num, legal_person_name, legal_person_phone, business_address, point
+        from
+        performance_customer_info p
+        left join sys_user u on p.credit_manager_job_number = u.manager_num
+        left join sys_user u2 on p.grid_manager = u2.manager_num
+        <if test="groupIdList != null and groupIdList.size > 0">
+            left join (SELECT id,customer_id FROM custom_group_customer where custom_group_id in
+            <foreach collection="groupIdList" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+            ) c on p.id = c.customer_id
+        </if>
+        <where>
+            ${params.dataScope}
+            <if test="groupIdList != null and groupIdList.size > 0">
+                and c.id is not null
+            </if>
+            <if test="customerNm != null ">
+                and customer_nm like concat('%', #{customerNm}, '%')
+            </if>
+            <if test="customerName != null  and customerName != ''">
+                and customer_name like concat('%', #{customerName}, '%')
+            </if>
+            <if test="customerPhone != null  and customerPhone != ''">
+                and customer_phone like concat('%', #{customerPhone}, '%')
+            </if>
+            <if test="customerIdentity != null  and customerIdentity != ''">
+                and customer_identity like concat('%', #{customerIdentity}, '%')
+            </if>
+            <if test="customerLevelList != null and customerLevelList.size > 0 ">
+                and customer_level in
+                <foreach collection="customerLevelList" item="customerLevel" separator="," open="(" close=")">
+                    #{customerLevel}
+                </foreach>
+            </if>
+            <if test="workUnit != null  and workUnit != ''">
+                and work_unit like concat('%', #{workUnit}, '%')
+            </if>
+            <if test="job != null  and job != ''">
+                and job like concat('%', #{job}, '%')
+            </if>
+            <if test="creditManager != null  and creditManager != ''">
+                and credit_manager like concat('%', #{creditManager}, '%')
+            </if>
+            <if test="minDeposit != null and maxDeposit != null">
+                and deposit between #{minDeposit} and #{maxDeposit}
+            </if>
+            <if test="minDeposit != null and maxDeposit == null">
+                and deposit &gt;= #{minDeposit}
+            </if>
+            <if test="maxDeposit != null and minDeposit == null">
+                and deposit &lt;= #{maxDeposit}
+            </if>
+            <if test="minLoan != null and maxLoan != null">
+                and loan between #{minLoan} and #{maxLoan}
+            </if>
+            <if test="minLoan != null">
+                and loan &gt;= #{minLoan}
+            </if>
+            <if test="maxLoan != null">
+                and loan &lt;= #{maxLoan}
+            </if>
+            <if test="minFinance != null and maxFinance != null">
+                and finance between #{minFinance} and #{maxFinance}
+            </if>
+            <if test="minFinance != null">
+                and finance &gt;= #{minFinance}
+            </if>
+            <if test="maxFinance != null">
+                and finance &lt;= #{maxFinance}
+            </if>
+            <if test="minProperty != null and maxProperty != null">
+                and property between #{minProperty} and #{maxProperty}
+            </if>
+            <if test="minProperty != null">
+                and property &gt;= #{minProperty}
+            </if>
+            <if test="maxProperty != null">
+                and property &lt;= #{maxProperty}
+            </if>
+            <if test="belongGridCode != null  and belongGridCode != ''">
+                and belong_grid_code = #{belongGridCode}
+            </if>
+            <if test="belongGridCodeArr != null and belongGridCodeArr.size > 0 ">
+                and belong_grid_code in
+                <foreach collection="belongGridCodeArr" item="belongGridCode" separator="," open="(" close=")">
+                    #{belongGridCode}
+                </foreach>
+            </if>
+            <if test="gridManager != null  and gridManager != ''">
+                and grid_manager = #{gridManager}
+            </if>
+            <if test="customerType != null ">
+                and customer_type = #{customerType}
+            </if>
+            <if test="query != null and query != ''">
+                and (customer_name like concat('%', #{query}, '%') or customer_identity like concat('%', #{query}, '%')
+                or customer_phone like concat('%', #{query}, '%'))
+            </if>
+            <if test="customerTypes != null and customerTypes.size > 0">
+                and customer_type in
+                <foreach collection="customerTypes" item="customerType" open="(" close=")" separator=",">
+                    #{customerType}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectPerformanceCustomerInfoById" parameterType="Long" resultMap="PerformanceCustomerInfoResult">
+        <include refid="selectPerformanceCustomerInfoVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectPerformanceCustomerInfoIdCount" resultType="int">
+        <include refid="selectPerformanceCUstomerSql">
+            <property name="columns" value="count(1)"/>
+        </include>
+    </select>
+    <select id="selectPerformanceCustomerInfoIdList" resultType="java.lang.Long">
+        <include refid="selectPerformanceCUstomerSql">
+            <property name="columns" value="p.id"/>
+        </include>
+    </select>
+
+    <sql id="selectPerformanceCUstomerSql">
+        select ${columns} from performance_customer_info p
+        left join sys_user u on p.credit_manager_job_number = u.manager_num
+        <where>
+            ${params.dataScope}
+            and p.id is not null
+            <if test="customerNm != null ">and p.customer_nm like concat('%', #{customerNm}, '%')</if>
+            <if test="customerName != null  and customerName != ''">and p.customer_name like concat('%',
+                #{customerName},
+                '%')
+            </if>
+            <if test="customerPhone != null  and customerPhone != ''">and p.customer_phone like concat('%',
+                #{customerPhone}, '%')
+            </if>
+            <if test="customerLevelList != null and customerLevelList.size > 0 ">and p.customer_level in
+                <foreach collection="customerLevelList" item="customerLevel" separator="," open="(" close=")">
+                    #{customerLevel}
+                </foreach>
+            </if>
+            <if test="workUnit != null  and workUnit != ''">and p.work_unit like concat('%', #{workUnit}, '%')</if>
+            <if test="job != null  and job != ''">and p.job like concat('%', #{job}, '%')</if>
+            <if test="minDeposit != null and maxDeposit != null">and p.deposit between #{minDeposit} and #{maxDeposit}
+            </if>
+            <if test="minDeposit != null">and p.deposit &gt;= #{minDeposit}</if>
+            <if test="maxDeposit != null">and p.deposit &lt;= #{maxDeposit}</if>
+            <if test="minLoan != null and maxLoan != null">and p.loan between #{minLoan} and #{maxLoan}</if>
+            <if test="minLoan != null">and p.loan &gt;= #{minLoan}</if>
+            <if test="maxLoan != null">and p.loan &lt;= #{maxLoan}</if>
+            <if test="minFinance != null and maxFinance != null">and p.finance between #{minFinance} and #{maxFinance}
+            </if>
+            <if test="minFinance != null">and p.finance &gt;= #{minFinance}</if>
+            <if test="maxFinance != null">and p.finance &lt;= #{maxFinance}</if>
+            <if test="minProperty != null and maxProperty != null">and p.property between #{minProperty} and
+                #{maxProperty}
+            </if>
+            <if test="minProperty != null">and p.property &gt;= #{minProperty}</if>
+            <if test="maxProperty != null">and p.property &lt;= #{maxProperty}</if>
+            <if test="belongGridCode != null  and belongGridCode != ''">and p.belong_grid_code = #{belongGridCode}</if>
+            <if test="gridManager != null  and gridManager != ''">and p.grid_manager = #{gridManager}</if>
+            <if test="customerType != null and customerType != ''">and p.customer_type = #{customerType}</if>
+            <if test="customerTypes != null and customerTypes.size > 0 ">and p.customer_type in
+                <foreach collection="customerTypes" item="t" open="(" close=")" separator=",">
+                    #{t}
+                </foreach>
+            </if>
+        </where>
+    </sql>
+
+    <insert id="insertPerformanceCustomerInfo" parameterType="com.kx.system.domain.customer.PerformanceCustomerInfo"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into performance_customer_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="customerNm != null and customerNm != ''">customer_nm,</if>
+            <if test="customerName != null">customer_name,</if>
+            <if test="customerPhone != null">customer_phone,</if>
+            <if test="customerIdentity != null">customer_identity,</if>
+            <if test="customerType != null">customer_type,</if>
+            <if test="customerLevel != null">customer_level,</if>
+            <if test="customerAddress != null">customer_address,</if>
+            <if test="workUnit != null">work_unit,</if>
+            <if test="job != null">job,</if>
+            <if test="deposit != null">deposit,</if>
+            <if test="loan != null">loan,</if>
+            <if test="finance != null">finance,</if>
+            <if test="property != null">property,</if>
+            <if test="belongGridCode != null">belong_grid_code,</if>
+            <if test="belongGridName != null">belong_grid_name,</if>
+            <if test="gridManager != null">grid_manager,</if>
+            <if test="branchBank != null">branch_bank,</if>
+            <if test="separateBank != null">separate_bank,</if>
+            <if test="creditManager != null">credit_manager,</if>
+            <if test="creditManagerJobNumber != null">credit_manager_job_number,</if>
+            <if test="gender != null">gender,</if>
+            <if test="birthday != null">birthday,</if>
+            <if test="age != null">age,</if>
+            <if test="maritalStatus != null">marital_status,</if>
+            <if test="legalPersonIdentityNum != null">legal_person_identity_num,</if>
+            <if test="legalPersonName != null">legal_person_name,</if>
+            <if test="legalPersonPhone != null">legal_person_phone,</if>
+            <if test="businessAddress != null">business_address,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="customerNm != null and customerNm != ''">#{customerNm},</if>
+            <if test="customerName != null">#{customerName},</if>
+            <if test="customerPhone != null">#{customerPhone},</if>
+            <if test="customerIdentity != null">#{customerIdentity},</if>
+            <if test="customerType != null">#{customerType},</if>
+            <if test="customerLevel != null">#{customerLevel},</if>
+            <if test="customerAddress != null">#{customerAddress},</if>
+            <if test="workUnit != null">#{workUnit},</if>
+            <if test="job != null">#{job},</if>
+            <if test="deposit != null">#{deposit},</if>
+            <if test="loan != null">#{loan},</if>
+            <if test="finance != null">#{finance},</if>
+            <if test="property != null">#{property},</if>
+            <if test="belongGridCode != null">#{belongGridCode},</if>
+            <if test="belongGridName != null">#{belongGridName},</if>
+            <if test="gridManager != null">#{gridManager},</if>
+            <if test="branchBank != null">#{branchBank},</if>
+            <if test="separateBank != null">#{separateBank},</if>
+            <if test="creditManager != null">#{creditManager},</if>
+            <if test="creditManagerJobNumber != null">#{creditManagerJobNumber},</if>
+            <if test="gender != null">#{gender},</if>
+            <if test="birthday != null">#{birthday},</if>
+            <if test="age != null">#{age},</if>
+            <if test="maritalStatus != null">#{maritalStatus},</if>
+            <if test="legalPersonIdentityNum != null">#{legalPersonIdentityNum},</if>
+            <if test="legalPersonName != null">#{legalPersonName},</if>
+            <if test="legalPersonPhone != null">#{legalPersonPhone},</if>
+            <if test="businessAddress != null">#{businessAddress},</if>
+        </trim>
+    </insert>
+
+    <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        insert into performance_customer_info
+        ( customer_nm,
+        customer_name,
+        customer_phone,
+        customer_identity,
+        customer_type,
+        customer_level,
+        customer_address,
+        work_unit,
+        job,
+        deposit,
+        loan,
+        finance,
+        property,
+        belong_grid_code,
+        belong_grid_name,
+        grid_manager,
+        dept_id,
+        branch_bank,
+        separate_bank_id,
+        separate_bank,
+        credit_manager,
+        credit_manager_job_number,
+        gender,
+        birthday,
+        age,
+        marital_status,
+        legal_person_identity_num,
+        legal_person_name,
+        legal_person_phone,
+        business_address,
+        create_time,
+        org_num,
+        addr_type,
+        new_legal_person)
+        values
+        <foreach collection="customerInfos" item="customerInfo" separator=",">
+            (#{customerInfo.customerNm},
+            #{customerInfo.customerName},
+            #{customerInfo.customerPhone},
+            #{customerInfo.customerIdentity},
+            #{customerInfo.customerType},
+            #{customerInfo.customerLevel},
+            #{customerInfo.customerAddress},
+            #{customerInfo.workUnit},
+            #{customerInfo.job},
+            #{customerInfo.deposit},
+            #{customerInfo.loan},
+            #{customerInfo.finance},
+            #{customerInfo.property},
+            #{customerInfo.belongGridCode},
+            #{customerInfo.belongGridName},
+            #{customerInfo.gridManager},
+            #{customerInfo.deptId},
+            #{customerInfo.branchBank},
+            #{customerInfo.separateBankId},
+            #{customerInfo.separateBank},
+            #{customerInfo.creditManager},
+            #{customerInfo.creditManagerJobNumber},
+            #{customerInfo.gender},
+            #{customerInfo.birthday},
+            #{customerInfo.age},
+            #{customerInfo.maritalStatus},
+            #{customerInfo.legalPersonIdentityNum},
+            #{customerInfo.legalPersonName},
+            #{customerInfo.legalPersonPhone},
+            #{customerInfo.businessAddress},
+            #{customerInfo.createTime},
+            #{customerInfo.orgNum},
+            #{customerInfo.addrType},
+            #{customerInfo.newLegalPerson})
+        </foreach>
+    </insert>
+
+    <update id="updatePerformanceCustomerInfo" parameterType="com.kx.system.domain.customer.PerformanceCustomerInfo">
+        update performance_customer_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="customerNm != null and customerNm != ''">customer_nm = #{customerNm},</if>
+            <if test="customerName != null">customer_name = #{customerName},</if>
+            <if test="customerPhone != null">customer_phone = #{customerPhone},</if>
+            <if test="customerIdentity != null">customer_identity = #{customerIdentity},</if>
+            <if test="customerType != null">customer_type = #{customerType},</if>
+            <if test="customerLevel != null">customer_level = #{customerLevel},</if>
+            <if test="customerAddress != null">customer_address = #{customerAddress},</if>
+            <if test="workUnit != null">work_unit = #{workUnit},</if>
+            <if test="job != null">job = #{job},</if>
+            <if test="deposit != null">deposit = #{deposit},</if>
+            <if test="loan != null">loan = #{loan},</if>
+            <if test="finance != null">finance = #{finance},</if>
+            <if test="property != null">property = #{property},</if>
+            <if test="belongGridCode != null">belong_grid_code = #{belongGridCode},</if>
+            <if test="belongGridName != null">belong_grid_name = #{belongGridName},</if>
+            <if test="gridManager != null">grid_manager = #{gridManager},</if>
+            <if test="branchBank != null">branch_bank = #{branchBank},</if>
+            <if test="separateBank != null">separate_bank = #{separateBank},</if>
+            <if test="creditManager != null">credit_manager = #{creditManager},</if>
+            <if test="creditManagerJobNumber != null">credit_manager_job_number = #{creditManagerJobNumber},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="birthday != null">birthday = #{birthday},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="maritalStatus != null">marital_status = #{maritalStatus},</if>
+            <if test="legalPersonIdentityNum != null">legal_person_identity_num = #{legalPersonIdentityNum},</if>
+            <if test="legalPersonName != null">legal_person_name = #{legalPersonName},</if>
+            <if test="legalPersonPhone != null">legal_person_phone = #{legalPersonPhone},</if>
+            <if test="businessAddress != null">business_address = #{businessAddress},</if>
+            <if test="orgNum != null and orgNum != ''">org_num = #{orgNum},
+            </if>
+            <if test="deptId != null">
+                dept_id=#{deptId},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="updateGridManager">
+        update performance_customer_info pci,anchor_point ap set pci.grid_manager = ap.grid_manager where pci.customer_nm = ap.customer_nm and ap.type = 1 and ap.belong_grid = #{code}
+    </update>
+    <update id="updateFtpPerformance">
+        update performance_customer_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deposit != null">deposit = #{deposit},</if>
+            <if test="loan != null">loan = #{loan},</if>
+            <if test="finance != null">finance = #{finance},</if>
+            <if test="property != null">property = #{property},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where customer_nm = #{customerNm} and credit_manager_job_number = #{creditManagerJobNumber}
+    </update>
+    <update id="updatePerBelongGrid">
+        update performance_customer_info pci,anchor_point ap set pci.belong_grid_code = ap.belong_grid, pci.belong_grid_name = ap.belong_grid_name, pci.grid_manager = ap.grid_manager where ap.customer_nm = pci.customer_nm and ap.type = 1 and pci.credit_manager_job_number  = ap.belong_manager_code
+    </update>
+
+    <delete id="deletePerformanceCustomerInfoById" parameterType="Long">
+        delete from performance_customer_info where id = #{id}
+    </delete>
+
+    <delete id="deletePerformanceCustomerInfoByIds" parameterType="String">
+        delete from performance_customer_info where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 查询列表 -->
+    <select id="list" parameterType="com.kx.system.domain.customer.PerformanceCustomerInfo"
+            resultMap="PerformanceCustomerInfoResult">
+        <include refid="selectPerformanceCustomerInfoVo"/>
+        <where>
+            <if test=" customerNm!=null and customerNm !='' ">and customer_nm like concat('%',#{customerNm },'%')</if>
+            <if test=" customerName!=null and customerName !='' ">and customer_name like
+                concat('%',#{customerName },'%')
+            </if>
+            <if test=" customerIdentity!=null and customerIdentity !='' ">and customer_identity like
+                concat('%',#{customerIdentity },'%')
+            </if>
+            <if test=" customerPhone!=null and customerPhone !='' ">and customer_phone like
+                concat('%',#{customerPhone },'%')
+            </if>
+            <if test=" customerLevel!=null and customerLevel !='' ">and customer_level = #{customerLevel }</if>
+            <if test=" workUnit!=null and workUnit !='' ">and work_unit = #{workUnit }</if>
+            <if test=" job!=null and job !='' ">and job = #{job }</if>
+            <if test=" deposit!=null and deposit !='' ">and deposit = #{deposit }</if>
+            <if test=" loan!=null and loan !='' ">and loan = #{loan }</if>
+            <if test=" finance!=null and finance !='' ">and finance = #{finance }</if>
+            <if test=" property!=null and property !='' ">and property = #{property }</if>
+            <if test=" belongGridCode!=null and belongGridCode !='' ">and belong_grid_code = #{belongGridCode }</if>
+            <if test=" belongGridName!=null and belongGridName !='' ">and belong_grid_name = #{belongGridName }</if>
+            <if test=" gridManager!=null and gridManager !='' ">and grid_manager = #{gridManager }</if>
+            <if test=" customerType!=null and customerType !='' ">and customer_type = #{customerType }</if>
+        </where>
+        limit 20
+    </select>
+    <select id="selectCustomerInfo" resultMap="PerformanceCustomerInfoResult">
+        select pci.id, pci.customer_nm, pci.customer_name, pci.customer_phone, pci.customer_identity,
+        pci.customer_type, pci.customer_level, pci.customer_address, pci.work_unit, pci.job, pci.deposit, pci.loan,
+        pci.finance,
+        pci.property, pci.belong_grid_code, pci.belong_grid_name, pci.grid_manager, pci.branch_bank, pci.separate_bank,
+        pci.credit_manager, pci.credit_manager_job_number, pci.gender, birthday, pci.age, pci.marital_status,
+        pci.legal_person_identity_num, pci.legal_person_name, pci.legal_person_phone, pci.business_address,
+        pci.point,su.nick_name as grid_manager_name
+        from performance_customer_info pci
+        left join sys_user su on pci.grid_manager = su.manager_num
+
+        <where>
+            <if test="customerId!=null and customerId !='' ">and pci.id = #{customerId}</if>
+            <if test="customerIdentity!=null and customerIdentity !='' ">and pci.customer_identity = #{customerIdentity}
+            </if>
+        </where>
+        limit 50
+    </select>
+
+    <select id="selectEsDataByGroupId" resultMap="PerMemberResult">
+        SELECT a.id,a.customer_nm,a.customer_name,a.customer_phone,
+        a.customer_identity,a.customer_type,a.customer_level,a.customer_address,
+        a.work_unit,a.job,a.deposit,a.loan,a.finance,a.property,a.belong_grid_code,
+        a.belong_grid_name,a.grid_manager,u2.nick_name ,a.branch_bank,
+        a.separate_bank,a.credit_manager,a.credit_manager_job_number,a.gender,
+        a.birthday,a.age,a.marital_status,a.legal_person_identity_num,
+        a.legal_person_name,a.legal_person_phone,a.business_address,a.point,
+        u.dept_id,u.user_id,sd.ancestors,cgc.custom_group_id,pait.ancestor_codes
+        FROM custom_group_customer cgc
+        left join performance_customer_info a on a.id = cgc.customer_id
+        left join sys_user u on a.credit_manager_job_number = u.manager_num
+        left join sys_user u2 on a.grid_manager = u2.manager_num
+        left join sys_dept sd on u.dept_id= sd.dept_id
+        left join pa_addr_info_type pait on a.belong_grid_code = pait.code
+        where cgc.custom_group_id = #{groupId}
+        limit #{startIndex},#{endIndex}
+    </select>
+
+    <select id="selectPerformanceCustomerInfoByNm" resultMap="PerformanceCustomerInfoResult">
+        <include refid="selectPerformanceCustomerInfoVo"/>
+        where customer_nm = #{nm}
+
+    </select>
+
+    <select id="selectAll" resultMap="PerformanceCustomerInfoResult">
+        <include refid="selectPerformanceCustomerInfoVo">
+        </include>
+        where belong_grid_code is  null
+    </select>
+
+    <select id="selectLikeNm" resultMap="PerformanceCustomerInfoResult">
+
+        <include refid="selectPerformanceCustomerInfoVo" />
+        where customer_nm like concat('%',#{nm},'%')
+    </select>
+
+      <select id="listByRenHang" parameterType="com.kx.system.domain.customer.PerformanceCustomerInfo"
+            resultMap="PerformanceCustomerInfoResult">
+        select
+            p.id,
+            p.customer_name,
+            s.duty_name,
+            s.duty_phone,
+            p.customer_address,
+            p.belong_grid_code,
+            p.belong_grid_name,
+            g.grid_main_manager_name,
+            p.bank_agency_name,
+            p.lat,
+            p.lon,
+            s.dot_type,
+            a.user_id,
+            g.rural_grid_type,
+            s.dept_classify
+        from performance_customer_info p
+        left join  grid_message_info g on p.belong_grid_code = g.grid_code
+        left join sys_dept s  on p.customer_name = s.dept_name
+        left join pa_addr_info_type a on p.belong_grid_code = a.code
+        <if test=" groupId!=null "> left join custom_group_customer d on p.id = d.customer_id  </if>
+        <where>
+            <if test=" customerName!=null and customerName !='' "> and customer_name like concat('%',#{customerName},'%') </if>
+            <if test=" customerAddress !=null and customerAddress  !='' "> and customer_address like concat('%', #{customerAddress },'%') </if>
+            <if test="dotTypeList!=null and dotTypeList.size()>0 ">
+                <foreach collection="dotTypeList" item="dotTypeItem">
+                    and  s.dot_type like concat('%',#{dotTypeItem},'%')
+                </foreach>
+            </if>
+            <if test=" belongGridCodeList!=null and belongGridCodeList.size()>0 ">
+                and
+                <foreach collection="belongGridCodeList" item="item" open="(" close=")" separator="or">
+                     belong_grid_code like concat(#{item},'%')
+                </foreach>
+            </if>
+            <if test=" serviceTypeList!=null and serviceTypeList.size()>0">
+                and
+                <foreach collection="serviceTypeList" item="item" open="(" close=")" separator="and">
+                   find_in_set(#{item},service_type)
+                </foreach>
+            </if>
+            <if test=" dutyName!=null and dutyName !='' "> and s.duty_name like concat('%',#{dutyName},'%') </if>
+            <if test=" bankAgencyName!=null and bankAgencyName !='' "> and p.bank_agency_name = #{bankAgencyName} </if>
+            <if test=" groupId!=null "> and d.custom_group_id = #{groupId} </if>
+            <if test=" ruralGridType!=null "> and g.rural_grid_type = #{ruralGridType} </if>
+            <if test=" deptClassifyList!=null and deptClassifyList.size()>0 ">
+                and s.dept_classify in (
+                <foreach collection="deptClassifyList" item="item" separator=",">
+                    #{item}
+                </foreach>
+                )
+            </if>
+
+        </where>
+        ORDER BY
+        s.dot_type desc,
+        CASE p.belong_grid_code
+        WHEN '330702%' THEN 1
+        WHEN '330703%' THEN 2
+        WHEN '330781%' THEN 3
+        ELSE 4
+        END,
+        p.belong_grid_code
+    </select>
+
+    <select id="listByBank"  resultMap="BankResult">
+        select bank_agency_name,count(*) as count
+        from performance_customer_info p
+        <if test=" groupId!=null "> left join custom_group_customer c on p.id = c.customer_id  </if>
+        <where>
+         <if test=" groupId!=null "> and c.custom_group_id = #{groupId} </if>
+        </where>
+        group by bank_agency_name
+    </select>
+    <select id="selectAllAnchor" resultType="com.kx.system.domain.AnchorExport">
+        select distinct
+        p.bank_agency_name,
+        p.customer_name,
+        case when s.dot_type = '0,2' then '特色网点、责任网点'
+        when s.dot_type = '1,2' then '特殊网点、责任网点'
+        when s.dot_type = '2' then '责任网点'
+        when s.dot_type = '0' then '特色网点'
+        when s.dot_type = '1' then '特殊网点'
+        when s.dot_type = '3' then '其他网点'
+        end as dot_type,
+        p.anchor_ranks,
+        s.dot_type,
+        s.duty_name,
+        s.duty_phone,
+        s.duty_telephone,
+        p.customer_address,
+        case
+            when g.rural_grid_type = '0' then '行政村'
+            when g.rural_grid_type = '1' then '社区'
+            when g.rural_grid_type = '1' then '社区'
+        end
+        as rural_grid_type,
+        p.belong_grid_name,
+        ap.deposit_machine,
+        ap.cash_teller_machine,
+        ap.atm_machine,
+        g.grid_main_manager_name,
+        g.grid_main_manager_phone,
+        p.service_type,
+        g1.grid_name,
+        a2.name as zjName,
+        a3.name as xyName
+        FROM anchor_point ap
+        left JOIN performance_customer_info p on p.customer_name= ap.anchor_name
+        left JOIN sys_dept s on s.dept_name = ap.anchor_name
+        left JOIN grid_message_info g ON g.grid_code = ap.belong_grid
+        left JOIN grid_message_info g1 ON g1.duty_network_name = ap.anchor_name
+        left JOIN pa_addr_info_type a ON g1.grid_code = a.code
+        left join pa_addr_info_type a2 on a2.code = a.parent_code
+        left join pa_addr_info_type a3 on a3.code = a2.parent_code
+        <where>
+            <if test=" customerName!=null and customerName !='' "> and p.customer_name like concat('%',#{customerName},'%') </if>
+            <if test=" customerAddress!=null and customerAddress !='' "> and p.customer_address like concat('%', #{customerAddress },'%') </if>
+            <if test="dotTypeList!=null and dotTypeList.size()>0 ">
+                <foreach collection="dotTypeList" item="dotTypeItem">
+                    and  s.dot_type like concat('%',#{dotTypeItem},'%')
+                </foreach>
+            </if>
+            <if test=" belongGridCodeList!=null and belongGridCodeList.size()>0 ">
+                and
+                <foreach collection="belongGridCodeList" item="item" open="(" close=")" separator="or">
+                    a.code like concat(#{item},'%')
+                </foreach>
+            </if>
+            <if test=" serviceTypeList!=null and serviceTypeList.size()>0">
+                and
+                <foreach collection="serviceTypeList" item="item" open="(" close=")" separator="and">
+                    find_in_set(#{item},service_type)
+                </foreach>
+            </if>
+            <if test=" dutyName!=null and dutyName !='' "> and s.duty_name like concat('%',#{dutyName},'%') </if>
+            <if test=" bankAgencyName!=null and bankAgencyName !='' "> and p.bank_agency_name = #{bankAgencyName} </if>
+            <if test=" groupId!=null "> and d.custom_group_id = #{groupId} </if>
+            <if test=" ruralGridType!=null "> and g.rural_grid_type = #{ruralGridType} </if>
+        </where>
+        ORDER BY p.customer_name
+    </select>
+    <select id="selectAllAnchorTest" resultType="com.kx.system.domain.ExportAnchor">
+        select distinct
+        p.bank_agency_name,
+        p.customer_name,
+        case when s.dot_type = '0,2' then '特色网点、责任网点'
+        when s.dot_type = '1,2' then '特殊网点、责任网点'
+        when s.dot_type = '2' then '责任网点'
+        when s.dot_type = '0' then '特色网点'
+        when s.dot_type = '1' then '特殊网点'
+        when s.dot_type = '3' then '其他网点'
+        end as dot_type,
+        p.anchor_ranks,
+        s.dot_type,
+        s.duty_name,
+        s.duty_phone,
+        s.duty_telephone,
+        p.customer_address,
+        case
+        when g.rural_grid_type = '0' then '行政村'
+        when g.rural_grid_type = '1' then '社区'
+        when g.rural_grid_type = '1' then '社区'
+        end
+        as rural_grid_type,
+        p.belong_grid_name,
+        ap.deposit_machine,
+        ap.cash_teller_machine,
+        ap.atm_machine,
+        g.grid_main_manager_name,
+        g.grid_main_manager_phone,
+        p.service_type,
+        g1.grid_name,
+        a2.name as zjName,
+        a3.name as xyName
+        FROM anchor_point ap
+        left JOIN performance_customer_info p on p.customer_name= ap.anchor_name
+        left JOIN sys_dept s on s.dept_name = ap.anchor_name
+        left JOIN grid_message_info g ON g.grid_code = ap.belong_grid
+        left JOIN grid_message_info g1 ON g1.duty_network_name = ap.anchor_name
+        left JOIN pa_addr_info_type a ON g1.grid_code = a.code
+        left join pa_addr_info_type a2 on a2.code = a.parent_code
+        left join pa_addr_info_type a3 on a3.code = a2.parent_code
+        <where>
+            <if test=" customerName!=null and customerName !='' "> and p.customer_name like concat('%',#{customerName},'%') </if>
+            <if test=" customerAddress!=null and customerAddress !='' "> and p.customer_address like concat('%', #{customerAddress },'%') </if>
+            <if test="dotTypeList!=null and dotTypeList.size()>0 ">
+                <foreach collection="dotTypeList" item="dotTypeItem">
+                    and  s.dot_type like concat('%',#{dotTypeItem},'%')
+                </foreach>
+            </if>
+            <if test=" belongGridCodeList!=null and belongGridCodeList.size()>0 ">
+                and
+                <foreach collection="belongGridCodeList" item="item" open="(" close=")" separator="or">
+                    a.code like concat(#{item},'%')
+                </foreach>
+            </if>
+            <if test=" serviceTypeList!=null and serviceTypeList.size()>0">
+                and
+                <foreach collection="serviceTypeList" item="item" open="(" close=")" separator="and">
+                    find_in_set(#{item},service_type)
+                </foreach>
+            </if>
+            <if test=" dutyName!=null and dutyName !='' "> and s.duty_name like concat('%',#{dutyName},'%') </if>
+            <if test=" bankAgencyName!=null and bankAgencyName !='' "> and p.bank_agency_name = #{bankAgencyName} </if>
+            <if test=" groupId!=null "> and d.custom_group_id = #{groupId} </if>
+            <if test=" ruralGridType!=null "> and g.rural_grid_type = #{ruralGridType} </if>
+        </where>
+        ORDER BY p.customer_name
+    </select>
+
+
+    <update id="UpdateBatchByDeptName">
+        <foreach collection="cachedDataList" item="item" separator=";" close=";" >
+            update performance_customer_info
+            set  service_type = #{item.serviceType}
+            where customer_name = #{item.deptName}
+        </foreach>
+    </update>
+
+<!--    from performance_customer_info p-->
+<!--    left join  grid_message_info g on p.customer_name= g.duty_network_name-->
+<!--    left join sys_dept s  on p.customer_name = s.dept_name-->
+<!--    left join pa_addr_info_type a on p.belong_grid_code = a.code-->
+<!--    left join anchor_point ap on a.code = ap.belong_grid-->
+<!--    left join pa_addr_info_type a2 on a2.code = a.parent_code-->
+<!--    left join pa_addr_info_type a3 on a3.code = a2.parent_code-->
+
+</mapper>

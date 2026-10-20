@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.BranchViewMapper">
+    <insert id="insertBranchEvent">
+        insert into branch_events(branch_id, complainant, complainant_phone, complainant_type, complain_time,
+                                  description, handler, handler_phone, status, customer_name, create_time,superiors_name,
+                                  superiors_phone)
+        values (#{branchId}, #{complainant}, #{complainantPhone}, #{complainantType}, #{complainTime}, #{description},
+                #{handler}, #{handlerPhone}, #{status}, #{customerName}, #{createTime},#{superiorsName},#{superiorsPhone})
+
+    </insert>
+    <update id="updateBranchEvent" parameterType="com.kx.system.domain.BranchEvents">
+        UPDATE branch_events
+        set
+            complainant = #{complainant},
+            complainant_phone = #{complainantPhone},
+            complainant_type = #{complainantType},
+            complain_time = #{complainTime},
+            description = #{description},
+            handler = #{handler},
+            handler_phone = #{handlerPhone},
+            update_time = #{updateTime},
+            status = #{status},
+            branch_id = #{branchId},
+            superiors_name= #{superiorsName},
+            superiors_phone = #{superiorsPhone}
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+
+
+    <delete id="deleteBranchEvent" parameterType="java.lang.Long">
+        delete
+        from branch_events
+        where id = #{id}
+    </delete>
+
+
+    <select id="selectPerformanceInfo" resultType="com.kx.system.domain.customer.PerformanceCustomerInfo"
+            parameterType="java.lang.String">
+        select customer_name,
+               customer_address,
+               belong_grid_code,
+               belong_grid_name,
+               service_type,
+               bank_agency_name
+        from performance_customer_info
+        where customer_name = #{customerName}
+    </select>
+
+    <select id="selectBranchEvent" resultType="com.kx.system.domain.BranchEvents">
+        select id,
+               branch_id,
+               complainant,
+               complainant_phone,
+               complainant_type,
+               complain_time,
+               description,
+               handler,
+               handler_phone,
+               status,
+               customer_name,
+               create_time,
+               superiors_name,
+               superiors_phone
+        from branch_events
+        where customer_name = #{customerName}
+        order by create_time desc
+        limit 1
+    </select>
+    <select id="selectBranchEventAll" resultType="com.kx.system.domain.BranchEvents">
+        select id,
+               branch_id,
+               complainant,
+               complainant_phone,
+               complainant_type,
+               complain_time,
+               description,
+               handler,
+               handler_phone,
+               status,
+               customer_name,
+               create_time,
+               superiors_name,
+               superiors_phone
+        from branch_events
+        where customer_name = #{customerName}
+        order by complain_time
+    </select>
+    <select id="selectBranchBifferentiate" resultType="com.kx.system.domain.grid.GridMessageInfo">
+        select b.duty_network_name, b.duty_network_code
+        from anchor_point a
+        left join grid_message_info b on a.anchor_name = b.duty_network_name
+        where b.duty_network_name is not null
+          and b.duty_network_name != ''
+          and a.anchor_name = #{anchorName};
+    </select>
+    <select id="selectBranch" resultType="java.lang.Boolean">
+        select count(1)
+        from anchor_point
+        where anchor_name = #{branchName}
+    </select>
+    <select id="selectGridInfo" resultType="com.kx.system.domain.dto.BranchInfoDTO">
+        SELECT distinct
+               p.customer_name,
+               p.customer_address,
+               s.bank_agency_name,
+               s.duty_name,
+               s.duty_phone,
+               s.duty_telephone,
+               p.belong_grid_name as gridName,
+               g.grid_main_manager_name as gridMainManagerName,
+               g.grid_main_manager_phone as gridMainManagerPhone,
+               s.dot_introduce,
+               g.rural_grid_type,
+               p.anchor_ranks
+        FROM performance_customer_info p
+                 LEFT JOIN grid_message_info g ON p.belong_grid_code = g.grid_code
+                 LEFT JOIN sys_dept s  on p.customer_name = s.dept_name
+        WHERE p.customer_name = #{customerName}
+    </select>
+    <select id="selectBranchEventById" resultType="com.kx.system.domain.BranchEvents"
+            parameterType="java.lang.Long">
+        select id,
+               branch_id,
+               complainant,
+               complainant_phone,
+               complainant_type,
+               complain_time,
+               description,
+               handler,
+               handler_phone,
+               status,
+               customer_name,
+               update_time
+        from branch_events
+        where id = #{id}
+    </select>
+    <select id="getParentCode" resultType="java.lang.String">
+        SELECT parent_code FROM pa_addr_info_type WHERE code = #{code}
+    </select>
+    <select id="getCategoryName" resultType="java.lang.String">
+        SELECT name FROM pa_addr_info_type WHERE code = #{code}
+    </select>
+
+
+
+
+
+
+    <select id="selectFinancialServiceInfo" resultType="com.kx.system.domain.VillageFinancialServicePoints"
+            parameterType="java.util.List">
+        SELECT
+        serve_point_name,
+        serve_point_addr,
+        duty_name,
+        duty_phone,
+        grid_name,
+        serve_point_addr
+        FROM
+        village_financial_service_points
+        WHERE
+        grid_code IN
+        <foreach item="gridCode" collection="list" open="(" separator="," close=")">
+            #{gridCode}
+        </foreach>
+    </select>
+    <select id="selectGridManageInfo" resultType="com.kx.system.domain.dto.GridManageInfoDTO" parameterType="java.util.List">
+        SELECT  t3.name AS belong_county,
+                t2.name AS belong_town,
+                t1.name AS belong_grid,
+                t1.code AS grid_code
+        FROM pa_addr_info_type t1
+        JOIN pa_addr_info_type t2 ON t1.parent_code = t2.code
+        JOIN pa_addr_info_type t3 ON t2.parent_code = t3.code
+        <where>
+            <foreach item="gridCode" collection="gridCodes" separator="OR">
+                t1.ancestor_codes LIKE concat('%,', #{gridCode}, ',%')
+            </foreach>
+        </where>
+    </select>
+    <select id="selectCashServiceInfo" resultType="com.kx.system.domain.CashServicePoints"
+            parameterType="java.util.List">
+        SELECT
+        serve_point_name,
+        serve_point_addr,
+        duty_name,
+        duty_phone,
+        grid_name,
+        serve_point_addr
+        FROM
+        cash_service_points
+        WHERE
+        grid_code IN
+        <foreach item="gridCode" collection="list" open="(" separator="," close=")">
+            #{gridCode}
+        </foreach>
+    </select>
+
+
+</mapper>

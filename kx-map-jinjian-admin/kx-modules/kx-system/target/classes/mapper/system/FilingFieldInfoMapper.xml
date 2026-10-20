@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.FilingFieldInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="filingFieldInfoResultMap" type="com.kx.system.domain.filing.FilingFieldInfo">
+        <id column="id" property="id" />
+        <result column="model_id" property="modelId" />
+        <result column="chinese_name" property="chineseName" />
+        <result column="english_name" property="englishName" />
+        <result column="use_type" property="useType" />
+        <result column="field_type" property="fieldType" />
+        <result column="is_finish" property="isFinish" />
+        <result column="is_must" property="isMust" />
+        <result column="remark" property="remark" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="content" property="content" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="columns">
+        id, model_id, chinese_name, english_name,content, use_type, field_type, is_finish, is_must, remark, create_time, update_time
+    </sql>
+
+
+    <!-- 查询列表 -->
+    <select id="list" parameterType="com.kx.system.domain.filing.FilingFieldInfo" resultMap="filingFieldInfoResultMap">
+        select <include refid="columns"/>  from filing_field_info
+        <where>
+            <if test=" modelId!=null and modelId !='' "> and model_id = #{modelId } </if>
+            <if test=" chineseName!=null and chineseName !='' "> and chinese_name = #{chineseName } </if>
+            <if test=" englishName!=null and englishName !='' "> and english_name = #{englishName } </if>
+            <if test=" useType!=null and useType !='' "> and use_type = #{useType } </if>
+            <if test=" fieldType!=null and fieldType !='' "> and field_type = #{fieldType } </if>
+            <if test=" isFinish!=null and isFinish !='' "> and is_finish = #{isFinish } </if>
+            <if test=" isMust!=null and isMust !='' "> and is_must = #{isMust } </if>
+            <if test=" remark!=null and remark !='' "> and remark = #{remark } </if>
+            <if test=" content!=null and content !='' "> and content = #{content} </if>
+            <if test=" createTime!=null and createTime !='' "> and create_time = #{createTime } </if>
+            <if test=" updateTime!=null and updateTime !='' "> and update_time = #{updateTime } </if>
+        </where>
+    </select>
+
+    <!-- 根据id查询 -->
+    <select id="getById"  resultMap="filingFieldInfoResultMap">
+        select <include refid="columns"/>  from filing_field_info where id = #{id}
+    </select>
+    <select id="getByEnglishNameAndModelId"  resultMap="filingFieldInfoResultMap">
+        select <include refid="columns"/>  from filing_field_info where english_name = #{englishName } and model_id = #{modelId }
+    </select>
+
+    <!-- 根据id删除 -->
+    <delete id="deleteById">
+        delete from  filing_field_info where  id= #{id}
+    </delete>
+    <delete id="deleteByModelId">
+        delete from  filing_field_info where  model_id = #{modelId }
+    </delete>
+    <delete id="deleteByModelIdAndEnglishName">
+        delete from  filing_field_info where  model_id = #{modelId } and  english_name = #{englishName }
+    </delete>
+
+    <!-- 新增 -->
+    <insert id="insertFilingFieldInfo" parameterType="com.kx.system.domain.filing.FilingFieldInfo" keyProperty="id" useGeneratedKeys="true">
+        insert into filing_field_info(
+            model_id,chinese_name,english_name,content,use_type,field_type,is_finish,is_must,remark,create_time,update_time
+        )values(
+                   #{modelId}, #{chineseName}, #{englishName},#{content}, #{useType}, #{fieldType}, #{isFinish}, #{isMust}, #{remark}, #{createTime}, #{updateTime}
+               )
+    </insert>
+
+    <!-- 更新 -->
+    <update id="updateFilingFieldInfo" parameterType="com.kx.system.domain.filing.FilingFieldInfo">
+        update filing_field_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test=" modelId!=null and modelId !='' ">  model_id = #{modelId } ,</if>
+            <if test=" chineseName!=null and chineseName !='' ">  chinese_name = #{chineseName } ,</if>
+            <if test=" englishName!=null and englishName !='' ">  english_name = #{englishName } ,</if>
+            <if test=" useType!=null and useType !='' ">  use_type = #{useType } ,</if>
+            <if test=" fieldType!=null and fieldType !='' ">  field_type = #{fieldType } ,</if>
+            <if test=" isFinish!=null and isFinish !='' ">  is_finish = #{isFinish } ,</if>
+            <if test=" isMust!=null and isMust !='' ">  is_must = #{isMust } ,</if>
+            <if test=" content!=null "> content = #{content} ,</if>
+            <if test=" remark!=null and remark !='' ">  remark = #{remark } ,</if>
+            <if test=" createTime!=null ">  create_time = #{createTime } ,</if>
+            <if test=" updateTime!=null ">  update_time = #{updateTime } </if>
+        </trim>
+        where id = #{id}
+    </update>
+</mapper>

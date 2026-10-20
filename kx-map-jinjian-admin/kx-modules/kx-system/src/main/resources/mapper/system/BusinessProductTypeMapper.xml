@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.BusinessProductTypeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="businessProductTypeResultMap" type="com.kx.system.domain.business.BusinessProductType">
+        <id column="id" property="id" />
+        <result column="business_type" property="businessType" />
+        <result column="business_type_remark" property="businessTypeRemark" />
+        <result column="business_product_name" property="businessProductName" />
+        <result column="create_by" property="createBy" />
+        <result column="create_org" property="createOrg" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="columns">
+        id, business_type, business_type_remark, business_product_name, create_by, create_org, create_time, update_time
+    </sql>
+
+    <!-- 查询列表 -->
+    <select id="list" parameterType="com.kx.system.domain.business.BusinessProductType" resultMap="businessProductTypeResultMap">
+        select <include refid="columns"/>  from business_product_type
+        <where>
+            <if test=" businessType!=null and businessType !='' "> and business_type = #{businessType } </if>
+            <if test=" businessTypeRemark!=null and businessTypeRemark !='' "> and business_type_remark = #{businessTypeRemark } </if>
+            <if test=" businessProductName!=null and businessProductName !='' "> and business_product_name = #{businessProductName } </if>
+            <if test=" createBy!=null and createBy !='' "> and create_by = #{createBy } </if>
+            <if test=" createOrg!=null and createOrg !='' "> and create_org = #{createOrg } </if>
+            <if test=" createTime!=null and createTime !='' "> and create_time = #{createTime } </if>
+            <if test=" updateTime!=null and updateTime !='' "> and update_time = #{updateTime } </if>
+        </where>
+    </select>
+
+    <!-- 根据id查询 -->
+    <select id="getById"  resultMap="businessProductTypeResultMap">
+        select <include refid="columns"/>  from business_product_type where id = #{id}
+    </select>
+
+    <!-- 根据id删除 -->
+    <delete id="deleteById">
+        delete from  business_product_type where  id= #{id}
+    </delete>
+
+    <!-- 新增 -->
+    <insert id="insertBusinessProductType" parameterType="com.kx.system.domain.business.BusinessProductType" keyProperty="id" useGeneratedKeys="true">
+        insert into business_product_type(
+            business_type,business_type_remark,business_product_name,create_by,create_org,create_time,update_time,
+        )values(
+             #{businessType}, #{businessTypeRemark}, #{businessProductName}, #{createBy}, #{createOrg}, #{createTime}, #{updateTime},
+        )
+    </insert>
+
+    <!-- 更新 -->
+    <update id="updateBusinessProductType" parameterType="com.kx.system.domain.business.BusinessProductType">
+        update business_product_type
+    <trim prefix="SET" suffixOverrides=",">
+        <if test=" businessType!=null and businessType !='' ">  business_type = #{businessType } ,</if>
+        <if test=" businessTypeRemark!=null and businessTypeRemark !='' ">  business_type_remark = #{businessTypeRemark } ,</if>
+        <if test=" businessProductName!=null and businessProductName !='' ">  business_product_name = #{businessProductName } ,</if>
+        <if test=" createBy!=null and createBy !='' ">  create_by = #{createBy } ,</if>
+        <if test=" createOrg!=null and createOrg !='' ">  create_org = #{createOrg } ,</if>
+        <if test=" createTime!=null and createTime !='' ">  create_time = #{createTime } ,</if>
+        <if test=" updateTime!=null and updateTime !='' ">  update_time = #{updateTime } ,</if>
+    </trim>
+     where id = #{id}
+    </update>
+
+</mapper>

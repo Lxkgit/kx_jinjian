@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.BusinessFieldInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="businessFieldInfoResultMap" type="com.kx.system.domain.business.BusinessFieldInfo">
+        <id column="id" property="id" />
+        <result column="product_id" property="productId" />
+        <result column="is_need" property="isNeed" />
+        <result column="field_name" property="fieldName" />
+        <result column="field_type" property="fieldType" />
+        <result column="remark" property="remark" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="columns">
+        id, product_id, is_need, field_name, field_type, remark, create_time, update_time
+    </sql>
+
+    <!-- 查询列表 -->
+    <select id="list" parameterType="com.kx.system.domain.business.BusinessFieldInfo" resultMap="businessFieldInfoResultMap">
+        select <include refid="columns"/>  from business_field_info
+        <where>
+            <if test=" productId!=null and productId !='' "> and product_id = #{productId } </if>
+            <if test=" isNeed!=null and isNeed !='' "> and is_need = #{isNeed } </if>
+            <if test=" fieldName!=null and fieldName !='' "> and field_name = #{fieldName } </if>
+            <if test=" fieldType!=null and fieldType !='' "> and field_type = #{fieldType } </if>
+            <if test=" remark!=null and remark !='' "> and remark = #{remark } </if>
+            <if test=" createTime!=null and createTime !='' "> and create_time = #{createTime } </if>
+            <if test=" updateTime!=null and updateTime !='' "> and update_time = #{updateTime } </if>
+        </where>
+    </select>
+
+    <!-- 根据id查询 -->
+    <select id="getById"  resultMap="businessFieldInfoResultMap">
+        select <include refid="columns"/>  from business_field_info where id = #{id}
+    </select>
+
+    <!-- 根据id删除 -->
+    <delete id="deleteById">
+        delete from  business_field_info where  id= #{id}
+    </delete>
+
+    <!-- 新增 -->
+    <insert id="insertBusinessFieldInfo" parameterType="com.kx.system.domain.business.BusinessFieldInfo" keyProperty="id" useGeneratedKeys="true">
+        insert into business_field_info(
+            product_id,is_need,field_name,field_type,remark,create_time,update_time,
+        )values(
+             #{productId}, #{isNeed}, #{fieldName}, #{fieldType}, #{remark}, #{createTime}, #{updateTime},
+        )
+    </insert>
+
+    <!-- 更新 -->
+    <update id="updateBusinessFieldInfo" parameterType="com.kx.system.domain.business.BusinessFieldInfo">
+        update business_field_info
+    <trim prefix="SET" suffixOverrides=",">
+        <if test=" productId!=null and productId !='' ">  product_id = #{productId } ,</if>
+        <if test=" isNeed!=null and isNeed !='' ">  is_need = #{isNeed } ,</if>
+        <if test=" fieldName!=null and fieldName !='' ">  field_name = #{fieldName } ,</if>
+        <if test=" fieldType!=null and fieldType !='' ">  field_type = #{fieldType } ,</if>
+        <if test=" remark!=null and remark !='' ">  remark = #{remark } ,</if>
+        <if test=" createTime!=null and createTime !='' ">  create_time = #{createTime } ,</if>
+        <if test=" updateTime!=null and updateTime !='' ">  update_time = #{updateTime } ,</if>
+    </trim>
+     where id = #{id}
+    </update>
+
+</mapper>

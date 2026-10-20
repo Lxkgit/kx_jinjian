@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.FilingCustomerTransferMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="filingCustomerTransferResultMap" type="com.kx.system.domain.filing.FilingCustomerTransfer">
+        <id column="id" property="id"/>
+        <result column="filing_id" property="filingId"/>
+        <result column="customer_type" property="customerType"/>
+        <result column="customer_name" property="customerName"/>
+        <result column="customer_identity" property="customerIdentity"/>
+        <result column="customer_phone" property="customerPhone"/>
+        <result column="belong_grid_name" property="belongGridName"/>
+        <result column="move_out_manager_name" property="moveOutManagerName"/>
+        <result column="move_out_manager_code" property="moveOutManagerCode"/>
+        <result column="move_out_org_name" property="moveOutOrgName"/>
+        <result column="move_out_org_code" property="moveOutOrgCode"/>
+        <result column="move_in_manager_name" property="moveInManagerName"/>
+        <result column="move_in_manager_code" property="moveInManagerCode"/>
+        <result column="move_in_org_name" property="moveInOrgName"/>
+        <result column="move_in_org_code" property="moveInOrgCode"/>
+        <result column="move_judge_name" property="moveJudgeName"/>
+        <result column="move_judge_code" property="moveJudgeCode"/>
+        <result column="move_judge_dept_id" property="moveJudgeDeptId"/>
+        <result column="dept_name" property="moveJudgeDeptName"/>
+        <result column="move_manual" property="moveManual"/>
+        <result column="judge_indicate" property="judgeIndicate"/>
+        <result column="move_status" property="moveStatus"/>
+        <result column="move_date" property="moveDate"/>
+        <result column="finish_date" property="finishDate"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="two_year_loan_pass_rate" property="twoYearLoanPassRate" />
+        <result column="last_month_normal_inte_rate" property="lastMonthNormalInteRate" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="selectSql">
+        select
+                t.id,
+                t.filing_id,
+                t.customer_name,
+                t.customer_type,
+                t.customer_identity,
+                t.customer_phone,
+                t.belong_grid_name,
+                t.move_out_manager_name,
+                t.move_out_manager_code,
+                t.move_out_org_name,
+                t.move_out_org_code,
+                t.move_in_manager_name,
+                t.move_in_manager_code,
+                t.move_in_org_name,
+                t.move_in_org_code,
+                t.move_judge_name,
+                t.move_judge_code,
+                t.move_judge_dept_id,
+                d.dept_name,
+                t.move_manual,
+                t.judge_indicate,
+                t.move_status,
+                t.move_date,
+                t.finish_date,
+                t.create_time,
+                t.update_time,
+                f.two_year_loan_pass_rate,
+                f.last_month_normal_inte_rate
+        from filing_customer_transfer t
+        left join sys_dept d on d.dept_id = t.move_judge_dept_id
+        left join manager_transfer_refer_index f on t.move_out_manager_code = f.manager_num
+    </sql>
+
+    <!-- 查询列表 -->
+    <select id="list" parameterType="com.kx.system.domain.filing.FilingCustomerTransfer"
+            resultMap="filingCustomerTransferResultMap">
+        <include refid="selectSql"/>
+        <where>
+            <if test=" filingId!=null and filingId !='' ">and filing_id = #{filingId }</if>
+            <if test=" customerType!=null and customerType !='' ">and customer_type = #{customerType }</if>
+            <if test=" customerIdentity!=null and customerIdentity !='' ">and customer_identity = #{customerIdentity }
+            </if>
+            <if test=" customerPhone!=null and customerPhone !='' ">and customer_phone = #{customerPhone }</if>
+            <if test=" belongGridName!=null and belongGridName !='' ">and belong_grid_name = #{belongGridName }</if>
+            <if test=" moveOutManagerName!=null and moveOutManagerName !='' ">and move_out_manager_name like concat('%',
+                #{moveOutManagerName},'%')
+            </if>
+            <if test=" moveOutManagerCode!=null and moveOutManagerCode !='' ">
+                and (
+                move_out_manager_code = #{moveOutManagerCode }
+                or (
+                    filing_id in (select id from filing_customer_info where filing_manager_code = #{moveOutManagerCode})
+                    and move_status = '0'
+                    )
+                )
+            </if>
+            <if test=" moveInManagerName!=null and moveInManagerName !='' ">and move_in_manager_name like concat('%',
+                #{moveInManagerName},'%')
+            </if>
+            <if test=" moveInManagerCode!=null and moveInManagerCode !='' ">and move_in_manager_code =
+                #{moveInManagerCode }
+            </if>
+            <if test=" moveJudgeName!=null and moveJudgeName !='' ">and move_judge_name = #{moveJudgeName }</if>
+            <if test=" moveJudgeCode!=null and moveJudgeCode !='' ">and move_judge_code = #{moveJudgeCode }</if>
+            <if test=" moveJudgeDeptId!=null ">and move_judge_dept_id = #{moveJudgeDeptId }</if>
+            <if test=" moveManual!=null and moveManual !='' ">and move_manual = #{moveManual }</if>
+            <if test=" judgeIndicate!=null and judgeIndicate !='' ">and judge_indicate = #{judgeIndicate }</if>
+            <if test=" moveStatus!=null and moveStatus !='' ">and move_status = #{moveStatus }</if>
+            <if test=" moveDate!=null  ">and move_date = #{moveDate }</if>
+            <if test=" finishDate!=null  ">and finish_date = #{finishDate }</if>
+            <if test=" createTime!=null  ">and create_time = #{createTime }</if>
+            <if test=" updateTime!=null ">and update_time = #{updateTime }</if>
+        </where>
+        order by t.create_time desc
+    </select>
+
+    <!-- 根据id查询 -->
+    <select id="getById" resultMap="filingCustomerTransferResultMap">
+        <include refid="selectSql"/>
+        where t.id = #{id}
+    </select>
+
+    <!-- 根据id集合查询 -->
+    <select id="getByFilingIds" resultMap="filingCustomerTransferResultMap">
+        <include refid="selectSql"/>
+        where
+        t.move_status = '0'
+        and
+        t.filing_id in
+        <foreach collection="ids" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+
+    <!-- 根据id删除 -->
+    <delete id="deleteById">
+        delete
+        from filing_customer_transfer
+        where id = #{id}
+    </delete>
+
+    <!-- 新增 -->
+    <insert id="insertFilingCustomerTransfer" parameterType="com.kx.system.domain.filing.FilingCustomerTransfer"
+            keyProperty="id" useGeneratedKeys="true">
+        insert into filing_customer_transfer(filing_id, customer_type, customer_identity, customer_phone,
+                                             belong_grid_name, move_out_manager_name, move_out_manager_code,
+                                             move_in_manager_name, move_in_manager_code, move_judge_name,
+                                             move_judge_code, move_judge_dept_id, move_manual, judge_indicate, move_status, move_date,
+                                             finish_date, create_time, update_time,customer_name,move_out_org_name,move_out_org_code,move_in_org_name,move_in_org_code)
+        values (#{filingId}, #{customerType}, #{customerIdentity}, #{customerPhone}, #{belongGridName},
+                #{moveOutManagerName}, #{moveOutManagerCode}, #{moveInManagerName}, #{moveInManagerCode},
+                #{moveJudgeName}, #{moveJudgeCode}, #{moveJudgeDeptId}, #{moveManual}, #{judgeIndicate}, #{moveStatus}, #{moveDate},
+                #{finishDate}, #{createTime}, #{updateTime},#{customerName},#{moveInOrgCode},#{moveInOrgName},#{moveOutOrgCode},#{moveOutOrgName})
+    </insert>
+
+    <!-- 更新 -->
+    <update id="updateFilingCustomerTransfer" parameterType="com.kx.system.domain.filing.FilingCustomerTransfer">
+        update filing_customer_transfer
+        <trim prefix="SET" suffixOverrides=",">
+            update_time = now() ,
+            <if test=" filingId!=null and filingId !='' ">filing_id = #{filingId } ,</if>
+            <if test=" customerType!=null and customerType !='' ">customer_type = #{customerType } ,</if>
+            <if test=" customerIdentity!=null and customerIdentity !='' ">customer_identity = #{customerIdentity } ,
+            </if>
+            <if test=" customerPhone!=null and customerPhone !='' ">customer_phone = #{customerPhone } ,</if>
+            <if test=" belongGridName!=null and belongGridName !='' ">belong_grid_name = #{belongGridName } ,</if>
+            <if test=" moveOutManagerName!=null and moveOutManagerName !='' ">move_out_manager_name =
+                #{moveOutManagerName } ,
+            </if>
+            <if test=" moveOutManagerCode!=null and moveOutManagerCode !='' ">move_out_manager_code =
+                #{moveOutManagerCode } ,
+            </if>
+            <if test=" moveInManagerName!=null and moveInManagerName !='' ">move_in_manager_name = #{moveInManagerName }
+                ,
+            </if>
+            <if test=" moveInManagerCode!=null and moveInManagerCode !='' ">move_in_manager_code = #{moveInManagerCode }
+                ,
+            </if>
+            <if test=" moveJudgeName!=null and moveJudgeName !='' ">move_judge_name = #{moveJudgeName } ,</if>
+            <if test=" moveJudgeCode!=null and moveJudgeCode !='' ">move_judge_code = #{moveJudgeCode } ,</if>
+            <if test=" moveJudgeDeptId!=null and moveJudgeDeptId !='' ">move_judge_dept_id = #{moveJudgeDeptId } ,</if>
+            <if test=" moveManual!=null and moveManual !='' ">move_manual = #{moveManual } ,</if>
+            <if test=" judgeIndicate!=null and judgeIndicate !='' ">judge_indicate = #{judgeIndicate } ,</if>
+            <if test=" moveStatus!=null and moveStatus !='' ">move_status = #{moveStatus } ,</if>
+            <if test=" moveDate!=null">move_date = #{moveDate } ,</if>
+            <if test=" finishDate!=null">finish_date = #{finishDate } </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <!-- 批量插入 -->
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO filing_customer_transfer (
+        filing_id,
+        customer_type,
+        customer_identity,
+        customer_phone,
+        belong_grid_name,
+        move_out_manager_name,
+        move_out_manager_code,
+        move_in_manager_name,
+        move_in_manager_code,
+        move_judge_name,
+        move_judge_code,
+        move_judge_dept_id,
+        move_manual,
+        judge_indicate,
+        move_status,
+        move_date,
+        finish_date,
+        create_time,
+        update_time,
+        customer_name,
+        move_out_org_name,
+        move_out_org_code,
+        move_in_org_name,
+        move_in_org_code
+        ) VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.filingId,jdbcType=BIGINT},
+            #{item.customerType,jdbcType=VARCHAR},
+            #{item.customerIdentity,jdbcType=VARCHAR},
+            #{item.customerPhone,jdbcType=VARCHAR},
+            #{item.belongGridName,jdbcType=VARCHAR},
+            #{item.moveOutManagerName,jdbcType=VARCHAR},
+            #{item.moveOutManagerCode,jdbcType=VARCHAR},
+            #{item.moveInManagerName,jdbcType=VARCHAR},
+            #{item.moveInManagerCode,jdbcType=VARCHAR},
+            #{item.moveJudgeName,jdbcType=VARCHAR},
+            #{item.moveJudgeCode,jdbcType=VARCHAR},
+            #{item.moveJudgeDeptId,jdbcType=VARCHAR},
+            #{item.moveManual,jdbcType=VARCHAR},
+            #{item.judgeIndicate,jdbcType=VARCHAR},
+            #{item.moveStatus,jdbcType=VARCHAR},
+            #{item.moveDate,jdbcType=TIMESTAMP},
+            #{item.finishDate,jdbcType=TIMESTAMP},
+            #{item.createTime,jdbcType=TIMESTAMP},
+            #{item.updateTime,jdbcType=TIMESTAMP},
+            #{item.customerName,jdbcType=VARCHAR},
+            #{item.moveOutOrgName,jdbcType=VARCHAR},
+            #{item.moveOutOrgCode,jdbcType=VARCHAR},
+            #{item.moveInOrgName,jdbcType=VARCHAR},
+            #{item.moveInOrgCode,jdbcType=VARCHAR}
+            )
+        </foreach>
+    </insert>
+
+
+    <update id="updateBatchById" parameterType="java.util.List">
+        update filing_customer_transfer
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix=" filing_id = case " suffix=" end, ">
+                <foreach collection="list" item="item">
+                    <if test="item.filingId != null">
+                        when "id" = #{item.id} then #{item.filingId}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix=" judge_indicate = case " suffix=" end, ">
+                <foreach collection="list" item="item">
+                    <if test="item.judgeIndicate != null and item.judgeIndicate!='' ">
+                        when "id" = #{item.id} then #{item.judgeIndicate}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix=" move_status = case " suffix=" end, ">
+                <foreach collection="list" item="item">
+                    <if test="item.moveStatus != null and item.moveStatus!='' ">
+                        when "id" = #{item.id} then #{item.moveStatus}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix=" finish_date = case " suffix=" end, ">
+                <foreach collection="list" item="item">
+                    <if test="item.finishDate != null">
+                        when "id" = #{item.id} then #{item.finishDate}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix=" update_time = case " suffix=" end, ">
+                <foreach collection="list" item="item">
+                    <if test="item.updateTime != null">
+                        when "id" = #{item.id} then #{item.updateTime}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where id in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item.id}
+        </foreach>
+    </update>
+
+</mapper>

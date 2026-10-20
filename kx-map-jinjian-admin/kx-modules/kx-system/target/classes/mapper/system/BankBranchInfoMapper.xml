@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.BankBranchInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.kx.system.domain.BankBranchInfo">
+        <id column="id" property="id"/>
+        <result column="org_code" property="orgCode"/>
+        <result column="org_name" property="orgName"/>
+        <result column="bank_type" property="bankType"/>
+        <result column="org_address" property="orgAddress"/>
+        <result column="area" property="area"/>
+        <result column="area_code" property="areaCode"/>
+        <result column="province" property="province"/>
+        <result column="city" property="city"/>
+        <result column="district" property="district"/>
+        <result column="district_code" property="districtCode"/>
+        <result column="issue_date" property="issueDate"/>
+        <result column="approval_date" property="approvalDate"/>
+        <result column="issue_authority" property="issueAuthority"/>
+        <result column="serial" property="serial"/>
+        <result column="scope" property="scope"/>
+        <result column="exit_date" property="exitDate"/>
+        <result column="lon" property="lon"/>
+        <result column="lat" property="lat"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, org_code, org_name, bank_type, org_address, area, area_code, province, city, district,
+        district_code, issue_date, approval_date, issue_authority, serial, scope, exit_date, lon, lat
+    </sql>
+
+    <select id="selectByAreaCode" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM bank_branch_info
+        WHERE area_code = #{areaCode}
+        <if test="bankType != null">
+            AND bank_type = #{bankType}
+        </if>
+    </select>
+
+    <select id="selectByAreaCodePrefix" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM bank_branch_info
+        WHERE area_code LIKE CONCAT(#{prefix}, '%') and org_level = #{level}
+        <if test="bankType != null">
+            AND bank_type = #{bankType}
+        </if>
+    </select>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM bank_branch_info
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.kx.system.domain.BankBranchInfo" useGeneratedKeys="true">
+        INSERT INTO bank_branch_info (org_code, org_name, org_address, area, area_code, province, city, district,
+            district_code, issue_date, approval_date, issue_authority, serial, scope, exit_date, lon, lat)
+        VALUES (#{orgCode}, #{orgName}, #{orgAddress}, #{area}, #{areaCode}, #{province}, #{city}, #{district},
+            #{districtCode}, #{issueDate}, #{approvalDate}, #{issueAuthority}, #{serial}, #{scope}, #{exitDate}, #{lon}, #{lat})
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.kx.system.domain.BankBranchInfo">
+        UPDATE bank_branch_info
+        <set>
+            <if test="orgCode != null and orgCode != ''">
+                org_code = #{orgCode},
+            </if>
+            <if test="orgName != null and orgName != ''">
+                org_name = #{orgName},
+            </if>
+            <if test="orgAddress != null and orgAddress != ''">
+                org_address = #{orgAddress},
+            </if>
+            <if test="area != null and area != ''">
+                area = #{area},
+            </if>
+            <if test="areaCode != null and areaCode != ''">
+                area_code = #{areaCode},
+            </if>
+            <if test="province != null and province != ''">
+                province = #{province},
+            </if>
+            <if test="city != null and city != ''">
+                city = #{city},
+            </if>
+            <if test="district != null and district != ''">
+                district = #{district},
+            </if>
+            <if test="districtCode != null and districtCode != ''">
+                district_code = #{districtCode},
+            </if>
+            <if test="issueDate != null">
+                issue_date = #{issueDate},
+            </if>
+            <if test="approvalDate != null">
+                approval_date = #{approvalDate},
+            </if>
+            <if test="issueAuthority != null and issueAuthority != ''">
+                issue_authority = #{issueAuthority},
+            </if>
+            <if test="serial != null">
+                serial = #{serial},
+            </if>
+            <if test="scope != null and scope != ''">
+                scope = #{scope},
+            </if>
+            <if test="exitDate != null">
+                exit_date = #{exitDate},
+            </if>
+            <if test="lon != null">
+                lon = #{lon},
+            </if>
+            <if test="lat != null">
+                lat = #{lat},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        DELETE FROM bank_branch_info WHERE id = #{id}
+    </delete>
+
+</mapper>

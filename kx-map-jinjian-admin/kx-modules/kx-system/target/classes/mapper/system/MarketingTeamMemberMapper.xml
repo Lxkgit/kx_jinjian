@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.MarketingTeamMemberMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="MarketingTeamMemberResultMap" type="com.kx.system.domain.dto.MarketingTeamMemberDto">
+        <result column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="user_name" property="userName" />
+        <result column="mkt_team_id" property="mktTeamId" />
+        <result column="phonenumber" property="phonenumber" />
+        <result column="join_date" property="joinDate" />
+        <result column="is_leader" property="isLeader" />
+        <result column="create_user_id" property="createUserId" />
+        <result column="last_modify_date" property="lastModifyDate" />
+        <result column="last_modify_user" property="lastModifyUser" />
+        <result column="position" property="position" />
+        <result column="enterdate" property="enterdate" />
+        <result column="dept_name" property="orgName" />
+    </resultMap>
+
+    <sql id="base_sql">
+        id, join_date, user_id, mkt_team_id, is_leader, create_user_id, last_modify_date, last_modify_user, "position", enterdate
+    </sql>
+    <select id="selectMarketingTeamMemberPageList" resultMap="MarketingTeamMemberResultMap">
+        select a.id,a.user_id,b.user_name,a.mkt_team_id,b.phonenumber,c.dept_name from F_OCRM_F_CM_TEAM_CUST_MANAGER a
+        left join sys_user b
+        on a.user_id = b.manager_num
+        left join sys_dept c
+        on b.dept_id = c.dept_id
+        <where>
+            <if test="mktTeamId != null">and a.mkt_team_id  = #{mktTeamId}</if>
+            <if test="userId != null and userId != ''">and a.user_id like concat('%',#{userId},'%') </if>
+            <if test="userName != null and userName != ''">and b.user_name like concat('%',#{userName},'%')</if>
+        </where>
+        order by a.id desc
+    </select>
+
+
+</mapper>

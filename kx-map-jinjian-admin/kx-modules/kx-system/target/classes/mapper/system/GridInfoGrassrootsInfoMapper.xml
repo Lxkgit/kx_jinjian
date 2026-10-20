@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.GridInfoGrassrootsInfoMapper">
+
+    <!-- ResultMap映射 -->
+    <resultMap id="BaseResultMap" type="com.kx.common.core.domain.system.grid.GridInfoGrassrootsInfo">
+        <id property="id" column="id"/>
+        <result property="gridCode" column="grid_code"/>
+        <result property="organizationName" column="organization_name"/>
+        <result property="organizationType" column="organization_type"/>
+        <result property="contactsName" column="contacts_name"/>
+        <result property="contactsPhone" column="contacts_phone"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createName" column="create_name"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateName" column="update_name"/>
+        <result property="updateBy" column="update_by"/>
+    </resultMap>
+
+    <!-- 新增记录 -->
+    <insert id="insertGridInfoGrassrootsInfo" parameterType="com.kx.common.core.domain.system.grid.GridInfoGrassrootsInfo"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO grid_info_grassroots_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gridCode != null">grid_code,</if>
+            <if test="organizationName != null">organization_name,</if>
+            <if test="organizationType != null">organization_type,</if>
+            <if test="contactsName != null">contacts_name,</if>
+            <if test="contactsPhone != null">contacts_phone,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createName != null">create_name,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateName != null">update_name,</if>
+            <if test="updateBy != null">update_by,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="gridCode != null">#{gridCode},</if>
+            <if test="organizationName != null">#{organizationName},</if>
+            <if test="organizationType != null">#{organizationType},</if>
+            <if test="contactsName != null">#{contactsName},</if>
+            <if test="contactsPhone != null">#{contactsPhone},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createName != null">#{createName},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateName != null">#{updateName},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+        </trim>
+    </insert>
+
+    <!-- 根据ID删除 -->
+    <delete id="deleteGridInfoGrassrootsInfoById">
+        DELETE
+        FROM grid_info_grassroots_info
+        WHERE id = #{id}
+    </delete>
+
+    <!-- 动态更新 -->
+    <update id="updateGridInfoGrassrootsInfo" parameterType="com.kx.common.core.domain.system.grid.GridInfoGrassrootsInfo">
+        UPDATE grid_info_grassroots_info
+        <set>
+            <if test="gridCode != null">grid_code = #{gridCode},</if>
+            <if test="organizationName != null">organization_name = #{organizationName},</if>
+            <if test="organizationType != null">organization_type = #{organizationType},</if>
+            <if test="contactsName != null">contacts_name = #{contactsName},</if>
+            <if test="contactsPhone != null">contacts_phone = #{contactsPhone},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateName != null">update_name = #{updateName},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据网格编码查询 -->
+    <select id="selectGridInfoGrassrootsInfoList" parameterType="com.kx.common.core.domain.system.grid.GridInfoGrassrootsInfo"
+            resultMap="BaseResultMap">
+        SELECT * FROM grid_info_grassroots_info
+        <where>
+            <if test="gridCode != null and gridCode != ''">
+                grid_code = #{gridCode}
+            </if>
+        </where>
+    </select>
+
+</mapper>

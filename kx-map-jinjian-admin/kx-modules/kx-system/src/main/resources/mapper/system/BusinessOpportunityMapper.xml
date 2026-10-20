@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.BusinessOpportunityMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="businessOpportunityResultMap" type="com.kx.system.domain.business.BusinessOpportunity">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="identity" property="identity" />
+        <result column="type" property="type" />
+        <result column="business_name" property="businessName" />
+        <result column="business_extend" property="businessExtend" />
+        <result column="business_status" property="businessStatus" />
+        <result column="business_resource" property="businessResource" />
+        <result column="common_status" property="commonStatus" />
+        <result column="create_by" property="createBy" />
+        <result column="execute_manager_name" property="executeManagerName" />
+        <result column="execute_manager_code" property="executeManagerCode" />
+        <result column="execute_network_name" property="executeNetworkName" />
+        <result column="execute_network_code" property="executeNetworkCode" />
+        <result column="start_time" property="startTime" />
+        <result column="end_time" property="endTime" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="columns">
+        id, name, identity, type, business_name, business_extend, business_status, business_resource, common_status, create_by, execute_manager_name, execute_manager_code, execute_network_name, execute_network_code, start_time, end_time, create_time, update_time
+    </sql>
+
+    <!-- 查询列表 -->
+    <select id="list" parameterType="com.kx.system.domain.business.BusinessOpportunity" resultMap="businessOpportunityResultMap">
+        select <include refid="columns"/>  from business_opportunity
+        <where>
+            <if test=" name!=null and name !='' "> and name = #{name } </if>
+            <if test=" identity!=null and identity !='' "> and identity = #{identity } </if>
+            <if test=" type!=null and type !='' "> and type = #{type } </if>
+            <if test=" businessName!=null and businessName !='' "> and business_name = #{businessName } </if>
+            <if test=" businessExtend!=null and businessExtend !='' "> and business_extend = #{businessExtend } </if>
+            <if test=" businessStatus!=null and businessStatus !='' "> and business_status = #{businessStatus } </if>
+            <if test=" businessResource!=null and businessResource !='' "> and business_resource = #{businessResource } </if>
+            <if test=" commonStatus!=null and commonStatus !='' "> and common_status = #{commonStatus } </if>
+            <if test=" createBy!=null and createBy !='' "> and create_by = #{createBy } </if>
+            <if test=" executeManagerName!=null and executeManagerName !='' "> and execute_manager_name = #{executeManagerName } </if>
+            <if test=" executeManagerCode!=null and executeManagerCode !='' "> and execute_manager_code = #{executeManagerCode } </if>
+            <if test=" executeNetworkName!=null and executeNetworkName !='' "> and execute_network_name = #{executeNetworkName } </if>
+            <if test=" executeNetworkCode!=null and executeNetworkCode !='' "> and execute_network_code = #{executeNetworkCode } </if>
+            <if test=" startTime!=null"> and start_time = #{startTime} </if>
+            <if test=" endTime!=null "> and end_time = #{endTime} </if>
+            <if test=" startTimeSearchStart!=null and startTimeSearchStart !='' and startTimeSearchEnd!=null and startTimeSearchEnd !='' ">
+                 and start_time BETWEEN  #{startTimeSearchStart} AND #{startTimeSearchEnd}
+            </if>
+            <if test=" endTimeSearchStart!=null and endTimeSearchStart !='' and endTimeSearchEnd!=null and endTimeSearchEnd !='' ">
+                 and end_time BETWEEN #{endTimeSearchStart} AND #{endTimeSearchEnd}
+            </if>
+        </where>
+    </select>
+
+    <!-- 根据id查询 -->
+    <select id="getById"  resultMap="businessOpportunityResultMap">
+        select <include refid="columns"/>  from business_opportunity where id = #{id}
+    </select>
+
+    <!-- 根据id删除 -->
+    <delete id="deleteById">
+        delete from  business_opportunity where  id= #{id}
+    </delete>
+
+    <!-- 新增 -->
+    <insert id="insertBusinessOpportunity" parameterType="com.kx.system.domain.business.BusinessOpportunity" keyProperty="id" useGeneratedKeys="true">
+        insert into business_opportunity(
+            name,identity,type,business_name,business_extend,business_status,business_resource,common_status,create_by,execute_manager_name,execute_manager_code,execute_network_name,execute_network_code,start_time,end_time,create_time, update_time
+        )values(
+                   #{name}, #{identity}, #{type}, #{businessName}, #{businessExtend}, #{businessStatus}, #{businessResource}, #{commonStatus}, #{createBy}, #{executeManagerName}, #{executeManagerCode}, #{executeNetworkName}, #{executeNetworkCode}, #{startTime}, #{endTime},#{createTime},#{updateTime}
+               )
+    </insert>
+
+    <!-- 更新 -->
+    <update id="updateBusinessOpportunity" parameterType="com.kx.system.domain.business.BusinessOpportunity">
+        update business_opportunity
+        <trim prefix="SET" suffixOverrides=",">
+            <if test=" name!=null and name !='' ">  name = #{name } ,</if>
+            <if test=" identity!=null and identity !='' ">  identity = #{identity } ,</if>
+            <if test=" type!=null and type !='' ">  type = #{type } ,</if>
+            <if test=" businessName!=null and businessName !='' ">  business_name = #{businessName } ,</if>
+            <if test=" businessExtend!=null and businessExtend !='' ">  business_extend = #{businessExtend } ,</if>
+            <if test=" businessStatus!=null and businessStatus !='' ">  business_status = #{businessStatus } ,</if>
+            <if test=" businessResource!=null and businessResource !='' ">  business_resource = #{businessResource } ,</if>
+            <if test=" commonStatus!=null and commonStatus !='' ">  common_status = #{commonStatus } ,</if>
+            <if test=" createBy!=null and createBy !='' ">  create_by = #{createBy } ,</if>
+            <if test=" executeManagerName!=null and executeManagerName !='' ">  execute_manager_name = #{executeManagerName } ,</if>
+            <if test=" executeManagerCode!=null and executeManagerCode !='' ">  execute_manager_code = #{executeManagerCode } ,</if>
+            <if test=" executeNetworkName!=null and executeNetworkName !='' ">  execute_network_name = #{executeNetworkName } ,</if>
+            <if test=" executeNetworkCode!=null and executeNetworkCode !='' ">  execute_network_code = #{executeNetworkCode } ,</if>
+            <if test=" startTime!=null">  start_time = #{startTime } ,</if>
+            <if test=" endTime!=null ">  end_time = #{endTime } ,</if>
+            <if test=" updateTime!=null">  update_time = #{updateTime}</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+</mapper>

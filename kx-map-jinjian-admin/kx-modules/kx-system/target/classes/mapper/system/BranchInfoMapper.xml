@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.BranchInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.kx.system.domain.branch.BranchInfo">
+        <id column="id" property="id"/>
+        <result column="gird_code" property="girdCode"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="parent_dept_name" property="parentDeptName"/>
+        <result column="parent_org_num" property="parentOrgNum"/>
+        <result column="org_num" property="orgNum"/>
+        <result column="branch_name" property="branchName"/>
+        <result column="branch_addr" property="branchAddr"/>
+        <result column="branch_charge_person" property="branchChargePerson"/>
+        <result column="charge_telephone" property="chargeTelephone"/>
+        <result column="charge_mobile_phone" property="chargeMobilePhone"/>
+        <result column="branch_desc" property="branchDesc"/>
+
+        <result column="branch_service_machines" property="branchServiceMachines"/>
+        <result column="atm_machines" property="atmMachines"/>
+        <result column="anto_small_cash_machines" property="antoSmallCashMachines"/>
+        <result column="small_cash_machines" property="smallCashMachines"/>
+        <result column="crs_machines" property="crsMachines"/>
+        <result column="artificial_cash_machines" property="artificialCashMachines"/>
+        <result column="coin_exchange_machines" property="coinExchangeMachines"/>
+
+        <result column="branch_function" property="branchFunction"/>
+
+        <result column="change_wallets_num" property="changeWalletsNum"/>
+        <result column="change_wallets_count" property="changeWalletsCount"/>
+<!--        <result column="change_wallets_amount" property="changeWalletsAmount"/>-->
+        <result column="broken_coin_amount" property="brokenCoinAmount"/>
+        <result column="broken_coin_count" property="brokenCoinCount"/>
+        <result column="coin_exchange_amount" property="coinExchangeAmount"/>
+        <result column="coin_exchange_count" property="coinExchangeCount"/>
+
+        <result column="lon" property="lon"/>
+        <result column="lat" property="lat"/>
+        <result column="org_name" property="orgName"/>
+        <result column="org_type" property="orgType"/>
+        <result column="branch_type" property="branchType"/>
+        <result column="grid_name" property="gridName"/>
+        <result column="branch_addr_type" property="branchAddrType"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_name" property="createName"/>
+        <result column="create_by" property="createBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_name" property="updateName"/>
+        <result column="update_by" property="updateBy"/>
+    </resultMap>
+
+
+
+    <select id="selectBranchList" parameterType="com.kx.system.domain.branch.BranchInfo" resultMap="BaseResultMap">
+        select *
+        from branch_info
+        <where>
+            <if test="branchName != null and branchName != ''">
+                AND branch_name like concat('%', #{branchName}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectBranchById" resultMap="BaseResultMap">
+        SELECT
+        *
+        from branch_info
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insertBranch" parameterType="com.kx.system.domain.branch.BranchInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into branch_info (gird_code, parent_id, parent_dept_name, parent_org_num, org_num,
+                                 branch_name, branch_addr, branch_level, branch_charge_person,
+                                 charge_telephone, charge_mobile_phone, branch_desc, branch_machines,
+                                 branch_function, lon, lat, create_time, create_name, create_by)
+        VALUES (#{girdCode}, #{parentId}, #{parentDeptName}, #{parentOrgNum}, #{orgNum},
+                #{branchName}, #{branchAddr}, #{branchLevel}, #{branchChargePerson},
+                #{chargeTelephone}, #{chargeMobilePhone}, #{branchDesc}, #{branchMachines},
+                #{branchFunction}, #{lon}, #{lat}, #{createTime}, #{createName}, #{createBy})
+    </insert>
+
+    <insert id="insertBranchList" parameterType="list">
+        insert into branch_info (gird_code, parent_id, parent_dept_name, parent_org_num, org_num,
+        branch_name, branch_addr, branch_level, branch_charge_person,
+        charge_telephone, charge_mobile_phone, branch_desc, branch_machines,
+        branch_function, lon, lat, create_time, create_name, create_by) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{girdCode}, #{parentId}, #{parentDeptName}, #{parentOrgNum}, #{orgNum},
+            #{branchName}, #{branchAddr}, #{branchLevel}, #{branchChargePerson},
+            #{chargeTelephone}, #{chargeMobilePhone}, #{branchDesc}, #{branchMachines},
+            #{branchFunction}, #{lon}, #{lat}, #{createTime}, #{createName}, #{createBy})
+        </foreach>
+    </insert>
+
+    <update id="updateBranchByOrgNum" parameterType="com.kx.system.domain.branch.BranchInfo">
+        update branch_info
+        <set>
+            <if test="girdCode != null">gird_code = #{girdCode},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="parentDeptName != null">parent_dept_name = #{parentDeptName},</if>
+            <if test="parentOrgNum != null">parent_org_num = #{parentOrgNum},</if>
+            <if test="branchName != null">branch_name = #{branchName},</if>
+            <if test="branchAddr != null">branch_addr = #{branchAddr},</if>
+            <if test="branchLevel != null">branch_level = #{branchLevel},</if>
+            <if test="branchChargePerson != null">branch_charge_person = #{branchChargePerson},</if>
+            <if test="chargeTelephone != null">charge_telephone = #{chargeTelephone},</if>
+            <if test="chargeMobilePhone != null">charge_mobile_phone = #{chargeMobilePhone},</if>
+            <if test="branchDesc != null">branch_desc = #{branchDesc},</if>
+            <if test="branchMachines != null">branch_machines = #{branchMachines},</if>
+            <if test="branchFunction != null">branch_function = #{branchFunction},</if>
+            <if test="lon != null">lon = #{lon},</if>
+            <if test="lat != null">lat = #{lat},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createName != null">create_name = #{createName},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateName != null">update_name = #{updateName},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </set>
+        WHERE org_num = #{orgNum}
+    </update>
+
+</mapper>

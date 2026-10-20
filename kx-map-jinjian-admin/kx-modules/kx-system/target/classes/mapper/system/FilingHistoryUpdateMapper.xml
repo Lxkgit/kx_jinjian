@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.FilingHistoryUpdateMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="filingHistoryUpdateResultMap" type="com.kx.system.domain.filing.FilingHistoryUpdate">
+        <id column="id" property="id" />
+        <result column="model" property="model" />
+        <result column="identity" property="identity" />
+        <result column="filing_id" property="filingId" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_by_code" property="updateByCode" />
+        <result column="update_org" property="updateOrg" />
+        <result column="update_org_code" property="updateOrgCode" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="columns">
+        id, model, identity, filing_id, update_by, update_by_code, update_org, update_org_code, create_time, update_time
+    </sql>
+
+    <!-- 查询列表 -->
+    <select id="list" parameterType="com.kx.system.domain.filing.FilingHistoryUpdate" resultMap="filingHistoryUpdateResultMap">
+        select <include refid="columns"/>  from filing_history_update
+        <where>
+            <if test=" model!=null and model !='' "> and model = #{model } </if>
+            <if test=" identity!=null and identity !='' "> and identity = #{identity } </if>
+            <if test=" filingId!=null and filingId !='' "> and filing_id = #{filingId } </if>
+            <if test=" updateBy!=null and updateBy !='' "> and update_by = #{updateBy } </if>
+            <if test=" updateByCode!=null and updateByCode !='' "> and update_by_code = #{updateByCode } </if>
+            <if test=" updateOrg!=null and updateOrg !='' "> and update_org = #{updateOrg } </if>
+            <if test=" updateOrgCode!=null and updateOrgCode !='' "> and update_org_code = #{updateOrgCode } </if>
+            <if test=" createTime!=null and createTime !='' "> and create_time = #{createTime } </if>
+            <if test=" updateTime!=null and updateTime !='' "> and update_time = #{updateTime } </if>
+        </where>
+    </select>
+
+    <!-- 根据id查询 -->
+    <select id="getById"  resultMap="filingHistoryUpdateResultMap">
+        select <include refid="columns"/>  from filing_history_update where id = #{id}
+    </select>
+
+    <!-- 根据id删除 -->
+    <delete id="deleteById">
+        delete from  filing_history_update where  id= #{id}
+    </delete>
+
+    <!-- 新增 -->
+    <insert id="insertFilingHistoryUpdate" parameterType="com.kx.system.domain.filing.FilingHistoryUpdate" keyProperty="id" useGeneratedKeys="true">
+        insert into filing_history_update(
+            model,identity,filing_id,update_by,update_by_code,update_org,update_org_code,create_time,update_time
+        )values(
+             #{model}, #{identity}, #{filingId}, #{updateBy}, #{updateByCode}, #{updateOrg}, #{updateOrgCode}, #{createTime}, #{updateTime}
+        )
+    </insert>
+
+    <!-- 更新 -->
+    <update id="updateFilingHistoryUpdate" parameterType="com.kx.system.domain.filing.FilingHistoryUpdate">
+        update filing_history_update
+    <trim prefix="SET" suffixOverrides=",">
+        <if test=" model!=null and model !='' ">  model = #{model } ,</if>
+        <if test=" identity!=null and identity !='' ">  identity = #{identity } ,</if>
+        <if test=" filingId!=null and filingId !='' ">  filing_id = #{filingId } ,</if>
+        <if test=" updateBy!=null and updateBy !='' ">  update_by = #{updateBy } ,</if>
+        <if test=" updateByCode!=null and updateByCode !='' ">  update_by_code = #{updateByCode } ,</if>
+        <if test=" updateOrg!=null and updateOrg !='' ">  update_org = #{updateOrg } ,</if>
+        <if test=" updateOrgCode!=null and updateOrgCode !='' ">  update_org_code = #{updateOrgCode } ,</if>
+        <if test=" createTime!=null and createTime !='' ">  create_time = #{createTime } ,</if>
+        <if test=" updateTime!=null and updateTime !='' ">  update_time = #{updateTime } ,</if>
+    </trim>
+     where id = #{id}
+    </update>
+
+    <select id="getByIdentityAndModelId"  resultMap="filingHistoryUpdateResultMap">
+        select <include refid="columns"/>  from filing_history_update
+        <where>
+            <if test=" model!=null and model !='' "> and model = #{model } </if>
+            <if test=" identity!=null and identity !='' "> and identity = #{identity } </if>
+        </where>
+    </select>
+
+
+</mapper>

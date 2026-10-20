@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.ProductBusStatisticsMapper">
+  <resultMap id="BaseResultMap" type="com.kx.system.domain.ProductBusStatistics">
+    <!--@mbg.generated-->
+    <!--@Table product_bus_statistics-->
+    <id column="id" property="id" />
+    <result column="product_id" property="productId" />
+    <result column="product_nm" property="productNm" />
+    <result column="scan_total" property="scanTotal" />
+    <result column="scan_bus_total" property="scanBusTotal" />
+    <result column="bus_conversion_ratio" property="busConversionRatio" />
+    <result column="product_bus_total" property="productBusTotal" />
+    <result column="product_name" property="productName" />
+    <result column="product_type" property="productType" />
+    <result column="etl_dt" property="etlDt" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, product_id, product_nm, scan_total, scan_bus_total, bus_conversion_ratio, product_bus_total,
+    etl_dt
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select
+    <include refid="Base_Column_List" />
+    from product_bus_statistics
+    where id = #{id}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--@mbg.generated-->
+    delete from product_bus_statistics
+    where id = #{id}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.kx.system.domain.ProductBusStatistics" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into product_bus_statistics (product_id, product_nm, scan_total, scan_bus_total, bus_conversion_ratio,
+      product_bus_total, etl_dt)
+    values (#{productId}, #{productNm}, #{scanTotal}, #{scanBusTotal}, #{busConversionRatio},
+      #{productBusTotal}, #{etlDt})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.kx.system.domain.ProductBusStatistics" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into product_bus_statistics
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="productId != null">
+        product_id,
+      </if>
+      <if test="productNm != null and productNm != ''">
+        product_nm,
+      </if>
+      <if test="scanTotal != null">
+        scan_total,
+      </if>
+      <if test="scanBusTotal != null">
+        scan_bus_total,
+      </if>
+      <if test="busConversionRatio != null">
+        bus_conversion_ratio,
+      </if>
+      <if test="productBusTotal != null">
+        product_bus_total,
+      </if>
+      <if test="etlDt != null">
+        etl_dt,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="productId != null">
+        #{productId},
+      </if>
+      <if test="productNm != null and productNm != ''">
+        #{productNm},
+      </if>
+      <if test="scanTotal != null">
+        #{scanTotal},
+      </if>
+      <if test="scanBusTotal != null">
+        #{scanBusTotal},
+      </if>
+      <if test="busConversionRatio != null">
+        #{busConversionRatio},
+      </if>
+      <if test="productBusTotal != null">
+        #{productBusTotal},
+      </if>
+      <if test="etlDt != null">
+        #{etlDt},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kx.system.domain.ProductBusStatistics">
+    <!--@mbg.generated-->
+    update product_bus_statistics
+    <set>
+      <if test="productId != null">
+        product_id = #{productId},
+      </if>
+      <if test="productNm != null and productNm != ''">
+        product_nm = #{productNm},
+      </if>
+      <if test="scanTotal != null">
+        scan_total = #{scanTotal},
+      </if>
+      <if test="scanBusTotal != null">
+        scan_bus_total = #{scanBusTotal},
+      </if>
+      <if test="busConversionRatio != null">
+        bus_conversion_ratio = #{busConversionRatio},
+      </if>
+      <if test="productBusTotal != null">
+        product_bus_total = #{productBusTotal},
+      </if>
+      <if test="etlDt != null">
+        etl_dt = #{etlDt},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kx.system.domain.ProductBusStatistics">
+    <!--@mbg.generated-->
+    update product_bus_statistics
+    set product_id = #{productId},
+      product_nm = #{productNm},
+      scan_total = #{scanTotal},
+      scan_bus_total = #{scanBusTotal},
+      bus_conversion_ratio = #{busConversionRatio},
+      product_bus_total = #{productBusTotal},
+      etl_dt = #{etlDt}
+    where id = #{id}
+  </update>
+
+  <select id="selectByProductId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from product_bus_statistics
+    where product_id = #{productId}
+  </select>
+
+  <select id="selectPage" resultMap="BaseResultMap">
+    select pi.product_name,pi.product_type,
+    pbs.id, pbs.product_id, pbs.product_nm, pbs.scan_total, pbs.scan_bus_total,pbs.bus_conversion_ratio , pbs.product_bus_total,
+    pbs.etl_dt
+    from product_bus_statistics pbs
+    left join product_info pi on pbs.product_id = pi.id
+    <where>
+        <if test="productType != null and productType != ''">
+          and pi.product_type = #{productType}
+        </if>
+      <if test="productName != null and productName != ''">
+        and pi.product_name like concat('%',#{productName}, '%')
+      </if>
+    </where>
+  </select>
+</mapper>

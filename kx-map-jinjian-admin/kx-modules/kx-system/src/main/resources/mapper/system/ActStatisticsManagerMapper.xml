@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.ActStatisticsManagerMapper">
+  <resultMap id="BaseResultMap" type="com.kx.system.domain.ActStatisticsManager">
+    <!--@mbg.generated-->
+    <!--@Table act_statistics_manager-->
+    <id column="id" property="id" />
+    <result column="act_id" property="actId" />
+    <result column="manager_name" property="managerName" />
+    <result column="manager_num" property="managerNum" />
+    <result column="dept_no" property="deptNo" />
+    <result column="dept_name" property="deptName" />
+    <result column="act_participate_num" property="actParticipateNum" />
+    <result column="info_collect_num" property="infoCollectNum" />
+    <result column="info_collect_rate" property="infoCollectRate" />
+    <result column="info_collect_effect_num" property="infoCollectEffectNum" />
+    <result column="info_collect_effect_rate" property="infoCollectEffectRate" />
+    <result column="bus_proc_num" property="busProcNum" />
+    <result column="bus_proc_rate" property="busProcRate" />
+    <result column="scan_code_num" property="scanCodeNum" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, act_id, manager_name, manager_num, dept_no, dept_name, act_participate_num, info_collect_num,
+    info_collect_rate, info_collect_effect_num, info_collect_effect_rate, bus_proc_num,
+    bus_proc_rate,scan_code_num
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select
+    <include refid="Base_Column_List" />
+    from act_statistics_manager
+    where id = #{id}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--@mbg.generated-->
+    delete from act_statistics_manager
+    where id = #{id}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.kx.system.domain.ActStatisticsManager" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into act_statistics_manager (act_id, manager_name, manager_num, dept_no, dept_name, act_participate_num,
+      info_collect_num, info_collect_rate, info_collect_effect_num, info_collect_effect_rate,
+      bus_proc_num, bus_proc_rate)
+    values (#{actId}, #{managerName}, #{managerNum}, #{deptNo}, #{deptName}, #{actParticipateNum},
+      #{infoCollectNum}, #{infoCollectRate}, #{infoCollectEffectNum}, #{infoCollectEffectRate},
+      #{busProcNum}, #{busProcRate})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.kx.system.domain.ActStatisticsManager" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into act_statistics_manager
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="actId != null">
+        act_id,
+      </if>
+      <if test="managerName != null and managerName != ''">
+        manager_name,
+      </if>
+      <if test="managerNum != null and managerNum != ''">
+        manager_num,
+      </if>
+      <if test="deptNo != null and deptNo != ''">
+        dept_no,
+      </if>
+      <if test="deptName != null and deptName != ''">
+        dept_name,
+      </if>
+      <if test="actParticipateNum != null">
+        act_participate_num,
+      </if>
+      <if test="infoCollectNum != null">
+        info_collect_num,
+      </if>
+      <if test="infoCollectRate != null">
+        info_collect_rate,
+      </if>
+      <if test="infoCollectEffectNum != null">
+        info_collect_effect_num,
+      </if>
+      <if test="infoCollectEffectRate != null">
+        info_collect_effect_rate,
+      </if>
+      <if test="busProcNum != null">
+        bus_proc_num,
+      </if>
+      <if test="busProcRate != null">
+        bus_proc_rate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="actId != null">
+        #{actId},
+      </if>
+      <if test="managerName != null and managerName != ''">
+        #{managerName},
+      </if>
+      <if test="managerNum != null and managerNum != ''">
+        #{managerNum},
+      </if>
+      <if test="deptNo != null and deptNo != ''">
+        #{deptNo},
+      </if>
+      <if test="deptName != null and deptName != ''">
+        #{deptName},
+      </if>
+      <if test="actParticipateNum != null">
+        #{actParticipateNum},
+      </if>
+      <if test="infoCollectNum != null">
+        #{infoCollectNum},
+      </if>
+      <if test="infoCollectRate != null">
+        #{infoCollectRate},
+      </if>
+      <if test="infoCollectEffectNum != null">
+        #{infoCollectEffectNum},
+      </if>
+      <if test="infoCollectEffectRate != null">
+        #{infoCollectEffectRate},
+      </if>
+      <if test="busProcNum != null">
+        #{busProcNum},
+      </if>
+      <if test="busProcRate != null">
+        #{busProcRate},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kx.system.domain.ActStatisticsManager">
+    <!--@mbg.generated-->
+    update act_statistics_manager
+    <set>
+      <if test="actId != null">
+        act_id = #{actId},
+      </if>
+      <if test="managerName != null and managerName != ''">
+        manager_name = #{managerName},
+      </if>
+      <if test="managerNum != null and managerNum != ''">
+        manager_num = #{managerNum},
+      </if>
+      <if test="deptNo != null and deptNo != ''">
+        dept_no = #{deptNo},
+      </if>
+      <if test="deptName != null and deptName != ''">
+        dept_name = #{deptName},
+      </if>
+      <if test="actParticipateNum != null">
+        act_participate_num = #{actParticipateNum},
+      </if>
+      <if test="infoCollectNum != null">
+        info_collect_num = #{infoCollectNum},
+      </if>
+      <if test="infoCollectRate != null">
+        info_collect_rate = #{infoCollectRate},
+      </if>
+      <if test="infoCollectEffectNum != null">
+        info_collect_effect_num = #{infoCollectEffectNum},
+      </if>
+      <if test="infoCollectEffectRate != null">
+        info_collect_effect_rate = #{infoCollectEffectRate},
+      </if>
+      <if test="busProcNum != null">
+        bus_proc_num = #{busProcNum},
+      </if>
+      <if test="busProcRate != null">
+        bus_proc_rate = #{busProcRate},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kx.system.domain.ActStatisticsManager">
+    <!--@mbg.generated-->
+    update act_statistics_manager
+    set act_id = #{actId},
+      manager_name = #{managerName},
+      manager_num = #{managerNum},
+      dept_no = #{deptNo},
+      dept_name = #{deptName},
+      act_participate_num = #{actParticipateNum},
+      info_collect_num = #{infoCollectNum},
+      info_collect_rate = #{infoCollectRate},
+      info_collect_effect_num = #{infoCollectEffectNum},
+      info_collect_effect_rate = #{infoCollectEffectRate},
+      bus_proc_num = #{busProcNum},
+      bus_proc_rate = #{busProcRate}
+    where id = #{id}
+  </update>
+
+  <select id="selectByActId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from act_statistics_manager
+    where act_id = #{actId}
+    </select>
+
+  <insert id="batchInsert">
+    <foreach collection="list" close=";" separator=";" item="actStatisticsManager" >
+      insert into act_statistics_manager
+      <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="actStatisticsManager.actId != null">
+          act_id,
+        </if>
+        <if test="actStatisticsManager.managerName != null and actStatisticsManager.managerName != ''">
+          manager_name,
+        </if>
+        <if test="actStatisticsManager.managerNum != null and actStatisticsManager.managerNum != ''">
+          manager_num,
+        </if>
+        <if test="actStatisticsManager.deptNo != null and actStatisticsManager.deptNo != ''">
+          dept_no,
+        </if>
+        <if test="actStatisticsManager.deptName != null and actStatisticsManager.deptName != ''">
+          dept_name,
+        </if>
+        <if test="actStatisticsManager.actParticipateNum != null">
+          act_participate_num,
+        </if>
+        <if test="actStatisticsManager.infoCollectNum != null">
+          info_collect_num,
+        </if>
+        <if test="actStatisticsManager.infoCollectRate != null">
+          info_collect_rate,
+        </if>
+        <if test="actStatisticsManager.infoCollectEffectNum != null">
+          info_collect_effect_num,
+        </if>
+        <if test="actStatisticsManager.infoCollectEffectRate != null">
+          info_collect_effect_rate,
+        </if>
+        <if test="actStatisticsManager.busProcNum != null">
+          bus_proc_num,
+        </if>
+        <if test="actStatisticsManager.busProcRate != null">
+          bus_proc_rate,
+        </if>
+      </trim>
+      <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <if test="actStatisticsManager.actId != null">
+          #{actStatisticsManager.actId},
+        </if>
+        <if test="actStatisticsManager.managerName != null and actStatisticsManager.managerName != ''">
+          #{actStatisticsManager.managerName},
+        </if>
+        <if test="actStatisticsManager.managerNum != null and actStatisticsManager.managerNum != ''">
+          #{actStatisticsManager.managerNum},
+        </if>
+        <if test="actStatisticsManager.deptNo != null and actStatisticsManager.deptNo != ''">
+          #{actStatisticsManager.deptNo},
+        </if>
+        <if test="actStatisticsManager.deptName != null and actStatisticsManager.deptName != ''">
+          #{actStatisticsManager.deptName},
+        </if>
+        <if test="actStatisticsManager.actParticipateNum != null">
+          #{actStatisticsManager.actParticipateNum},
+        </if>
+        <if test="actStatisticsManager.infoCollectNum != null">
+          #{actStatisticsManager.infoCollectNum},
+        </if>
+        <if test="actStatisticsManager.infoCollectRate != null">
+          #{actStatisticsManager.infoCollectRate},
+        </if>
+        <if test="actStatisticsManager.infoCollectEffectNum != null">
+          #{actStatisticsManager.infoCollectEffectNum},
+        </if>
+        <if test="actStatisticsManager.infoCollectEffectRate != null">
+          #{actStatisticsManager.infoCollectEffectRate},
+        </if>
+        <if test="actStatisticsManager.busProcNum != null">
+          #{actStatisticsManager.busProcNum},
+        </if>
+        <if test="actStatisticsManager.busProcRate != null">
+          #{actStatisticsManager.busProcRate},
+        </if>
+      </trim>
+    </foreach>
+  </insert>
+</mapper>

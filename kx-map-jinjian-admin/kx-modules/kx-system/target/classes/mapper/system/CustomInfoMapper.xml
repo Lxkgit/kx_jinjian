@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.CustomInfoMapper">
+    <resultMap id="BaseResultMap" type="com.kx.system.domain.CustomInfo">
+        <!--@mbg.generated-->
+        <!--@Table custom_info-->
+        <result column="nm" jdbcType="VARCHAR" property="nm"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="identify" jdbcType="VARCHAR" property="identify"/>
+        <result column="home_address" jdbcType="VARCHAR" property="homeAddress"/>
+        <result column="contract_address" jdbcType="VARCHAR" property="contractAddress"/>
+        <result column="work" jdbcType="VARCHAR" property="work"/>
+        <result column="profession" jdbcType="VARCHAR" property="profession"/>
+        <result column="telephone" jdbcType="VARCHAR" property="telephone"/>
+        <result column="birthday"  property="birthday"/>
+        <result column="gender" jdbcType="VARCHAR" property="gender"/>
+        <result column="marital_status" jdbcType="VARCHAR" property="maritalStatus"/>
+        <result column="etl_dt" jdbcType="DATE" property="etlDt"/>
+        <result column="etl_flg" jdbcType="VARCHAR" property="etlFlg"/>
+    </resultMap>
+
+
+    <resultMap id="CustomInfoVoMap" type="com.kx.system.domain.CustomInfoVo">
+        <result column="nm" jdbcType="VARCHAR" property="nm"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="identify" jdbcType="VARCHAR" property="identify"/>
+        <result column="home_address" jdbcType="VARCHAR" property="homeAddress"/>
+        <result column="contract_address" jdbcType="VARCHAR" property="contractAddress"/>
+        <result column="outlet" jdbcType="VARCHAR" property="outlet"/>
+        <result column="outlet_code" jdbcType="VARCHAR" property="outletCode"/>
+        <result column="township" jdbcType="VARCHAR" property="township"/>
+        <result column="area" jdbcType="VARCHAR" property="area"/>
+        <result column="manager_id" jdbcType="VARCHAR" property="managerId"/>
+        <result column="work" jdbcType="VARCHAR" property="work"/>
+        <result column="profession" jdbcType="VARCHAR" property="profession"/>
+        <result column="telephone" jdbcType="VARCHAR" property="telephone"/>
+        <result column="gender" jdbcType="VARCHAR" property="gender"/>
+        <result column="marital_status" jdbcType="VARCHAR" property="maritalStatus"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="allocation_date" jdbcType="DATE" property="allocationDate"/>
+        <result column="etl_dt" jdbcType="DATE" property="etlDt"/>
+        <result column="star" property="star"/>
+    </resultMap>
+
+    <resultMap id="PaCustomInfoVoMap" type="com.kx.system.domain.vo.PaCustomInfoVO">
+        <result column="id" property="relationId"/>
+        <result column="nm" property="nm"/>
+        <result column="name" property="name"/>
+        <result column="identify" property="identify"/>
+        <result column="home_address" property="addressArea"/>
+        <result column="work" property="work"/>
+        <result column="belong_area" property="belongArea"/>
+    </resultMap>
+
+    <resultMap id="TmCustomInfoVo" type="com.kx.system.domain.vo.TmCustomInfoVo">
+        <!--@mbg.generated-->
+        <!--@Table pa_custom_info-->
+        <result column="nm" jdbcType="VARCHAR" property="nm"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="manager_id" jdbcType="VARCHAR" property="managerId"/>
+        <result column="manager_name" jdbcType="VARCHAR" property="managerName"/>
+    </resultMap>
+
+    <resultMap id="ManagerCustInfoDto" type="com.kx.system.domain.dto.ManagerCustInfoDto">
+        <result column="manager_id" jdbcType="VARCHAR" property='jobNumber'/>
+        <result column="client_sum" jdbcType="INTEGER" property='clientSum'/>
+    </resultMap>
+
+    <resultMap id="MangerIncrTrendsDto" type="com.kx.system.domain.dto.MangerIncrTrendsDto">
+        <result property="jobNumber" column="manager_id" jdbcType="NUMERIC"/>
+        <result property="month1Value" column="month1_value" jdbcType="NUMERIC"/>
+        <result property="month2Value" column="month2_value" jdbcType="NUMERIC"/>
+        <result property="month3Value" column="month3_value" jdbcType="NUMERIC"/>
+        <result property="month4Value" column="month4_value" jdbcType="NUMERIC"/>
+        <result property="month5Value" column="month5_value" jdbcType="NUMERIC"/>
+        <result property="month6Value" column="month6_value" jdbcType="NUMERIC"/>
+    </resultMap>
+    <resultMap id="MangerIncrTrendsNumberDto" type="com.kx.system.domain.dto.MangerIncrTrendsNumberDto">
+        <result property="jobNumber" column="manager_id" jdbcType="NUMERIC"/>
+        <result property="month1Value" column="month1_value" jdbcType="INTEGER"/>
+        <result property="month2Value" column="month2_value" jdbcType="INTEGER"/>
+        <result property="month3Value" column="month3_value" jdbcType="INTEGER"/>
+        <result property="month4Value" column="month4_value" jdbcType="INTEGER"/>
+        <result property="month5Value" column="month5_value" jdbcType="INTEGER"/>
+        <result property="month6Value" column="month6_value" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        nm, [name], identify, home_address, contract_address, [work], profession, telephone,birthday, gender, marital_status,etl_dt,etl_flg
+    </sql>
+
+    <update id="updateCustomBirthdayBYId">
+        update pa_custom_info
+        set birthday = #{birthday}
+        where nm = #{nm}
+    </update>
+
+
+
+
+    <select id="selectCustomInfoByClientCodes" resultMap="TmCustomInfoVo">
+        SELECT DISTINCT
+        a.nm,
+        a.name,
+        a.manager_id
+        <!--        b.business_no,-->
+        <!--        b.etl_dt,-->
+        <!--c.stcanm20 manager_name-->
+        FROM
+        pa_custom_info a
+        <!--        INNER JOIN business_info b ON a.nm = b.nm-->
+        <!--LEFT JOIN manager_info c ON a.manager_id = c.stcastaf-->
+        WHERE
+        a.nm IN
+        <foreach collection="list" item="nm" open="(" separator="," close=")">
+            #{nm}
+        </foreach>
+    </select>
+    <select id="getAllManagerIds" resultType="java.lang.String">
+
+        select manager_id
+        from pa_custom_info
+        group by manager_id
+
+    </select>
+    <select id="getCustStatistics" resultMap="ManagerCustInfoDto">
+        select manager_id, count(nm) as client_sum
+        from pa_custom_info
+        where manager_id is not null
+        group by manager_id
+
+    </select>
+    <select id="getIncreClientThisYear" resultMap="ManagerCustInfoDto">
+        select manager_id, count(nm) as client_sum
+        from pa_custom_info
+        where manager_id is not null
+          and etl_dt >= DATEFROMPARTS(YEAR(GETDATE()), 1, 1)
+        group by manager_id
+
+    </select>
+    <select id="getIncreClientThisMonth" resultMap="ManagerCustInfoDto">
+
+        select manager_id, count(nm) as client_sum
+        from pa_custom_info
+        where manager_id is not null
+          and etl_dt >= DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1)
+        group by manager_id
+
+    </select>
+    <select id="getIncreClientThisDay" resultMap="ManagerCustInfoDto">
+
+        select manager_id, count(nm) as client_sum
+        from pa_custom_info
+        where manager_id is not null
+          and etl_dt >= DATEADD(day, -1, CAST(GETDATE() AS date))
+        group by manager_id
+
+    </select>
+
+    <select id="selectByTownShipAndArea" resultType="java.lang.String">
+
+        select nm
+        from pa_custom_info
+        where township = #{townShip}
+          and area = #{area}
+
+    </select>
+
+    <select id="selectIncreCoustomThisYear" resultType="java.lang.Integer">
+        select count(*)
+        from pa_custom_info
+        where township = #{townShip} and area = #{area} and DATE_FORMAT(allocation_date, '%Y') = #{thisYear}
+        group by DATE_FORMAT(allocation_date, '%Y')
+
+    </select>
+
+    <select id="selectIncreCoustomThisMonth" resultType="java.lang.Integer">
+
+        select count(*)
+        from pa_custom_info
+        where township = #{townShip} and area = #{area} and DATE_FORMAT(allocation_date, '%Y-%m') = #{thisMonth}
+        group by DATE_FORMAT(allocation_date, '%Y-%m')
+
+    </select>
+
+    <select id="selectIncreCoustomThisDay" resultType="java.lang.Integer">
+
+        select count(*)
+        from pa_custom_info
+        where township = #{townShip} and area = #{area} and  DATE_FORMAT(allocation_date, '%Y-%m-%d') = #{thisDay}
+        group by DATE_FORMAT(allocation_date, '%Y-%m-%d')
+
+    </select>
+
+    <select id="queryCustomerInfoByNm" resultMap="CustomInfoVoMap">
+
+        select ci.nm,
+               ci.name,
+               ci.identify,
+               ci.home_address,
+               ci.contract_address,
+               ci.outlet,
+               ci.outlet_code,
+               ci.township,
+               ci.area,
+               ci.manager_id,
+               ci.work, ci.profession, ci.telephone, ci.gender, ci.marital_status, ci.type,
+            ci.allocation_date, ci.etl_dt, coi.star
+        from pa_custom_info as ci left join cust_other_info as coi
+        on ci.nm = coi.nm
+        where ci.nm = #{nm}
+
+    </select>
+
+
+    <resultMap id="ValuableClientResultMap" type="com.kx.system.domain.vo.ValuableClient">
+        <result column="total" property="sum"/>
+        <result column="fc" property="clientType"/>
+    </resultMap>
+    <select id="selectManageValuableClient" resultMap="ValuableClientResultMap">
+        select count(ci.nm) total, coi.fc as fc
+        from pa_custom_info as ci
+                 left join cust_other_info as coi on ci.nm = coi.nm
+        where manager_id = #{code}
+        group by coi.fc
+    </select>
+
+    <select id="selectManageValuableClientByJobNumberList" resultMap="ValuableClientResultMap">
+        select count(ci.nm) total ,coi.fc as fc from pa_custom_info as ci
+        left join cust_other_info as coi on ci.nm = coi.nm
+        where manager_id in
+        <foreach item="jobNumber" collection="list" open="(" separator="," close=")">
+            #{jobNumber}
+        </foreach>
+        group by coi.fc
+    </select>
+
+    <select id="getCustMangerIncrTrends" resultMap="MangerIncrTrendsNumberDto">
+        select cs.manager_id                  as manager_id,
+               (count(c1.nm) - count(ncs.nm)) as month1_dkzl,
+               (count(c2.nm) - count(ncs.nm)) as month2_dkzl,
+               (count(c3.nm) - count(ncs.nm)) as month3_dkzl,
+               (count(c4.nm) - count(ncs.nm)) as month4_dkzl,
+               (count(c5.nm) - count(ncs.nm)) as month5_dkzl,
+               (count(c6.nm) - count(ncs.nm)) as month6_dkzl
+        from pa_custom_info as cs
+                 left join (select manager_id, nm
+                            from pa_custom_info
+                            where datediff(month, etl_dt, getdate()) = 0) as c1 on cs.manager_id = c1.manager_id
+                 left join (select manager_id, nm
+                            from pa_custom_info
+                            where datediff(month, etl_dt, getdate()) = 1) as c2 on cs.manager_id = c2.manager_id
+                 left join (select manager_id, nm
+                            from pa_custom_info
+                            where datediff(month, etl_dt, getdate()) = 2) as c3 on cs.manager_id = c3.manager_id
+                 left join (select manager_id, nm
+                            from pa_custom_info
+                            where datediff(month, etl_dt, getdate()) = 3) as c4 on cs.manager_id = c4.manager_id
+                 left join (select manager_id, nm
+                            from pa_custom_info
+                            where datediff(month, etl_dt, getdate()) = 4) as c5 on cs.manager_id = c5.manager_id
+                 left join (select manager_id, nm
+                            from pa_custom_info
+                            where datediff(month, etl_dt, getdate()) = 5) as c6 on cs.manager_id = c6.manager_id
+                 left join (select manager_id, nm
+                            from pa_custom_info
+                            where datediff(month, etl_dt, getdate()) > 5) as ncs on cs.manager_id = ncs.manager_id
+        group by cs.manager_id
+        having cs.manager_id is not null
+    </select>
+
+    <select id="selectVillageValuableClient" resultMap="ValuableClientResultMap">
+         select count(ci.nm) total, coi.fc as fc
+        from pa_custom_info as ci
+                 left join cust_other_info as coi on ci.nm = coi.nm
+        where area_code = #{code}
+        group by coi.fc
+    </select>
+
+    <select id="selectTownValuableClient" resultMap="ValuableClientResultMap">
+         select count(ci.nm) total, coi.fc as fc
+        from pa_custom_info as ci
+                 left join cust_other_info as coi on ci.nm = coi.nm
+        where area_code like (#{code}+'%')
+        group by coi.fc
+    </select>
+
+    <select id="selectHeadValuableClient" resultMap="ValuableClientResultMap">
+         select count(ci.nm) total, coi.fc as fc
+        from pa_custom_info as ci
+                 left join cust_other_info as coi on ci.nm = coi.nm
+        group by coi.fc
+    </select>
+
+    <select id="selectVillageValuableClientByYear" resultMap="ValuableClientResultMap">
+ select count(ci.nm) total  ,coi.fc as fc from pa_custom_info as ci
+         left join cust_other_info as coi on ci.nm = coi.nm
+		where ci.area_code = #{code} and year(coi.etl_dt) = #{year}
+         group by coi.fc
+    </select>
+    <select id="selectManageValuableClientByYear" resultMap="ValuableClientResultMap">
+         select count(ci.nm) total  ,coi.fc as fc from pa_custom_info as ci
+         left join cust_other_info as coi on ci.nm = coi.nm
+		where manager_id = #{code} and year(coi.etl_dt) = #{thisYear}
+         group by coi.fc
+    </select>
+
+    <select id="selectManageValuableClientByJobNumberListByYear" resultMap="ValuableClientResultMap">
+        select count(ci.nm) total  ,coi.fc as fc from pa_custom_info as ci
+        left join cust_other_info as coi on ci.nm = coi.nm
+        where manager_id in
+        <foreach item="jobNumber" collection="list" open="(" separator="," close=")">
+            #{jobNumber}
+        </foreach>
+        and year(coi.etl_dt) = #{year}
+        group by coi.fc
+    </select>
+
+    <select id="selectTownValuableClientByYear" resultMap="ValuableClientResultMap">
+          select count(ci.nm) total  ,coi.fc as fc from pa_custom_info as ci
+         left join cust_other_info as coi on ci.nm = coi.nm
+		where ci.area_code like (#{code}+'%') and year(coi.etl_dt) = #{year}
+         group by coi.fc
+    </select>
+
+    <select id="selectHeadValuableClientByYear" resultMap="ValuableClientResultMap">
+        select count(ci.nm) total  ,coi.fc as fc from pa_custom_info as ci
+         left join cust_other_info as coi on ci.nm = coi.nm
+		where  year(coi.etl_dt) = #{year}
+         group by coi.fc
+    </select>
+
+    <select id="selectVillageAccountOpenTimeCompare" resultType="com.kx.system.domain.vo.ClientRange">
+        SELECT coi.star,
+        CASE ( DATEDIFF(year, coi.open_date, GETDATE()) / 1 + 1 )
+                  WHEN 1 THEN 'range1'
+                  WHEN 2 THEN 'range2'
+                  WHEN 3 THEN 'range2'
+                  WHEN 4 THEN 'range2'
+                  WHEN 5 THEN 'range3'
+                  WHEN 6 THEN 'range3'
+                  WHEN 7 THEN 'range3'
+                  WHEN 8 THEN 'range3'
+                  WHEN 9 THEN 'range3'
+                  WHEN 10 THEN 'range4'
+                  WHEN 11 THEN 'range4'
+                  WHEN 12 THEN 'range4'
+                  WHEN 13 THEN 'range4'
+                  WHEN 14 THEN 'range4'
+                  ELSE 'range5'
+                END 'range' ,
+                COUNT(*) 'total'
+
+                         from pa_custom_info as ci
+        left JOIN cust_other_info as coi on ci.nm = coi.nm
+        where ci.area_code = #{code}
+        GROUP BY ( CASE (DATEDIFF(year, coi.open_date, GETDATE()) / 1 + 1 )
+                     WHEN 1 THEN 'range1'
+                  WHEN 2 THEN 'range2'
+                  WHEN 3 THEN 'range2'
+                  WHEN 4 THEN 'range2'
+                  WHEN 5 THEN 'range3'
+                  WHEN 6 THEN 'range3'
+                  WHEN 7 THEN 'range3'
+                  WHEN 8 THEN 'range3'
+                  WHEN 9 THEN 'range3'
+                  WHEN 10 THEN 'range4'
+                  WHEN 11 THEN 'range4'
+                  WHEN 12 THEN 'range4'
+                  WHEN 13 THEN 'range4'
+                  WHEN 14 THEN 'range4'
+                  ELSE 'range5'
+                   END ),coi.star
+    </select>
+
+    <select id="selectTownAccountOpenTimeCompare" resultType="com.kx.system.domain.vo.ClientRange">
+        SELECT coi.star,
+        CASE ( DATEDIFF(year, coi.open_date, GETDATE()) / 1 + 1 )
+                  WHEN 1 THEN 'range1'
+                  WHEN 2 THEN 'range2'
+                  WHEN 3 THEN 'range2'
+                  WHEN 4 THEN 'range2'
+                  WHEN 5 THEN 'range3'
+                  WHEN 6 THEN 'range3'
+                  WHEN 7 THEN 'range3'
+                  WHEN 8 THEN 'range3'
+                  WHEN 9 THEN 'range3'
+                  WHEN 10 THEN 'range4'
+                  WHEN 11 THEN 'range4'
+                  WHEN 12 THEN 'range4'
+                  WHEN 13 THEN 'range4'
+                  WHEN 14 THEN 'range4'
+                  ELSE 'range5'
+                END 'range' ,
+                COUNT(*) 'total'
+
+                         from pa_custom_info as ci
+        left JOIN cust_other_info as coi on ci.nm = coi.nm
+        where ci.area_code like (#{code}+'%')
+        GROUP BY ( CASE (DATEDIFF(year, coi.open_date, GETDATE()) / 1 + 1 )
+                     WHEN 1 THEN 'range1'
+                  WHEN 2 THEN 'range2'
+                  WHEN 3 THEN 'range2'
+                  WHEN 4 THEN 'range2'
+                  WHEN 5 THEN 'range3'
+                  WHEN 6 THEN 'range3'
+                  WHEN 7 THEN 'range3'
+                  WHEN 8 THEN 'range3'
+                  WHEN 9 THEN 'range3'
+                  WHEN 10 THEN 'range4'
+                  WHEN 11 THEN 'range4'
+                  WHEN 12 THEN 'range4'
+                  WHEN 13 THEN 'range4'
+                  WHEN 14 THEN 'range4'
+                  ELSE 'range5'
+                   END ),coi.star
+    </select>
+
+    <select id="selectHeadAccountOpenTimeCompare" resultType="com.kx.system.domain.vo.ClientRange">
+        SELECT coi.star,
+        CASE ( DATEDIFF(year, coi.open_date, GETDATE()) / 1 + 1 )
+                  WHEN 1 THEN 'range1'
+                  WHEN 2 THEN 'range2'
+                  WHEN 3 THEN 'range2'
+                  WHEN 4 THEN 'range2'
+                  WHEN 5 THEN 'range3'
+                  WHEN 6 THEN 'range3'
+                  WHEN 7 THEN 'range3'
+                  WHEN 8 THEN 'range3'
+                  WHEN 9 THEN 'range3'
+                  WHEN 10 THEN 'range4'
+                  WHEN 11 THEN 'range4'
+                  WHEN 12 THEN 'range4'
+                  WHEN 13 THEN 'range4'
+                  WHEN 14 THEN 'range4'
+                  ELSE 'range5'
+                END 'range' ,
+                COUNT(*) 'total'
+
+                         from pa_custom_info as ci
+        left JOIN cust_other_info as coi on ci.nm = coi.nm
+        GROUP BY ( CASE (DATEDIFF(year, coi.open_date, GETDATE()) / 1 + 1 )
+                     WHEN 1 THEN 'range1'
+                  WHEN 2 THEN 'range2'
+                  WHEN 3 THEN 'range2'
+                  WHEN 4 THEN 'range2'
+                  WHEN 5 THEN 'range3'
+                  WHEN 6 THEN 'range3'
+                  WHEN 7 THEN 'range3'
+                  WHEN 8 THEN 'range3'
+                  WHEN 9 THEN 'range3'
+                  WHEN 10 THEN 'range4'
+                  WHEN 11 THEN 'range4'
+                  WHEN 12 THEN 'range4'
+                  WHEN 13 THEN 'range4'
+                  WHEN 14 THEN 'range4'
+                  ELSE 'range5'
+                   END ),coi.star
+    </select>
+
+    <select id="selectVillageUnitAgeCompare" resultType="com.kx.system.domain.vo.ClientRange">
+        SELECT coi.star,
+        CASE ( DATEDIFF(year, ci.birthday, GETDATE()) / 10 + 1 )
+                  WHEN 1 THEN 'range1'
+                  WHEN 2 THEN 'range1'
+                  WHEN 3 THEN 'range2'
+                  WHEN 4 THEN 'range3'
+                  WHEN 5 THEN 'range4'
+                  WHEN 6 THEN 'range5'
+                  WHEN 7 THEN 'range6'
+                  ELSE 'range7'
+                END 'range' ,
+                COUNT(*) 'total'
+
+                         from pa_custom_info as ci
+        left JOIN cust_other_info as coi on ci.nm = coi.nm
+        <where>
+            <if test="villageCode !=null">
+                ci.area_code =#{villageCode}
+            </if>
+            <if test="townCode !=null">
+                ci.area_code like (#{townCode}+'%')
+            </if>
+
+        </where>
+        GROUP BY ( CASE (  DATEDIFF(year, ci.birthday, GETDATE()) / 10 + 1 )
+                     WHEN 1 THEN 'range1'
+                  WHEN 2 THEN 'range1'
+                  WHEN 3 THEN 'range2'
+                  WHEN 4 THEN 'range3'
+                  WHEN 5 THEN 'range4'
+                  WHEN 6 THEN 'range5'
+                  WHEN 7 THEN 'range6'
+                  ELSE 'range7'
+                   END ),coi.star
+    </select>
+    <select id="selectVillageUnitSexCompare" resultType="com.kx.system.domain.vo.ClientRange">
+          select count(ci.gender) as total ,ci.gender as range,coi.star from pa_custom_info as ci
+         LEFT JOIN cust_other_info as coi on ci.nm = coi.nm
+        <where>
+            <if test="villageCode !=null">
+                ci.area_code =#{villageCode}
+            </if>
+            <if test="townCode !=null">
+                ci.area_code like (#{townCode}+'%')
+            </if>
+
+        </where>
+         GROUP BY coi.star ,ci.gender
+    </select>
+
+
+    <select id="selectNeedSynchronizeCustomInfo" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from custom_info where etl_dt >= #{nowDate} and etl_flg in ('I','A','D')
+    </select>
+
+    <select id="selectPaCustomInfoByClientAnchorId" parameterType="Long" resultMap="PaCustomInfoVoMap">
+        SELECT
+            b.id,
+            a.name,
+            a.nm,
+            a.identify,
+            CONCAT( township, '/', area ) belong_area,
+            a.home_address,
+            a.work
+        FROM
+            pa_custom_info a
+                LEFT JOIN pa_client_anchor_relation b ON a.nm = b.nm
+        where b.client_anchor_id = #{clientAnchorId};
+    </select>
+
+    <select id="selectCustomInfoByAreaCode" resultType="com.kx.system.domain.CustomInfo">
+        select nm from pa_custom_info where area_code = #{areaCode}
+    </select>
+
+    <select id="selectCountByAreaCode" resultType="java.lang.Long">
+        select count(*) from pa_custom_info where area_code like CONCAT(#{areaCode},'%')
+    </select>
+
+</mapper>
+

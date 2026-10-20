@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.GridPoliceInfoMapper">
+
+    <!-- 结果集映射 -->
+    <resultMap id="BaseResultMap" type="com.kx.system.domain.grid.message.GridPoliceInfo">
+        <id property="id" column="id"/>
+        <result property="gridCode" column="grid_code"/>
+        <result property="policeStationName" column="police_station_name"/>
+        <result property="policeStationAddr" column="police_station_addr"/>
+        <result property="policeName" column="police_name"/>
+        <result property="policePhone" column="police_phone"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createName" column="create_name"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateName" column="update_name"/>
+        <result property="updateBy" column="update_by"/>
+    </resultMap>
+
+    <!-- 新增派出所信息 -->
+    <insert id="insertGridPoliceInfo" parameterType="com.kx.system.domain.grid.message.GridPoliceInfo">
+        INSERT INTO grid_police_info (grid_code, police_station_name, police_station_addr,
+                                    police_name, police_phone, create_time,
+                                    create_name, create_by, update_time,
+                                    update_name, update_by)
+        VALUES (#{gridCode}, #{policeStationName}, #{policeStationAddr},
+                #{policeName}, #{policePhone}, #{createTime},
+                #{createName}, #{createBy}, #{updateTime},
+                #{updateName}, #{updateBy})
+    </insert>
+
+    <!-- 根据ID删除派出所信息 -->
+    <delete id="deleteGridPoliceInfoById" parameterType="long">
+        DELETE FROM grid_police_info WHERE id = #{id}
+    </delete>
+
+    <!-- 更新派出所信息 -->
+    <update id="updateGridPoliceInfo" parameterType="com.kx.system.domain.grid.message.GridPoliceInfo">
+        UPDATE grid_police_info
+        <set>
+            <if test="gridCode != null and gridCode != ''">
+                grid_code = #{gridCode},
+            </if>
+            <if test="policeStationName != null and policeStationName != ''">
+                police_station_name = #{policeStationName},
+            </if>
+            <if test="policeStationAddr != null and policeStationAddr != ''">
+                police_station_addr = #{policeStationAddr},
+            </if>
+            <if test="policeName != null and policeName != ''">
+                police_name = #{policeName},
+            </if>
+            <if test="policePhone != null and policePhone != ''">
+                police_phone = #{policePhone},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="updateName != null and updateName != ''">
+                update_name = #{updateName},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据网格编码查询派出所信息 -->
+    <select id="selectGridPoliceInfoByGridCode" parameterType="string" resultMap="BaseResultMap">
+        SELECT * FROM grid_police_info WHERE grid_code = #{gridCode}
+    </select>
+
+    <!-- 查询所有派出所信息 -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT * FROM grid_police_info
+    </select>
+
+    <!-- 根据ID查询派出所信息 -->
+    <select id="selectGridPoliceInfoById" parameterType="long" resultMap="BaseResultMap">
+        SELECT * FROM grid_police_info WHERE id = #{id}
+    </select>
+
+<!--    &lt;!&ndash; 通用查询映射结果 &ndash;&gt;-->
+<!--    <resultMap id="gridRatingInfoResultMap" type="com.kx.system.domain.grid.message.GridPoliceInfo">-->
+<!--        <id column="id" property="id" />-->
+<!--        <result column="grid_message_id" property="gridMessageId" />-->
+<!--        <result column="grid_code" property="gridCode" />-->
+<!--        <result column="rating_year" property="ratingYear" />-->
+<!--        <result column="grid_rating" property="gridRating" />-->
+<!--        <result column="create_time" property="createTime" />-->
+<!--        <result column="update_time" property="updateTime" />-->
+<!--        <result column="police_name" property="policeName" />-->
+<!--        <result column="police_address" property="policeAddress" />-->
+<!--        <result column="un_faker_name" property="unFakerName" />-->
+<!--        <result column="un_faker_phone" property="unFakerPhone" />-->
+<!--    </resultMap>-->
+
+<!--    &lt;!&ndash; 通用查询结果列 &ndash;&gt;-->
+<!--    <sql id="columns">-->
+<!--        id, grid_message_id, grid_code, rating_year, grid_rating, create_time, update_time,police_name,police_address,un_faker_name,un_faker_phone-->
+<!--    </sql>-->
+<!--    <sql id="policeInfo">-->
+<!--        a.id, a.grid_message_id, a.grid_code, a.rating_year, a.grid_rating, a.create_time, a.update_time,a.police_name,a.police_address,a.un_faker_name,a.un_faker_phone,a.un_faker_mobile-->
+<!--    </sql>-->
+
+<!--    &lt;!&ndash; 查询列表 &ndash;&gt;-->
+<!--    <select id="list" parameterType="com.kx.system.domain.grid.message.GridPoliceInfo" resultMap="gridRatingInfoResultMap">-->
+<!--        select <include refid="policeInfo"/>-->
+<!--        from grid_rating_info a-->
+<!--        left join pa_addr_info_type b on b.parent_code=a.grid_code-->
+<!--        <where>-->
+<!--            <if test=" gridMessageId!=null and gridMessageId !='' "> and grid_message_id = #{gridMessageId } </if>-->
+<!--            <if test=" gridCode!=null and gridCode !='' "> and b.code = #{gridCode } </if>-->
+<!--            <if test=" ratingYear!=null and ratingYear !='' "> and rating_year = #{ratingYear } </if>-->
+<!--            <if test=" gridRating!=null and gridRating !='' "> and grid_rating = #{gridRating } </if>-->
+<!--            <if test=" createTime!=null and createTime !='' "> and create_time = #{createTime } </if>-->
+<!--            <if test=" updateTime!=null and updateTime !='' "> and update_time = #{updateTime } </if>-->
+<!--        </where>-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash; 根据id查询 &ndash;&gt;-->
+<!--    <select id="getById"  resultMap="gridRatingInfoResultMap">-->
+<!--        select <include refid="columns"/>  from grid_rating_info where id = #{id}-->
+<!--    </select>-->
+
+<!--    <select id="getByYear"  resultMap="gridRatingInfoResultMap">-->
+<!--        select <include refid="columns"/>  from grid_rating_info where rating_year = #{ratingYear} and grid_code = #{gridCode}-->
+<!--   </select>-->
+
+<!--    &lt;!&ndash; 根据id删除 &ndash;&gt;-->
+<!--    <delete id="deleteById">-->
+<!--        delete from  grid_rating_info where  id= #{id}-->
+<!--    </delete>-->
+
+<!--    &lt;!&ndash; 新增 &ndash;&gt;-->
+<!--    <insert id="insertGridRatingInfo" parameterType="com.kx.system.domain.grid.message.GridPoliceInfo" keyProperty="id" useGeneratedKeys="true">-->
+<!--        insert into grid_rating_info(-->
+<!--            grid_message_id,grid_code,rating_year,grid_rating,create_time,update_time,police_name,police_address,un_faker_name,un_faker_phone-->
+<!--        )values(-->
+<!--             #{gridMessageId}, #{gridCode}, #{ratingYear}, #{gridRating}, #{createTime}, #{updateTime},#{policeName},#{policeAddress},#{unFakerName},#{unFakerPhone}-->
+<!--        )-->
+<!--    </insert>-->
+
+<!--    &lt;!&ndash; 更新 &ndash;&gt;-->
+<!--    <update id="updateGridRatingInfo" parameterType="com.kx.system.domain.grid.message.GridPoliceInfo">-->
+<!--        update grid_rating_info-->
+<!--    <trim prefix="SET" suffixOverrides=",">-->
+<!--        <if test=" gridMessageId!=null and gridMessageId !='' ">  grid_message_id = #{gridMessageId } ,</if>-->
+<!--        <if test=" gridCode!=null and gridCode !='' ">  grid_code = #{gridCode } ,</if>-->
+<!--        <if test=" ratingYear!=null and ratingYear !='' ">  rating_year = #{ratingYear } ,</if>-->
+<!--        <if test=" gridRating!=null and gridRating !='' ">  grid_rating = #{gridRating } ,</if>-->
+<!--        <if test=" createTime!=null">  create_time = #{createTime } ,</if>-->
+<!--        <if test=" updateTime!=null">  update_time = #{updateTime } ,</if>-->
+<!--        <if test=" policeName!=null and policeName !='' ">  police_name = #{policeName} ,</if>-->
+<!--        <if test=" policeAddress!=null and policeAddress !='' ">  police_address = #{policeAddress} ,</if>-->
+<!--        <if test=" unFakerName!=null and unFakerName !='' ">  un_faker_name = #{unFakerName} ,</if>-->
+<!--        <if test=" unFakerPhone!=null and unFakerPhone !='' ">  un_faker_phone = #{unFakerPhone} </if>-->
+<!--    </trim>-->
+<!--     where id = #{id}-->
+<!--    </update>-->
+
+</mapper>

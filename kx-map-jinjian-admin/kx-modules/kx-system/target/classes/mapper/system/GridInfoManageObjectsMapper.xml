@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.GridInfoManageObjectsMapper">
+
+    <resultMap id="BaseResultMap" type="com.kx.common.core.domain.system.grid.GridInfoManageObjects">
+        <id column="id" property="id"/>
+        <result column="grid_code" property="gridCode"/>
+        <result column="manager_name" property="managerName"/>
+        <result column="manager_type" property="managerType"/>
+        <result column="manager_addr" property="managerAddr"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_name" property="createName"/>
+        <result column="create_by" property="createBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_name" property="updateName"/>
+        <result column="update_by" property="updateBy"/>
+    </resultMap>
+
+    <!-- 新增 -->
+    <insert id="insertGridInfoManageObjects" parameterType="com.kx.common.core.domain.system.grid.GridInfoManageObjects" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO grid_info_manage_objects (
+        <if test="gridCode != null and gridCode != ''">grid_code,</if>
+        <if test="managerName != null and managerName != ''">manager_name,</if>
+        <if test="managerType != null">manager_type,</if>
+        <if test="managerAddr != null and managerAddr != ''">manager_addr,</if>
+        <if test="createTime != null">create_time,</if>
+        <if test="createName != null and createName != ''">create_name,</if>
+        <if test="createBy != null">create_by,</if>
+        <if test="updateTime != null">update_time,</if>
+        <if test="updateName != null and updateName != ''">update_name,</if>
+        <if test="updateBy != null">update_by,</if>
+        ) VALUES (
+        <if test="gridCode != null and gridCode != ''">#{gridCode},</if>
+        <if test="managerName != null and managerName != ''">#{managerName},</if>
+        <if test="managerType != null">#{managerType},</if>
+        <if test="managerAddr != null and managerAddr != ''">#{managerAddr},</if>
+        <if test="createTime != null">#{createTime},</if>
+        <if test="createName != null and createName != ''">#{createName},</if>
+        <if test="createBy != null">#{createBy},</if>
+        <if test="updateTime != null">#{updateTime},</if>
+        <if test="updateName != null and updateName != ''">#{updateName},</if>
+        <if test="updateBy != null">#{updateBy},</if>
+        )
+    </insert>
+
+    <!-- 根据ID删除 -->
+    <delete id="deleteGridInfoManageObjectsById">
+        DELETE FROM grid_info_manage_objects WHERE id = #{id}
+    </delete>
+
+    <!-- 更新 -->
+    <update id="updateGridInfoManageObjects" parameterType="com.kx.common.core.domain.system.grid.GridInfoManageObjects">
+        UPDATE grid_info_manage_objects
+        <set>
+            <if test="gridCode != null">grid_code = #{gridCode},</if>
+            <if test="managerName != null">manager_name = #{managerName},</if>
+            <if test="managerType != null">manager_type = #{managerType},</if>
+            <if test="managerAddr != null">manager_addr = #{managerAddr},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateName != null">update_name = #{updateName},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据网格编码查询（支持动态条件） -->
+    <select id="selectGridInfoManageObjectsList" parameterType="com.kx.common.core.domain.system.grid.GridInfoManageObjects" resultMap="BaseResultMap">
+        SELECT * FROM grid_info_manage_objects
+        <where>
+            <if test="gridCode != null and gridCode != ''">
+                AND grid_code = #{gridCode}
+            </if>
+            <if test="managerName != null and managerName != ''">
+                AND manager_name LIKE CONCAT('%', #{managerName}, '%')
+            </if>
+            <if test="managerType != null">
+                AND manager_type = #{managerType}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+</mapper>

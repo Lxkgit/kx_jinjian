@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.GridMessageInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="gridMessageInfoResultMap" type="com.kx.system.domain.grid.GridMessageInfo2">
+        <id column="id" property="id"/>
+        <result column="grid_code" property="gridCode"/>
+        <result column="grid_name" property="gridName"/>
+        <result column="grid_customer_total" property="gridCustomerTotal"/>
+        <result column="grid_main_manager_name" property="gridMainManagerName"/>
+        <result column="grid_main_manager_code" property="gridMainManagerCode"/>
+        <result column="grid_side_manager_name" property="gridSideManagerName"
+                typeHandler="com.kx.system.config.typehandler.ListStringTypeHandler"/>
+        <result column="grid_side_manager_code" property="gridSideManagerCode"
+                typeHandler="com.kx.system.config.typehandler.ListStringTypeHandler"/>
+        <result column="belong_team" property="belongTeam"/>
+        <result column="first_level_branch" property="firstLevelBranch"/>
+        <result column="second_level_branch" property="secondLevelBranch"/>
+        <result column="branch" property="branch"/>
+        <result column="picture" property="picture"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="grid_overview" property="gridOverview"/>
+        <result column="grid_remark" property="gridRemark"/>
+        <result column="rural_grid_type" property="ruralGridType"/>
+        <result column="is_modify" property="isModify"/>
+        <result column="peers_num" property="peersNum"/>
+        <result column="community_num" property="communityNum"/>
+        <result column="district_num" property="districtNum"/>
+        <result column="hiq_units_num" property="hiqUnitsNum"/>
+        <result column="hiq_units_situation" property="hiqUnitsSituation"/>
+        <result column="grid_main_manager_phone" property="gridMainManagerPhone"/>
+        <result column="duty_network_name" property="dutyNetworkName"/>
+        <result column="duty_network_code" property="dutyNetworkCode"/>
+        <result column="duty_name" property="dutyName"/>
+        <result column="duty_code" property="dutyCode"/>
+        <result column="duty_phone" property="dutyPhone"/>
+        <result column="bank_agency_name" property="bankAgencyName"/>
+        <result column="bank_agency_code" property="bankAgencyCode"/>
+        <result column="duty_network_address" property="dutyNetworkAddress"/>
+        <result column="duty_telephone" property="dutyTelephone"/>
+        <result column="is_cash" property="isCash"/>
+        <result column="grid_inspector_phone" property="gridInspectorPhone"/>
+        <result column="grid_inspector_name" property="gridInspectorName"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="columns">
+        id, grid_code, grid_name, grid_customer_total, grid_main_manager_name,
+        grid_main_manager_code,
+        grid_side_manager_name, grid_side_manager_code,
+        belong_team, first_level_branch, second_level_branch, branch,
+        picture, create_time, update_time,
+        grid_overview,grid_remark,rural_grid_type,is_modify,peers_num,
+        community_num,district_num,hiq_units_num,hiq_units_situation,
+        grid_main_manager_phone,duty_network_name,duty_network_code,
+        duty_name,duty_code,duty_phone,bank_agency_name,bank_agency_code,
+        duty_network_address,duty_telephone,is_cash,grid_inspector_phone,
+        grid_inspector_name
+
+    </sql>
+
+    <!-- 查询列表 -->
+    <select id="list" parameterType="com.kx.system.domain.grid.GridMessageInfo2" resultMap="gridMessageInfoResultMap">
+        select
+        a.id,
+        b.code as grid_code,
+        coalesce(a.grid_name, b.name) as grid_name,
+        grid_customer_total,
+        grid_main_manager_name,
+        grid_main_manager_code,
+        grid_side_manager_name,
+        grid_side_manager_code,
+        belong_team,
+        first_level_branch,
+        second_level_branch,
+        branch, picture,
+        create_time, a.update_time,
+        grid_overview,grid_remark,coalesce(a.rural_grid_type, b.rural_grid_type) as rural_grid_type,is_modify,peers_num,
+        community_num,district_num,hiq_units_num,hiq_units_situation,
+        grid_main_manager_phone,duty_network_name,duty_network_code,duty_name,
+        duty_code,duty_phone,bank_agency_name,bank_agency_code,
+        duty_network_address,duty_telephone,is_cash
+        from pa_addr_info_type b
+            left join grid_message_info a on a.grid_code = b.code
+        <where>
+            b.addr_level = 5
+            <if test=" gridCode!=null and gridCode !='' ">and b.code = #{gridCode }</if>
+            <if test=" code!=null and code !='' ">and b.ancestor_codes  like concat('%,',#{code},',%')</if>
+            <if test=" gridName!=null and gridName !='' ">and coalesce(a.grid_name, b.name) like concat ('%',#{gridName},'%')</if>
+            <if test=" gridCustomerTotal!=null and gridCustomerTotal !='' ">and grid_customer_total =
+                #{gridCustomerTotal }
+            </if>
+            <if test=" gridMainManagerName!=null and gridMainManagerName !='' ">and grid_main_manager_name =
+                #{gridMainManagerName }
+            </if>
+            <if test=" gridMainManagerCode!=null and gridMainManagerCode !='' ">and grid_main_manager_code =
+                #{gridMainManagerCode }
+            </if>
+            <if test=" gridSideManagerName != null and gridSideManagerName.size() != 0 ">and grid_side_manager_name =
+                #{gridSideManagerName ,typeHandler=com.kx.system.config.typehandler.ListStringTypeHandler}
+            </if>
+            <if test=" gridSideManagerCode != null and gridSideManagerCode.size() != 0 ">and grid_side_manager_code =
+                #{gridSideManagerCode ,typeHandler=com.kx.system.config.typehandler.ListStringTypeHandler}
+            </if>
+            <if test=" belongTeam!=null and belongTeam !='' ">and belong_team = #{belongTeam }</if>
+            <if test=" firstLevelBranch!=null and firstLevelBranch !='' ">and first_level_branch = #{firstLevelBranch }</if>
+            <if test=" secondLevelBranch!=null and secondLevelBranch !='' ">and second_level_branch = #{secondLevelBranch }</if>
+            <if test=" branch!=null and branch !='' ">and branch = #{branch }</if>
+            <if test=" picture!=null and picture !='' ">and picture = #{picture }</if>
+            <if test=" createTime!=null ">and create_time = #{createTime }</if>
+            <if test=" updateTime!=null ">and update_time = #{updateTime }</if>
+            <if test=" gridOverview!=null and gridOverview !='' ">and grid_overview = #{gridOverview}</if>
+            <if test=" gridRemark!=null and gridRemark !='' ">and grid_remark = #{gridRemark}</if>
+            <if test=" ruralGridType!=null and ruralGridType !='' ">and a.rural_grid_type = #{ruralGridType}</if>
+            <if test=" isCash!=null and isCash !='' ">and is_cash = #{isCash}</if>
+            <if test=" dutyNetworkName!=null and dutyNetworkName !='' ">and duty_network_name = #{dutyNetworkName}</if>
+            <if test=" dutyNetworkNames!=null and dutyNetworkNames.size() >0 ">
+                and
+                <foreach collection="dutyNetworkNames" item="item" open="(" close=")" separator="or">
+                    duty_network_name = #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!-- 新增 count 查询 -->
+    <select id="countList" resultType="java.lang.Long" parameterType="com.kx.system.domain.grid.GridMessageInfo2">
+        SELECT COUNT(0)
+        FROM pa_addr_info_type b
+        LEFT JOIN grid_message_info a ON a.grid_code = b.code
+        <where>
+            b.addr_level = 5
+            <if test=" gridCode!=null and gridCode !='' ">and b.code = #{gridCode }</if>
+            <if test=" code!=null and code !='' ">and b.ancestor_codes  like concat('%,',#{code},',%')</if>
+            <if test=" gridName!=null and gridName !='' ">and coalesce(a.grid_name, b.name) like concat ('%',#{gridName},'%')</if>
+            <if test=" gridCustomerTotal!=null and gridCustomerTotal !='' ">and grid_customer_total =
+                #{gridCustomerTotal }
+            </if>
+            <if test=" gridMainManagerName!=null and gridMainManagerName !='' ">and grid_main_manager_name =
+                #{gridMainManagerName }
+            </if>
+            <if test=" gridMainManagerCode!=null and gridMainManagerCode !='' ">and grid_main_manager_code =
+                #{gridMainManagerCode }
+            </if>
+            <if test=" gridSideManagerName != null and gridSideManagerName.size() != 0 ">and grid_side_manager_name =
+                #{gridSideManagerName ,typeHandler=com.kx.system.config.typehandler.ListStringTypeHandler}
+            </if>
+            <if test=" gridSideManagerCode != null and gridSideManagerCode.size() != 0 ">and grid_side_manager_code =
+                #{gridSideManagerCode ,typeHandler=com.kx.system.config.typehandler.ListStringTypeHandler}
+            </if>
+            <if test=" belongTeam!=null and belongTeam !='' ">and belong_team = #{belongTeam }</if>
+            <if test=" firstLevelBranch!=null and firstLevelBranch !='' ">and first_level_branch = #{firstLevelBranch }</if>
+            <if test=" secondLevelBranch!=null and secondLevelBranch !='' ">and second_level_branch = #{secondLevelBranch }</if>
+            <if test=" branch!=null and branch !='' ">and branch = #{branch }</if>
+            <if test=" picture!=null and picture !='' ">and picture = #{picture }</if>
+            <if test=" createTime!=null ">and create_time = #{createTime }</if>
+            <if test=" updateTime!=null ">and update_time = #{updateTime }</if>
+            <if test=" gridOverview!=null and gridOverview !='' ">and grid_overview = #{gridOverview}</if>
+            <if test=" gridRemark!=null and gridRemark !='' ">and grid_remark = #{gridRemark}</if>
+            <if test=" ruralGridType!=null and ruralGridType !='' ">and a.rural_grid_type = #{ruralGridType}</if>
+            <if test=" isCash!=null and isCash !='' ">and is_cash = #{isCash}</if>
+            <if test=" dutyNetworkName!=null and dutyNetworkName !='' ">and duty_network_name = #{dutyNetworkName}</if>
+            <if test=" dutyNetworkNames!=null and dutyNetworkNames.size() >0 ">
+                and
+                <foreach collection="dutyNetworkNames" item="item" open="(" close=")" separator="or">
+                    duty_network_name = #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!-- 根据id查询 -->
+    <select id="getById" resultMap="gridMessageInfoResultMap">
+        select
+        <include refid="columns"/>
+        from grid_message_info where id = #{id}
+    </select>
+
+    <!-- 根据id删除 -->
+    <delete id="deleteById">
+        delete
+        from grid_message_info
+        where id = #{id}
+    </delete>
+
+    <!-- 新增 -->
+    <insert id="insertGridMessageInfo" parameterType="com.kx.system.domain.grid.GridMessageInfo2" keyProperty="id"
+            useGeneratedKeys="true">
+        insert into grid_message_info(grid_code, grid_name, grid_customer_total, grid_main_manager_name,
+                                      grid_main_manager_code, grid_side_manager_name, grid_side_manager_code,
+                                      belong_team, first_level_branch, second_level_branch, branch, picture,
+                                      create_time, update_time, grid_overview, grid_remark, rural_grid_type, is_modify,
+                                      peers_num, community_num, district_num, hiq_units_num, hiq_units_situation,
+                                      grid_main_manager_phone, duty_network_name, duty_network_code, duty_name,
+                                      duty_code, duty_phone, bank_agency_name, bank_agency_code, duty_network_address,
+                                      duty_telephone, is_cash,grid_inspector_phone,grid_inspector_name)
+        values (#{gridCode}, #{gridName}, #{gridCustomerTotal}, #{gridMainManagerName}, #{gridMainManagerCode},
+                #{gridSideManagerName ,typeHandler=com.kx.system.config.typehandler.ListStringTypeHandler},
+                #{gridSideManagerCode ,typeHandler=com.kx.system.config.typehandler.ListStringTypeHandler},
+                #{belongTeam}, #{firstLevelBranch}, #{secondLevelBranch}, #{branch}, #{picture}, #{createTime},
+                #{updateTime}, #{gridOverview}, #{gridRemark}, #{ruralGridType}, #{isModify}, #{peersNum},
+                #{communityNum}, #{districtNum}, #{hiqUnitsNum}, #{hiqUnitsSituation}, #{gridMainManagerPhone},
+                #{dutyNetworkName}, #{dutyNetworkCode}, #{dutyName}, #{dutyCode}, #{dutyPhone}, #{bankAgencyName},
+                #{bankAgencyCode}, #{dutyNetworkAddress}, #{dutyTelephone}, #{isCash},#{gridInspectorPhone},#{gridInspectorName})
+    </insert>
+
+    <!-- 更新 -->
+    <update id="updateGridMessageInfo" parameterType="com.kx.system.domain.grid.GridMessageInfo2">
+        update grid_message_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test=" gridCode!=null and gridCode !='' ">grid_code = #{gridCode } ,</if>
+            <if test=" gridName!=null and gridName !='' ">grid_name = #{gridName } ,</if>
+            <if test=" gridCustomerTotal!=null and gridCustomerTotal !='' ">grid_customer_total = #{gridCustomerTotal }
+                ,
+            </if>
+            <if test=" gridMainManagerName!=null and gridMainManagerName !='' ">grid_main_manager_name =
+                #{gridMainManagerName } ,
+            </if>
+            <if test=" gridMainManagerCode!=null and gridMainManagerCode !='' ">grid_main_manager_code =
+                #{gridMainManagerCode } ,
+            </if>
+            <if test=" gridSideManagerName != null and gridSideManagerName.size() != 0">grid_side_manager_name =
+                #{gridSideManagerName,typeHandler=com.kx.system.config.typehandler.ListStringTypeHandler } ,
+            </if>
+            <if test=" gridSideManagerCode != null and gridSideManagerCode.size() != 0">grid_side_manager_code =
+                #{gridSideManagerCode,typeHandler=com.kx.system.config.typehandler.ListStringTypeHandler } ,
+            </if>
+            <if test=" belongTeam!=null and belongTeam !='' ">belong_team = #{belongTeam } ,</if>
+            <if test=" firstLevelBranch!=null and firstLevelBranch !='' ">first_level_branch = #{firstLevelBranch } ,
+            </if>
+            <if test=" secondLevelBranch!=null and secondLevelBranch !='' ">second_level_branch = #{secondLevelBranch }
+                ,
+            </if>
+            <if test=" branch!=null and branch !='' ">branch = #{branch } ,</if>
+            <if test=" picture!=null and picture !='' ">picture = #{picture } ,</if>
+            <if test=" createTime!=null ">create_time = #{createTime } ,</if>
+            <if test=" updateTime!=null ">update_time = #{updateTime } ,</if>
+            <if test=" gridOverview!=null and gridOverview !='' ">grid_overview = #{gridOverview} ,</if>
+            <if test=" gridRemark!=null and gridRemark !='' ">grid_remark = #{gridRemark},</if>
+            <if test=" ruralGridType!=null and ruralGridType !='' ">rural_grid_type = #{ruralGridType},</if>
+            <if test=" isModify!=null and isModify !='' ">is_modify = #{isModify},</if>
+            <if test="peersNum != null">peers_num = #{peersNum},</if>
+            <if test="communityNum != null">community_num= #{communityNum},</if>
+            <if test="districtNum != null">district_num = #{districtNum},</if>
+            <if test="hiqUnitsNum != null">hiq_units_num = #{hiqUnitsNum},</if>
+            <if test="hiqUnitsSituation != null and hiqUnitsSituation != ''">hiq_units_situation =
+                #{hiqUnitsSituation},
+            </if>
+            <if test=" gridMainManagerPhone!=null and gridMainManagerPhone !='' ">grid_main_manager_phone =
+                #{gridMainManagerPhone},
+            </if>
+            <if test=" dutyNetworkName!=null and dutyNetworkName !='' ">duty_network_name = #{dutyNetworkName},</if>
+            <if test=" dutyNetworkCode!=null and dutyNetworkCode !='' ">duty_network_code = #{dutyNetworkCode},</if>
+            <if test=" dutyName!=null and dutyName !='' ">duty_name = #{dutyName},</if>
+            <if test=" dutyCode!=null and dutyCode !='' ">duty_code = #{dutyCode},</if>
+            <if test=" dutyPhone!=null and dutyPhone !='' ">duty_phone = #{dutyPhone},</if>
+            <if test=" bankAgencyName!=null and bankAgencyName !='' ">bank_agency_name = #{bankAgencyName},</if>
+            <if test=" bankAgencyCode!=null and bankAgencyCode !='' ">bank_agency_code = #{bankAgencyCode},</if>
+            <if test=" dutyNetworkAddress!=null and dutyNetworkAddress !='' ">duty_network_address =
+                #{dutyNetworkAddress},
+            </if>
+            <if test=" dutyTelephone!=null and dutyTelephone !='' ">duty_telephone = #{dutyTelephone},</if>
+            <if test=" isCash!=null and isCash !='' ">is_cash = #{isCash},</if>
+            <if test=" gridInspectorName!=null and gridInspectorName !='' ">grid_inspector_name = #{gridInspectorName},</if>
+            <if test=" gridInspectorPhone!=null and gridInspectorPhone !='' ">grid_inspector_phone = #{gridInspectorPhone}</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+
+    <select id="getByGridCode" resultMap="gridMessageInfoResultMap">
+        select <include refid="columns"/>
+        from grid_message_info
+        where grid_code = #{gridCode}
+        order by update_time desc
+        limit 1
+    </select>
+    <select id="getByGridName" resultType="java.lang.String" parameterType="java.lang.String">
+        select grid_code
+        from grid_message_info
+        where grid_name = #{gridName}
+    </select>
+    <select id="getGridInfo" resultType="com.kx.system.domain.anchor.AnchorPoint">
+        select a.anchor_name ,a.address_desc,d.bank_agency_name as branchBank ,d.duty_name,d.duty_phone
+        from performance_customer_info p
+                 left join  anchor_point a on  p.customer_name = a.anchor_name
+                 left join sys_dept d on p.customer_name = d.dept_name
+                 left join pa_addr_info_type e on a.belong_grid = e.code
+                 left join grid_message_info g on e.code = g.grid_code
+        where e.ancestor_codes like concat('%,',#{gridCode},',%')
+          and (
+            case
+                when g.duty_network_name is not null then g.duty_network_name != a.anchor_name
+                else true
+                end
+            )
+    </select>
+    <select id="getAllByGridCode" resultType="com.kx.system.domain.PaAddrInfoType">
+        select <include refid="columns"/>
+            from grid_message_info gmi
+        left join pa_addr_info_type p on gmi.grid_code = p.belong_grid_code
+        where addr_level=4
+          and grid_code = #{gridCode}
+    </select>
+    <select id="selectAllGrid" resultType="com.kx.system.domain.GridExport">
+        select distinct
+        p.code,
+        p.name,
+        a2.name as zjName,
+        a3.name as xyName,
+        case when p.rural_grid_type like '%0%' then '行政村'
+        when  p.rural_grid_type like '%1%' then '社区'
+        else '其他'
+        end as ruralGridType,
+        case when g.is_cash like '%0%' then '否'
+        when  g.is_cash like '%1%' then '是'
+        end as isCash,
+        g.grid_main_manager_name,
+        g.grid_main_manager_phone,
+        g.duty_network_name,
+        case when g.duty_network_name is null then b.anchor_name end as ordinaryNetwork,
+        c.serve_point_name as cServePointName ,
+        c.serve_point_addr as cServePointAddr,
+        m.import_name,
+        m.import_address,
+        v.serve_point_name as vServePointName ,
+        v.serve_point_addr as vServePointaddr,
+        r.police_name,
+        r.police_address,
+        r.un_faker_mobile,
+        r.un_faker_name,
+        r.un_faker_phone,
+        d.supervisor_name,
+        d.supervisor_phone
+        from  pa_addr_info_type p
+        left join grid_message_info g on p.code = g.grid_code
+        left join cash_service_points c on p.code = c.grid_code
+        left join village_financial_service_points v on p.code = v.grid_code
+        left join grid_rating_info r on p.parent_code = r.grid_code
+        left join grid_manage_objects m on p.code = m.grid_code
+        left join anchor_point b on p.code = b.belong_grid
+        left join grid_community_supervisors d on p.code = d.grid_code
+        left join pa_addr_info_type a2 on a2.code = p.parent_code
+        left join pa_addr_info_type a3 on a3.code = a2.parent_code
+        <where>
+            p.addr_level = 5
+            <if test=" gridCode!=null and gridCode !='' ">and g.grid_code = #{gridCode }</if>
+            <if test=" code!=null and code !='' ">and p.ancestor_codes  like concat('%,',#{code},',%')</if>
+            <if test=" gridName!=null and gridName !='' ">and g.grid_name like concat ('%',#{gridName},'%')</if>
+            <if test=" ruralGridType!=null and ruralGridType !='' ">and g.rural_grid_type = #{ruralGridType}</if>
+            <if test=" isCash!=null and isCash !='' ">and is_cash = #{isCash}</if>
+            <if test=" dutyNetworkName!=null and dutyNetworkName !='' ">and duty_network_name = #{dutyNetworkName}</if>
+            <if test=" dutyNetworkNames!=null and dutyNetworkNames.size() >0 ">
+                and
+                <foreach collection="dutyNetworkNames" item="item" open="(" close=")" separator="or">
+                    duty_network_name = #{item}
+                </foreach>
+            </if>
+        </where>
+        order by p.code;
+    </select>
+    <select id="selectAllGrids" resultType="com.kx.system.domain.ExportGrid">
+        select distinct
+        p.code,
+        p.name,
+        a2.name as zjName,
+        a3.name as xyName,
+        case when p.rural_grid_type like '%0%' then '行政村'
+        when  p.rural_grid_type like '%1%' then '社区'
+        else '其他'
+        end as ruralGridType,
+        case when g.is_cash like '%0%' then '否'
+        when  g.is_cash like '%1%' then '是'
+        end as isCash,
+        g.grid_main_manager_name,
+        g.grid_main_manager_phone,
+        g.duty_network_name,
+        case when g.duty_network_name is null then b.anchor_name end as ordinaryNetwork,
+        c.serve_point_name as cServePointName ,
+        c.serve_point_addr as cServePointAddr,
+        m.import_name,
+        m.import_address,
+        v.serve_point_name as vServePointName ,
+        v.serve_point_addr as vServePointaddr,
+        r.police_name,
+        r.police_address,
+        r.un_faker_mobile,
+        r.un_faker_name,
+        r.un_faker_phone,
+        d.supervisor_name,
+        d.supervisor_phone
+        from  pa_addr_info_type p
+        left join grid_message_info g on p.code = g.grid_code
+        left join cash_service_points c on p.code = c.grid_code
+        left join village_financial_service_points v on p.code = v.grid_code
+        left join grid_rating_info r on p.parent_code = r.grid_code
+        left join grid_manage_objects m on p.code = m.grid_code
+        left join anchor_point b on p.code = b.belong_grid
+        left join grid_community_supervisors d on p.code = d.grid_code
+        left join pa_addr_info_type a2 on a2.code = p.parent_code
+        left join pa_addr_info_type a3 on a3.code = a2.parent_code
+        <where>
+            p.addr_level = 5
+            <if test=" gridCode!=null and gridCode !='' ">and g.grid_code = #{gridCode }</if>
+            <if test=" code!=null and code !='' ">and p.ancestor_codes  like concat('%,',#{code},',%')</if>
+            <if test=" gridName!=null and gridName !='' ">and g.grid_name like concat ('%',#{gridName},'%')</if>
+            <if test=" ruralGridType!=null and ruralGridType !='' ">and g.rural_grid_type = #{ruralGridType}</if>
+            <if test=" isCash!=null and isCash !='' ">and is_cash = #{isCash}</if>
+            <if test=" dutyNetworkName!=null and dutyNetworkName !='' ">and duty_network_name = #{dutyNetworkName}</if>
+            <if test=" dutyNetworkNames!=null and dutyNetworkNames.size() >0 ">
+                and
+                <foreach collection="dutyNetworkNames" item="item" open="(" close=")" separator="or">
+                    duty_network_name = #{item}
+                </foreach>
+            </if>
+        </where>
+        order by p.code;
+    </select>
+
+
+    <update id="UpdateBatchByDeptName" parameterType="List">
+        <foreach collection="cachedDataList" item="item" separator=";" close=";">
+            update grid_message_info
+            <set>
+                duty_name = #{item.dutyName},
+                duty_telephone = #{item.dutyTelephone},
+                duty_phone = #{item.dutyPhone}
+            </set>
+            where duty_network_name = #{item.deptName}
+        </foreach>
+    </update>
+
+</mapper>

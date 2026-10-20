@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.BusinessDetailInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="businessDetailInfoResultMap" type="com.kx.system.domain.business.BusinessDetailInfo">
+        <id column="id" property="id" />
+        <result column="product_id" property="productId" />
+        <result column="field_id" property="fieldId" />
+        <result column="identity" property="identity" />
+        <result column="field_content" property="fieldContent" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="columns">
+        id, product_id, field_id, identity, field_content, create_time, update_time
+    </sql>
+
+    <!-- 查询列表 -->
+    <select id="list" parameterType="com.kx.system.domain.business.BusinessDetailInfo" resultMap="businessDetailInfoResultMap">
+        select <include refid="columns"/>  from business_detail_info
+        <where>
+            <if test=" productId!=null and productId !='' "> and product_id = #{productId } </if>
+            <if test=" fieldId!=null and fieldId !='' "> and field_id = #{fieldId } </if>
+            <if test=" identity!=null and identity !='' "> and identity = #{identity } </if>
+            <if test=" fieldContent!=null and fieldContent !='' "> and field_content = #{fieldContent } </if>
+            <if test=" createTime!=null and createTime !='' "> and create_time = #{createTime } </if>
+            <if test=" updateTime!=null and updateTime !='' "> and update_time = #{updateTime } </if>
+        </where>
+    </select>
+
+    <!-- 根据id查询 -->
+    <select id="getById"  resultMap="businessDetailInfoResultMap">
+        select <include refid="columns"/>  from business_detail_info where id = #{id}
+    </select>
+
+    <!-- 根据id删除 -->
+    <delete id="deleteById">
+        delete from  business_detail_info where  id= #{id}
+    </delete>
+
+    <!-- 新增 -->
+    <insert id="insertBusinessDetailInfo" parameterType="com.kx.system.domain.business.BusinessDetailInfo" keyProperty="id" useGeneratedKeys="true">
+        insert into business_detail_info(
+            product_id,field_id,identity,field_content,create_time,update_time,
+        )values(
+             #{productId}, #{fieldId}, #{identity}, #{fieldContent}, #{createTime}, #{updateTime},
+        )
+    </insert>
+
+    <!-- 更新 -->
+    <update id="updateBusinessDetailInfo" parameterType="com.kx.system.domain.business.BusinessDetailInfo">
+        update business_detail_info
+    <trim prefix="SET" suffixOverrides=",">
+        <if test=" productId!=null and productId !='' ">  product_id = #{productId } ,</if>
+        <if test=" fieldId!=null and fieldId !='' ">  field_id = #{fieldId } ,</if>
+        <if test=" identity!=null and identity !='' ">  identity = #{identity } ,</if>
+        <if test=" fieldContent!=null and fieldContent !='' ">  field_content = #{fieldContent } ,</if>
+        <if test=" createTime!=null and createTime !='' ">  create_time = #{createTime } ,</if>
+        <if test=" updateTime!=null and updateTime !='' ">  update_time = #{updateTime } ,</if>
+    </trim>
+     where id = #{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.QuestionRecordMapper">
+
+    <sql id="Base_Column_List">
+        id,
+        type_id,
+        content,
+        create_by,
+        create_time,
+        update_time
+    </sql>
+
+    <insert id="insert">
+        INSERT INTO
+            question_record
+        (id,
+         type_id,
+         content,
+         create_by,
+         create_time,
+         update_time
+         )
+         values
+        (
+         #{id},
+         #{typeId},
+         #{content},
+         #{createBy},
+         #{createTime},
+         #{updateTime}
+        )
+
+    </insert>
+
+    <delete id="delete" >
+        DELETE FROM question_record
+        WHERE id = #{id}
+    </delete>
+
+    <update id="update" parameterType="com.kx.system.domain.QuestionRecord">
+        UPDATE question_record
+        <set>
+            <if test="null != content and '' != content">content = #{content},</if>
+            <if test="null != updateTime ">update_time = #{updateTime}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="list" resultType="com.kx.system.domain.QuestionRecord">
+        select
+            qr.id,
+            qr.type_id,
+            qr.content,
+            su.nick_name createBy,
+            qr.create_time,
+            qr.update_time
+        from question_record qr
+        left join sys_user su on qr.create_by = su.manager_num
+        <where>
+            <if test="null != typeId ">and type_id = #{typeId}</if>
+            <if test="null != createBy and '' != createBy">and qr.create_by = #{createBy}</if>
+        </where>
+        order by qr.create_time desc
+    </select>
+
+</mapper>

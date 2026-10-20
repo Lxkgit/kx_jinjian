@@ -1,0 +1,2 @@
+com.kx.common.log.service.AsyncLogService
+com.kx.common.log.aspect.LogAspect

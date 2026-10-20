@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.CustomerGroupCategoryMapper">
+
+    <resultMap type="com.kx.system.domain.group.CustomerGroupCategory" id="CustomerGroupCategoryResult">
+        <result property="id"    column="id"    />
+        <result property="categoryName"    column="category_name"    />
+        <result property="parentId"    column="parent_id"    />
+    </resultMap>
+
+    <sql id="selectCustomerGroupCategoryVo">
+        select id, category_name, parent_id from customer_group_category
+    </sql>
+
+    <select id="selectCustomerGroupCategoryList" parameterType="com.kx.system.domain.group.CustomerGroupCategory" resultMap="CustomerGroupCategoryResult">
+        <include refid="selectCustomerGroupCategoryVo"/>
+        <where>
+            <if test="categoryName != null  and categoryName != ''"> and category_name like concat('%', #{categoryName}, '%')</if>
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+        </where>
+    </select>
+
+    <select id="selectAll" resultMap="CustomerGroupCategoryResult">
+        <include refid="selectCustomerGroupCategoryVo"/>
+    </select>
+
+    <select id="selectCustomerGroupCategoryById" parameterType="Long" resultMap="CustomerGroupCategoryResult">
+        <include refid="selectCustomerGroupCategoryVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectExist" resultMap="CustomerGroupCategoryResult">
+        <include refid="selectCustomerGroupCategoryVo"/>
+        where category_name=#{categoryName} and parent_id = #{parentId} LIMIT 1
+    </select>
+
+    <select id="selectByParentId" resultType="com.kx.system.domain.group.CustomerGroupCategory">
+        <include refid="selectCustomerGroupCategoryVo"/>
+        where parent_id = #{parentId}
+    </select>
+
+    <insert id="insertCustomerGroupCategory" parameterType="com.kx.system.domain.group.CustomerGroupCategory">
+        insert into customer_group_category
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="customerGroupCategory.categoryName != null and customerGroupCategory.categoryName != ''">category_name,</if>
+            <if test="customerGroupCategory.parentId != null">parent_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="customerGroupCategory.categoryName != null and customerGroupCategory.categoryName != ''">#{customerGroupCategory.categoryName},</if>
+            <if test="customerGroupCategory.parentId != null">#{customerGroupCategory.parentId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCustomerGroupCategory" parameterType="com.kx.system.domain.group.CustomerGroupCategory">
+        update customer_group_category
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="customerGroupCategory.categoryName != null and customerGroupCategory.categoryName != ''">category_name = #{customerGroupCategory.categoryName},</if>
+            <if test="customerGroupCategory.parentId != null">parent_id = #{customerGroupCategory.parentId},</if>
+        </trim>
+        where id = #{customerGroupCategory.id}
+    </update>
+
+    <delete id="deleteCustomerGroupCategoryById" parameterType="Long">
+        delete from customer_group_category where id = #{id}
+    </delete>
+
+    <delete id="deleteCustomerGroupCategoryByIds" parameterType="String">
+        delete from customer_group_category where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

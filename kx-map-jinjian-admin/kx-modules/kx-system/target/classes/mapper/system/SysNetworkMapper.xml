@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.SysNetworkMapper">
+
+    <resultMap type="com.kx.system.domain.model.SysNetwork" id="SysNetworkResult">
+        <result property="networkId"    column="network_id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="ancestors"    column="ancestors"    />
+        <result property="networkName"    column="network_name"    />
+        <result property="networkCode"    column="network_code"    />
+        <result property="orderNum"    column="order_num"    />
+        <result property="leader"    column="leader"    />
+        <result property="type"    column="type"    />
+        <result property="similarRank"    column="similar_rank"    />
+        <result property="phone"    column="phone"    />
+        <result property="email"    column="email"    />
+        <result property="address"    column="address"    />
+        <result property="lng"    column="lng"    />
+        <result property="lat"    column="lat"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <resultMap type="com.kx.system.domain.vo.SysNetworkVo" id="SysNetworkVoResult">
+        <result property="networkId"    column="network_id"    />
+        <result property="networkName"    column="network_name"    />
+        <result property="networkCode"    column="network_code"    />
+        <result property="ancestors"    column="ancestors"    />
+        <result property="address"    column="address"    />
+        <result property="lng"    column="lng"    />
+        <result property="lat"    column="lat"    />
+        <result property="phone"    column="phone"    />
+    </resultMap>
+
+    <sql id="selectSysNetworkVo">
+        select network_id, parent_id, ancestors, network_name, network_code, order_num, leader, type, similar_rank, phone, email, address, lng, lat, status, del_flag, create_by, create_time, update_by, update_time, area_manage_update_time from sys_network
+    </sql>
+
+    <select id="selectNetworkList" parameterType="com.kx.system.domain.model.SysNetwork" resultMap="SysNetworkResult">
+        <include refid="selectSysNetworkVo"/>
+        <where>
+             del_flag = '0'
+            <if test="networkId != null "> and network_id = #{networkId}</if>
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+            <if test="ancestors != null  and ancestors != ''"> and ancestors like concat('%', #{ancestors}, '%')</if>
+            <if test="networkName != null  and networkName != ''"> and network_name like concat('%', #{networkName}, '%')</if>
+            <if test="networkCode != null  and networkCode != ''"> and network_code = #{networkCode}</if>
+            <if test="orderNum != null "> and order_num = #{orderNum}</if>
+            <if test="leader != null  and leader != ''"> and leader = #{leader}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="similarRank != null "> and similar_rank = #{similarRank}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="email != null  and email != ''"> and email = #{email}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="lng != null  and lng != ''"> and lng = #{lng}</if>
+            <if test="lat != null  and lat != ''"> and lat = #{lat}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <!-- 数据范围过滤 -->
+        ${params.dataScope}
+        order by parent_id, order_num
+        </where>
+    </select>
+
+    <select id="selectNetworkListByRoleId" parameterType="Long" resultType="Integer">
+        select n.network_id, n.parent_id
+        from sys_network n
+            left join sys_role_network rn on n.network_id = rn.network_id
+        where rn.role_id = #{roleId}
+            and n.network_id not in (select n.network_id from sys_network n inner join sys_role_network rn on n.network_id = rn.network_id and rn.role_id = #{roleId})
+        order by n.parent_id, n.order_num
+    </select>
+
+    <select id="selectNetworkById" parameterType="Long" resultMap="SysNetworkResult">
+        <include refid="selectSysNetworkVo"/>
+        where network_id = #{networkId}
+    </select>
+
+    <select id="checkNetworkExistUser" parameterType="Long" resultType="int">
+        select count(1) from sys_user where network_id = #{networkId} and del_flag = '0'
+    </select>
+
+    <select id="hasChildByNetworkId" parameterType="Long" resultType="int">
+        select count(1) from sys_network
+        where del_flag = '0' and parent_id = #{networkId} limit 1
+    </select>
+
+    <select id="selectChildrenNetworkById" parameterType="Long" resultMap="SysNetworkResult">
+        select * from sys_network where ancestors like concat('%,', #{networkId} ,',%')
+    </select>
+
+    <select id="selectNormalChildrenNetworkById" parameterType="Long" resultType="int">
+        select count(*) from sys_network where status = 0 and del_flag = '0' and ancestors like concat('%,', #{networkId} ,',%')
+    </select>
+
+    <select id="checkNetworkNameUnique" resultMap="SysNetworkResult">
+        <include refid="selectSysNetworkVo"/>
+        where network_name=#{networkName} and parent_id = #{parentId} limit 1
+    </select>
+    <select id="selectNetworkIdByNetworkCode" parameterType="string" resultType="java.lang.Long">
+        select network_id from sys_network where network_code = #{networkCode}
+    </select>
+
+    <insert id="insertSysNetwork" parameterType="com.kx.system.domain.model.SysNetwork" useGeneratedKeys="true" keyProperty="networkId">
+        insert into sys_network
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="parentId != null">parent_id,</if>
+            <if test="ancestors != null">ancestors,</if>
+            <if test="networkName != null">network_name,</if>
+            <if test="networkCode != null">network_code,</if>
+            <if test="orderNum != null">order_num,</if>
+            <if test="leader != null">leader,</if>
+            <if test="type != null">type,</if>
+            <if test="similarRank != null">similar_rank,</if>
+            <if test="phone != null">phone,</if>
+            <if test="email != null">email,</if>
+            <if test="address != null">address,</if>
+            <if test="lng != null">lng,</if>
+            <if test="lat != null">lat,</if>
+            <if test="status != null">status,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            create_time
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="parentId != null">#{parentId},</if>
+            <if test="ancestors != null">#{ancestors},</if>
+            <if test="networkName != null">#{networkName},</if>
+            <if test="networkCode != null">#{networkCode},</if>
+            <if test="orderNum != null">#{orderNum},</if>
+            <if test="leader != null">#{leader},</if>
+            <if test="type != null">#{type},</if>
+            <if test="similarRank != null">#{similarRank},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="email != null">#{email},</if>
+            <if test="address != null">#{address},</if>
+            <if test="lng != null">#{lng},</if>
+            <if test="lat != null">#{lat},</if>
+            <if test="status != null">#{status},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            sysdate()
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+
+    <update id="updateNetwork" parameterType="com.kx.system.domain.model.SysNetwork">
+        update sys_network
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="ancestors != null">ancestors = #{ancestors},</if>
+            <if test="networkName != null">network_name = #{networkName},</if>
+            <if test="networkCode != null">network_code = #{networkCode},</if>
+            <if test="orderNum != null">order_num = #{orderNum},</if>
+            <if test="leader != null">leader = #{leader},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="similarRank != null">similar_rank = #{similarRank},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="lng != null">lng = #{lng},</if>
+            <if test="lat != null">lat = #{lat},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </trim>
+        where network_id = #{networkId}
+    </update>
+    <update id="updateNetworkChildren" parameterType="java.util.List">
+        update sys_network set ancestors =
+        <foreach collection="networks" item="item" index="index"
+            separator=" " open="case network_id" close="end">
+            when #{item.networkId} then #{item.ancestors}
+        </foreach>
+        where network_id in
+        <foreach collection="networks" item="item" index="index"
+            separator="," open="(" close=")">
+            #{item.networkId}
+        </foreach>
+    </update>
+
+     <update id="updateNetworkStatus" parameterType="com.kx.system.domain.model.SysNetwork">
+        update sys_network
+        <set>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </set>
+        where network_id in (${ancestors})
+    </update>
+
+    <update id="updateManageAreaTime">
+        update sys_network
+        <set>
+            area_manage_update_time = sysdate()
+        </set>
+        where network_id = #{belongNetworkId}
+    </update>
+
+    <select id="checkNetworkCodeUnique" parameterType="String" resultMap="SysNetworkResult">
+        <include refid="selectSysNetworkVo"/>
+        where network_code = #{networkCode} limit 1
+    </select>
+
+    <select id="selectChildrenListById" resultType="String">
+        select network_name from sys_network where network_id = #{networkId} or ancestors like concat('%,', #{networkId} ,',%')
+    </select>
+    <select id="selectNetworkByNetworkCode" parameterType="com.kx.system.domain.model.SysNetwork" resultMap="SysNetworkResult">
+        <include refid="selectSysNetworkVo"/>
+        <where>
+            del_flag = '0'
+            <if test="networkCode != null  and networkCode != ''"> and network_code = #{networkCode}</if>
+        </where>
+    </select>
+
+    <delete id="deleteNetworkById" parameterType="Long">
+        delete from sys_network where network_id = #{networkId}
+    </delete>
+
+    <select id="selectNetWorkByCode" resultMap="SysNetworkResult">
+        <include refid="selectSysNetworkVo"/>
+        where network_code = #{networkCode} limit 1
+    </select>
+
+    <select id="selectNetworkCodeById" resultType="java.lang.String">
+        SELECT network_code from sys_network where del_flag = '0' and network_id =  #{netWorkId} or ancestors like concat('%,', #{networkId} ,',%')
+    </select>
+
+    <select id="selectChildrenAndOwnNetworkById" parameterType="Long" resultMap="SysNetworkResult">
+        select * from sys_network where network_id = #{networkId} or ancestors like concat('%,', #{networkId} ,',%')
+    </select>
+
+    <select id="selectByNetWorkCode" parameterType="java.lang.String" resultMap="SysNetworkResult">
+        select * from sys_network where network_code Like concat( #{netWorkCode},'%') and del_flag = '0'
+    </select>
+
+    <select id="queryByNetWorkCode" resultMap="SysNetworkResult">
+        <include refid="selectSysNetworkVo"/>
+        where del_flag = '0' and network_code  = #{netWorkCode}
+    </select>
+
+    <select id="queryChildrenByNetWorkId" resultMap="SysNetworkResult">
+        <include refid="selectSysNetworkVo"/>
+        where del_flag = '0' and parent_id = #{networkId}
+    </select>
+
+    <select id="selectAncestorsByNetworkId" resultType="java.lang.String">
+        select ancestors from sys_network where network_id = #{networkId}
+    </select>
+
+    <select id="networkList" resultMap="SysNetworkVoResult">
+        select network_id, network_name, network_code, ancestors, address, lng, lat ,phone from sys_network
+
+        where del_flag = '0' and  parent_id != 180 and LENGTH(network_code)=6 and address is not null
+    </select>
+
+    <select id="queryByNetWorkName" resultMap="SysNetworkResult">
+        <include refid="selectSysNetworkVo"/>
+        where del_flag = '0' and network_name = #{headOffice}
+    </select>
+
+    <select id="queryAllNetWorkData" resultMap="SysNetworkResult">
+        <include refid="selectSysNetworkVo"/>
+        where del_flag = '0'
+    </select>
+
+    <select id="queryNetWorkCodes" resultType="java.lang.String">
+     select network_code from sys_network where del_flag = '0' and (network_id = #{networkId} or ancestors like concat('%,', #{networkId} ,',%'))
+    </select>
+    <select id="selectChildrenIdListById" resultType="java.lang.Long">
+        select network_id from sys_network where network_id = #{networkId} or ancestors like concat('%,', #{networkId} ,',%')
+    </select>
+
+    <select id="selectSelfAndChildrenNetworkById" resultMap="SysNetworkResult">
+         select * from sys_network where network_id = #{networkId} or ancestors like concat('%,', #{networkId} ,',%')
+    </select>
+
+    <select id="selectSecondNetworkListByName" resultMap="SysNetworkResult">
+        select network_id, network_name from sys_network
+        where LENGTH(ancestors) = 9
+        <if test="networkName!=null and networkName!=''">
+            AND network_name like concat('%', #{networkName},'%')
+        </if>
+    </select>
+    <select id="listSonIds" resultType="java.lang.Long">
+        select network_id from sys_network where parent_id in
+        <foreach collection="networkIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+    <select id="queryNetworkNames" resultType="com.kx.system.domain.vo.TaskSelectVo" >
+        select network_code as code,network_name as name
+        from sys_network
+        where ancestors = '0,100,181'
+        <bind name="pattern" value="'%' + keyword + '%'" />
+        and (network_name like #{pattern} or network_code like #{pattern})
+        group by network_code,network_name
+    </select>
+    <select id="selectByTaskIdAndName" resultType="com.kx.system.domain.model.SysNetwork">
+        SELECT
+            network_id networkId,
+            network_name networkName
+        FROM sys_network
+        WHERE network_id IN
+              (SELECT network_id FROM sys_user WHERE user_id in (SELECT user_id FROM kpi_task_item WHERE task_id = #{taskId}))
+          <if test="name != null and name != ''">
+              AND network_name LIKE CONCAT('%', #{name},'%')
+          </if>
+    </select>
+    <select id="selectByParentIdAndName" resultType="com.kx.system.domain.model.SysNetwork">
+        SELECT
+            network_id networkId,
+            network_name networkName
+        FROM
+            sys_network
+        WHERE
+            parent_id = #{parentId}
+        <if test="name != null and name != ''">
+          AND network_name LIKE CONCAT('%', #{name}, '%')
+        </if>
+    </select>
+    <select id="selectNetworkCodeByParentId" resultType="java.lang.String">
+        select network_code from sys_network where  parent_id = #{parentId}
+    </select>
+    <select id="selectNetworkCodesByTaskId" resultType="java.lang.String">
+        SELECT network_code FROM sys_network WHERE network_id IN
+           (SELECT network_id FROM sys_user WHERE user_id IN
+              (SELECT user_id FROM kpi_task_item WHERE task_id = #{taskId})
+           )
+    </select>
+    <select id="selectNetworkCodesByNetworkIds" resultType="java.lang.String">
+        SELECT network_code FROM sys_network WHERE network_id IN
+        <foreach collection="networkIdList" item="nid" open="(" separator="," close=")">
+            #{nid}
+        </foreach>
+    </select>
+    <select id="selectNetworkCodeByParentCode" resultType="java.lang.String">
+        SELECT network_code FROM sys_network WHERE parent_id IN
+        (SELECT network_id FROM sys_network WHERE network_code = #{networkCode})
+    </select>
+    <select id="selectByNetworkdIds" resultMap="SysNetworkResult">
+        <include refid="selectSysNetworkVo"/>
+        WHERE network_id IN
+        <foreach collection="networkIdList" item="nid" open="(" separator="," close=")">
+            #{nid}
+        </foreach>
+    </select>
+    <select id="selectKpiTargetByNetworkIds" resultType="com.kx.system.domain.vo.TaskSelectVo">
+        SELECT network_id id, network_name name, parent_id parentId FROM sys_network
+        WHERE network_id IN
+        <foreach collection="networkIdList" item="nid" open="(" separator="," close=")">
+            #{nid}
+        </foreach>
+    </select>
+    <select id="selectNetworkTreeByUserId" resultType="java.lang.String">
+        SELECT
+            CONCAT(SUBSTRING(sn.ancestors, 3), ',', #{userId})
+        FROM
+            sys_network sn
+                LEFT JOIN sys_user su ON sn.network_id = su.network_id
+        WHERE
+            su.user_id = #{userId}
+    </select>
+    <select id="selectByNetworkId" resultMap="SysNetworkResult">
+        <include refid="selectSysNetworkVo"/>
+        where
+        network_id = #{networkId,jdbcType=NUMERIC}
+    </select>
+
+    <select id="selectByNetworkName" resultMap="SysNetworkResult">
+        <include refid="selectSysNetworkVo"/>
+        where
+        network_name = #{networkName} limit 1
+    </select>
+
+    <select id="selectAllSysNetwork" resultMap="SysNetworkResult">
+        <include refid="selectSysNetworkVo"/>
+        where del_flag = '0'
+    </select>
+</mapper>

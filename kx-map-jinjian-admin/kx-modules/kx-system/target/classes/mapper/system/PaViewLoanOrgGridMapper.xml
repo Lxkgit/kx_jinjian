@@ -1,0 +1,630 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.PaViewLoanOrgGridMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="paViewLoanOrgGridResultMap" type="com.kx.system.domain.small.PaViewLoan">
+        <id column="loan_id" property="loanId"/>
+        <result column="loan_ftp" property="loanFtp"/>
+        <result column="org_code" property="orgCode"/>
+        <result column="grid_code" property="gridCode"/>
+        <result column="customer_type" property="customerType"/>
+        <result column="grant_credit_num" property="grantCreditNum"/>
+        <result column="grant_credit_compare_month_num" property="grantCreditCompareMonthNum"/>
+        <result column="grant_credit_compare_year_num" property="grantCreditCompareYearNum"/>
+        <result column="grant_credit_grid_inside_num" property="grantCreditGridInsideNum"/>
+        <result column="grant_credit_inside_num_ratio" property="grantCreditInsideNumRatio"/>
+        <result column="grant_credit_inside_compare_month_num" property="grantCreditInsideCompareMonthNum"/>
+        <result column="grant_credit_inside_compare_year_num" property="grantCreditInsideCompareYearNum"/>
+        <result column="grant_credit_grid_outside_num" property="grantCreditGridOutsideNum"/>
+        <result column="grant_credit_outside_num_ratio" property="grantCreditOutsideNumRatio"/>
+        <result column="grant_credit_outside_compare_month_num" property="grantCreditOutsideCompareMonthNum"/>
+        <result column="grant_credit_outside_compare_year_num" property="grantCreditOutsideCompareYearNum"/>
+        <result column="use_credit_num" property="useCreditNum"/>
+        <result column="use_credit_compare_month_num" property="useCreditCompareMonthNum"/>
+        <result column="use_credit_compare_year_num" property="useCreditCompareYearNum"/>
+        <result column="use_credit_grid_inside_num" property="useCreditGridInsideNum"/>
+        <result column="use_credit_inside_num_ratio" property="useCreditInsideNumRatio"/>
+        <result column="use_credit_inside_compare_month_num" property="useCreditInsideCompareMonthNum"/>
+        <result column="use_credit_inside_compare_year_num" property="useCreditInsideCompareYearNum"/>
+        <result column="use_credit_grid_outside_num" property="useCreditGridOutsideNum"/>
+        <result column="use_credit_outside_num_ratio" property="useCreditOutsideNumRatio"/>
+        <result column="use_credit_outside_compare_month_num" property="useCreditOutsideCompareMonthNum"/>
+        <result column="use_credit_outside_compare_year_num" property="useCreditOutsideCompareYearNum"/>
+        <result column="grant_credit_bal" property="grantCreditBal"/>
+        <result column="grant_credit_compare_month_bal" property="grantCreditCompareMonthBal"/>
+        <result column="grant_credit_compare_year_bal" property="grantCreditCompareYearBal"/>
+        <result column="grant_credit_grid_inside_bal" property="grantCreditGridInsideBal"/>
+        <result column="grant_credit_inside_bal_ratio" property="grantCreditInsideBalRatio"/>
+        <result column="grant_credit_inside_compare_month_bal" property="grantCreditInsideCompareMonthBal"/>
+        <result column="grant_credit_inside_compare_year_bal" property="grantCreditInsideCompareYearBal"/>
+        <result column="grant_credit_grid_outside_bal" property="grantCreditGridOutsideBal"/>
+        <result column="grant_credit_outside_bal_ratio" property="grantCreditOutsideBalRatio"/>
+        <result column="grant_credit_outside_compare_month_bal" property="grantCreditOutsideCompareMonthBal"/>
+        <result column="grant_credit_outside_compare_year_bal" property="grantCreditOutsideCompareYearBal"/>
+        <result column="use_credit_bal" property="useCreditBal"/>
+        <result column="use_credit_compare_month_bal" property="useCreditCompareMonthBal"/>
+        <result column="use_credit_compare_year_bal" property="useCreditCompareYearBal"/>
+        <result column="use_credit_grid_inside_bal" property="useCreditGridInsideBal"/>
+        <result column="use_credit_inside_bal_ratio" property="useCreditInsideBalRatio"/>
+        <result column="use_credit_inside_compare_month_bal" property="useCreditInsideCompareMonthBal"/>
+        <result column="use_credit_inside_compare_year_bal" property="useCreditInsideCompareYearBal"/>
+        <result column="use_credit_grid_outside_bal" property="useCreditGridOutsideBal"/>
+        <result column="use_credit_outside_bal_ratio" property="useCreditOutsideBalRatio"/>
+        <result column="use_credit_outside_compare_month_bal" property="useCreditOutsideCompareMonthBal"/>
+        <result column="use_credit_outside_compare_year_bal" property="useCreditOutsideCompareYearBal"/>
+        <result column="total_bad_bal" property="totalBadBal"/>
+        <result column="total_bad_compare_month_bal" property="totalBadCompareMonthBal"/>
+        <result column="total_bad_compare_year_bal" property="totalBadCompareYearBal"/>
+        <result column="total_bad_ratio" property="totalBadRatio"/>
+        <result column="total_bad_grid_inside_ratio" property="totalBadGridInsideRatio"/>
+        <result column="total_bad_grid_outside_ratio" property="totalBadGridOutsideRatio"/>
+        <result column="total_overdue_bal" property="totalOverdueBal"/>
+        <result column="total_overdue_compare_month_bal" property="totalOverdueCompareMonthBal"/>
+        <result column="total_overdue_compare_year_bal" property="totalOverdueCompareYearBal"/>
+        <result column="total_overdue_ratio" property="totalOverdueRatio"/>
+        <result column="total_overdue_grid_inside_ratio" property="totalOverdueGridInsideRatio"/>
+        <result column="total_overdue_grid_outside_ratio" property="totalOverdueGridOutsideRatio"/>
+        <result column="total_interest_ratio" property="totalInterestRatio"/>
+        <result column="total_interest_grid_inside_ratio" property="totalInterestGridInsideRatio"/>
+        <result column="total_interest_grid_outside_ratio" property="totalInterestGridOutsideRatio"/>
+        <result column="credit_num" property="creditNum"/>
+        <result column="credit_bal" property="creditBal"/>
+        <result column="credit_bad_bal" property="creditBadBal"/>
+        <result column="credit_bad_ratio" property="creditBadRatio"/>
+        <result column="credit_overdue_bal" property="creditOverdueBal"/>
+        <result column="credit_overdue_ratio" property="creditOverdueRatio"/>
+        <result column="ensure_num" property="ensureNum"/>
+        <result column="ensure_bal" property="ensureBal"/>
+        <result column="ensure_bad_bal" property="ensureBadBal"/>
+        <result column="ensure_bad_ratio" property="ensureBadRatio"/>
+        <result column="ensure_overdue_bal" property="ensureOverdueBal"/>
+        <result column="ensure_overdue_ratio" property="ensureOverdueRatio"/>
+        <result column="mortgage_num" property="mortgageNum"/>
+        <result column="mortgage_bal" property="mortgageBal"/>
+        <result column="mortgage_bad_bal" property="mortgageBadBal"/>
+        <result column="mortgage_bad_ratio" property="mortgageBadRatio"/>
+        <result column="mortgage_overdue_bal" property="mortgageOverdueBal"/>
+        <result column="mortgage_overdue_ratio" property="mortgageOverdueRatio"/>
+        <result column="pledge_num" property="pledgeNum"/>
+        <result column="pledge_bal" property="pledgeBal"/>
+        <result column="pledge_bad_bal" property="pledgeBadBal"/>
+        <result column="pledge_bad_ratio" property="pledgeBadRatio"/>
+        <result column="pledge_overdue_bal" property="pledgeOverdueBal"/>
+        <result column="pledge_overdue_ratio" property="pledgeOverdueRatio"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="columns">
+        loan_id, loan_ftp, org_code, grid_code, customer_type, grant_credit_num, grant_credit_compare_month_num, grant_credit_compare_year_num, grant_credit_grid_inside_num, grant_credit_inside_num_ratio, grant_credit_inside_compare_month_num, grant_credit_inside_compare_year_num, grant_credit_grid_outside_num, grant_credit_outside_num_ratio, grant_credit_outside_compare_month_num, grant_credit_outside_compare_year_num, use_credit_num, use_credit_compare_month_num, use_credit_compare_year_num, use_credit_grid_inside_num, use_credit_inside_num_ratio, use_credit_inside_compare_month_num, use_credit_inside_compare_year_num, use_credit_grid_outside_num, use_credit_outside_num_ratio, use_credit_outside_compare_month_num, use_credit_outside_compare_year_num, grant_credit_bal, grant_credit_compare_month_bal, grant_credit_compare_year_bal, grant_credit_grid_inside_bal, grant_credit_inside_bal_ratio, grant_credit_inside_compare_month_bal, grant_credit_inside_compare_year_bal, grant_credit_grid_outside_bal, grant_credit_outside_bal_ratio, grant_credit_outside_compare_month_bal, grant_credit_outside_compare_year_bal, use_credit_bal, use_credit_compare_month_bal, use_credit_compare_year_bal, use_credit_grid_inside_bal, use_credit_inside_bal_ratio, use_credit_inside_compare_month_bal, use_credit_inside_compare_year_bal, use_credit_grid_outside_bal, use_credit_outside_bal_ratio, use_credit_outside_compare_month_bal, use_credit_outside_compare_year_bal, total_bad_bal, total_bad_compare_month_bal, total_bad_compare_year_bal, total_bad_ratio, total_bad_grid_inside_ratio, total_bad_grid_outside_ratio, total_overdue_bal, total_overdue_compare_month_bal, total_overdue_compare_year_bal, total_overdue_ratio, total_overdue_grid_inside_ratio, total_overdue_grid_outside_ratio, total_interest_ratio, total_interest_grid_inside_ratio, total_interest_grid_outside_ratio, credit_num, credit_bal, credit_bad_bal, credit_bad_ratio, credit_overdue_bal, credit_overdue_ratio, ensure_num, ensure_bal, ensure_bad_bal, ensure_bad_ratio, ensure_overdue_bal, ensure_overdue_ratio, mortgage_num, mortgage_bal, mortgage_bad_bal, mortgage_bad_ratio, mortgage_overdue_bal, mortgage_overdue_ratio, pledge_num, pledge_bal, pledge_bad_bal, pledge_bad_ratio, pledge_overdue_bal, pledge_overdue_ratio, create_time, update_time
+    </sql>
+
+    <!-- 查询列表 -->
+    <select id="list" parameterType="com.kx.system.domain.small.PaViewLoan" resultMap="paViewLoanOrgGridResultMap">
+        select
+        <include refid="columns"/>
+        from pa_view_loan_org_grid
+        <where>
+            <if test=" loanFtp!=null and loanFtp !='' ">and loan_ftp = #{loanFtp }</if>
+            <if test=" orgCode!=null and orgCode !='' ">and org_code = #{orgCode }</if>
+            <if test=" gridCode!=null and gridCode !='' ">and grid_code = #{gridCode }</if>
+            <if test=" customerType!=null and customerType !='' ">and customer_type = #{customerType }</if>
+            <if test=" grantCreditNum!=null and grantCreditNum !='' ">and grant_credit_num = #{grantCreditNum }</if>
+            <if test=" grantCreditCompareMonthNum!=null and grantCreditCompareMonthNum !='' ">and
+                grant_credit_compare_month_num = #{grantCreditCompareMonthNum }
+            </if>
+            <if test=" grantCreditCompareYearNum!=null and grantCreditCompareYearNum !='' ">and
+                grant_credit_compare_year_num = #{grantCreditCompareYearNum }
+            </if>
+            <if test=" grantCreditGridInsideNum!=null and grantCreditGridInsideNum !='' ">and
+                grant_credit_grid_inside_num = #{grantCreditGridInsideNum }
+            </if>
+            <if test=" grantCreditInsideNumRatio!=null and grantCreditInsideNumRatio !='' ">and
+                grant_credit_inside_num_ratio = #{grantCreditInsideNumRatio }
+            </if>
+            <if test=" grantCreditInsideCompareMonthNum!=null and grantCreditInsideCompareMonthNum !='' ">and
+                grant_credit_inside_compare_month_num = #{grantCreditInsideCompareMonthNum }
+            </if>
+            <if test=" grantCreditInsideCompareYearNum!=null and grantCreditInsideCompareYearNum !='' ">and
+                grant_credit_inside_compare_year_num = #{grantCreditInsideCompareYearNum }
+            </if>
+            <if test=" grantCreditGridOutsideNum!=null and grantCreditGridOutsideNum !='' ">and
+                grant_credit_grid_outside_num = #{grantCreditGridOutsideNum }
+            </if>
+            <if test=" grantCreditOutsideNumRatio!=null and grantCreditOutsideNumRatio !='' ">and
+                grant_credit_outside_num_ratio = #{grantCreditOutsideNumRatio }
+            </if>
+            <if test=" grantCreditOutsideCompareMonthNum!=null and grantCreditOutsideCompareMonthNum !='' ">and
+                grant_credit_outside_compare_month_num = #{grantCreditOutsideCompareMonthNum }
+            </if>
+            <if test=" grantCreditOutsideCompareYearNum!=null and grantCreditOutsideCompareYearNum !='' ">and
+                grant_credit_outside_compare_year_num = #{grantCreditOutsideCompareYearNum }
+            </if>
+            <if test=" useCreditNum!=null and useCreditNum !='' ">and use_credit_num = #{useCreditNum }</if>
+            <if test=" useCreditCompareMonthNum!=null and useCreditCompareMonthNum !='' ">and
+                use_credit_compare_month_num = #{useCreditCompareMonthNum }
+            </if>
+            <if test=" useCreditCompareYearNum!=null and useCreditCompareYearNum !='' ">and use_credit_compare_year_num
+                = #{useCreditCompareYearNum }
+            </if>
+            <if test=" useCreditGridInsideNum!=null and useCreditGridInsideNum !='' ">and use_credit_grid_inside_num =
+                #{useCreditGridInsideNum }
+            </if>
+            <if test=" useCreditInsideNumRatio!=null and useCreditInsideNumRatio !='' ">and use_credit_inside_num_ratio
+                = #{useCreditInsideNumRatio }
+            </if>
+            <if test=" useCreditInsideCompareMonthNum!=null and useCreditInsideCompareMonthNum !='' ">and
+                use_credit_inside_compare_month_num = #{useCreditInsideCompareMonthNum }
+            </if>
+            <if test=" useCreditInsideCompareYearNum!=null and useCreditInsideCompareYearNum !='' ">and
+                use_credit_inside_compare_year_num = #{useCreditInsideCompareYearNum }
+            </if>
+            <if test=" useCreditGridOutsideNum!=null and useCreditGridOutsideNum !='' ">and use_credit_grid_outside_num
+                = #{useCreditGridOutsideNum }
+            </if>
+            <if test=" useCreditOutsideNumRatio!=null and useCreditOutsideNumRatio !='' ">and
+                use_credit_outside_num_ratio = #{useCreditOutsideNumRatio }
+            </if>
+            <if test=" useCreditOutsideCompareMonthNum!=null and useCreditOutsideCompareMonthNum !='' ">and
+                use_credit_outside_compare_month_num = #{useCreditOutsideCompareMonthNum }
+            </if>
+            <if test=" useCreditOutsideCompareYearNum!=null and useCreditOutsideCompareYearNum !='' ">and
+                use_credit_outside_compare_year_num = #{useCreditOutsideCompareYearNum }
+            </if>
+            <if test=" grantCreditBal!=null and grantCreditBal !='' ">and grant_credit_bal = #{grantCreditBal }</if>
+            <if test=" grantCreditCompareMonthBal!=null and grantCreditCompareMonthBal !='' ">and
+                grant_credit_compare_month_bal = #{grantCreditCompareMonthBal }
+            </if>
+            <if test=" grantCreditCompareYearBal!=null and grantCreditCompareYearBal !='' ">and
+                grant_credit_compare_year_bal = #{grantCreditCompareYearBal }
+            </if>
+            <if test=" grantCreditGridInsideBal!=null and grantCreditGridInsideBal !='' ">and
+                grant_credit_grid_inside_bal = #{grantCreditGridInsideBal }
+            </if>
+            <if test=" grantCreditInsideBalRatio!=null and grantCreditInsideBalRatio !='' ">and
+                grant_credit_inside_bal_ratio = #{grantCreditInsideBalRatio }
+            </if>
+            <if test=" grantCreditInsideCompareMonthBal!=null and grantCreditInsideCompareMonthBal !='' ">and
+                grant_credit_inside_compare_month_bal = #{grantCreditInsideCompareMonthBal }
+            </if>
+            <if test=" grantCreditInsideCompareYearBal!=null and grantCreditInsideCompareYearBal !='' ">and
+                grant_credit_inside_compare_year_bal = #{grantCreditInsideCompareYearBal }
+            </if>
+            <if test=" grantCreditGridOutsideBal!=null and grantCreditGridOutsideBal !='' ">and
+                grant_credit_grid_outside_bal = #{grantCreditGridOutsideBal }
+            </if>
+            <if test=" grantCreditOutsideBalRatio!=null and grantCreditOutsideBalRatio !='' ">and
+                grant_credit_outside_bal_ratio = #{grantCreditOutsideBalRatio }
+            </if>
+            <if test=" grantCreditOutsideCompareMonthBal!=null and grantCreditOutsideCompareMonthBal !='' ">and
+                grant_credit_outside_compare_month_bal = #{grantCreditOutsideCompareMonthBal }
+            </if>
+            <if test=" grantCreditOutsideCompareYearBal!=null and grantCreditOutsideCompareYearBal !='' ">and
+                grant_credit_outside_compare_year_bal = #{grantCreditOutsideCompareYearBal }
+            </if>
+            <if test=" useCreditBal!=null and useCreditBal !='' ">and use_credit_bal = #{useCreditBal }</if>
+            <if test=" useCreditCompareMonthBal!=null and useCreditCompareMonthBal !='' ">and
+                use_credit_compare_month_bal = #{useCreditCompareMonthBal }
+            </if>
+            <if test=" useCreditCompareYearBal!=null and useCreditCompareYearBal !='' ">and use_credit_compare_year_bal
+                = #{useCreditCompareYearBal }
+            </if>
+            <if test=" useCreditGridInsideBal!=null and useCreditGridInsideBal !='' ">and use_credit_grid_inside_bal =
+                #{useCreditGridInsideBal }
+            </if>
+            <if test=" useCreditInsideBalRatio!=null and useCreditInsideBalRatio !='' ">and use_credit_inside_bal_ratio
+                = #{useCreditInsideBalRatio }
+            </if>
+            <if test=" useCreditInsideCompareMonthBal!=null and useCreditInsideCompareMonthBal !='' ">and
+                use_credit_inside_compare_month_bal = #{useCreditInsideCompareMonthBal }
+            </if>
+            <if test=" useCreditInsideCompareYearBal!=null and useCreditInsideCompareYearBal !='' ">and
+                use_credit_inside_compare_year_bal = #{useCreditInsideCompareYearBal }
+            </if>
+            <if test=" useCreditGridOutsideBal!=null and useCreditGridOutsideBal !='' ">and use_credit_grid_outside_bal
+                = #{useCreditGridOutsideBal }
+            </if>
+            <if test=" useCreditOutsideBalRatio!=null and useCreditOutsideBalRatio !='' ">and
+                use_credit_outside_bal_ratio = #{useCreditOutsideBalRatio }
+            </if>
+            <if test=" useCreditOutsideCompareMonthBal!=null and useCreditOutsideCompareMonthBal !='' ">and
+                use_credit_outside_compare_month_bal = #{useCreditOutsideCompareMonthBal }
+            </if>
+            <if test=" useCreditOutsideCompareYearBal!=null and useCreditOutsideCompareYearBal !='' ">and
+                use_credit_outside_compare_year_bal = #{useCreditOutsideCompareYearBal }
+            </if>
+            <if test=" totalBadBal!=null and totalBadBal !='' ">and total_bad_bal = #{totalBadBal }</if>
+            <if test=" totalBadCompareMonthBal!=null and totalBadCompareMonthBal !='' ">and total_bad_compare_month_bal
+                = #{totalBadCompareMonthBal }
+            </if>
+            <if test=" totalBadCompareYearBal!=null and totalBadCompareYearBal !='' ">and total_bad_compare_year_bal =
+                #{totalBadCompareYearBal }
+            </if>
+            <if test=" totalBadRatio!=null and totalBadRatio !='' ">and total_bad_ratio = #{totalBadRatio }</if>
+            <if test=" totalBadGridInsideRatio!=null and totalBadGridInsideRatio !='' ">and total_bad_grid_inside_ratio
+                = #{totalBadGridInsideRatio }
+            </if>
+            <if test=" totalBadGridOutsideRatio!=null and totalBadGridOutsideRatio !='' ">and
+                total_bad_grid_outside_ratio = #{totalBadGridOutsideRatio }
+            </if>
+            <if test=" totalOverdueBal!=null and totalOverdueBal !='' ">and total_overdue_bal = #{totalOverdueBal }</if>
+            <if test=" totalOverdueCompareMonthBal!=null and totalOverdueCompareMonthBal !='' ">and
+                total_overdue_compare_month_bal = #{totalOverdueCompareMonthBal }
+            </if>
+            <if test=" totalOverdueCompareYearBal!=null and totalOverdueCompareYearBal !='' ">and
+                total_overdue_compare_year_bal = #{totalOverdueCompareYearBal }
+            </if>
+            <if test=" totalOverdueRatio!=null and totalOverdueRatio !='' ">and total_overdue_ratio =
+                #{totalOverdueRatio }
+            </if>
+            <if test=" totalOverdueGridInsideRatio!=null and totalOverdueGridInsideRatio !='' ">and
+                total_overdue_grid_inside_ratio = #{totalOverdueGridInsideRatio }
+            </if>
+            <if test=" totalOverdueGridOutsideRatio!=null and totalOverdueGridOutsideRatio !='' ">and
+                total_overdue_grid_outside_ratio = #{totalOverdueGridOutsideRatio }
+            </if>
+            <if test=" totalInterestRatio!=null and totalInterestRatio !='' ">and total_interest_ratio =
+                #{totalInterestRatio }
+            </if>
+            <if test=" totalInterestGridInsideRatio!=null and totalInterestGridInsideRatio !='' ">and
+                total_interest_grid_inside_ratio = #{totalInterestGridInsideRatio }
+            </if>
+            <if test=" totalInterestGridOutsideRatio!=null and totalInterestGridOutsideRatio !='' ">and
+                total_interest_grid_outside_ratio = #{totalInterestGridOutsideRatio }
+            </if>
+            <if test=" creditNum!=null and creditNum !='' ">and credit_num = #{creditNum }</if>
+            <if test=" creditBal!=null and creditBal !='' ">and credit_bal = #{creditBal }</if>
+            <if test=" creditBadBal!=null and creditBadBal !='' ">and credit_bad_bal = #{creditBadBal }</if>
+            <if test=" creditBadRatio!=null and creditBadRatio !='' ">and credit_bad_ratio = #{creditBadRatio }</if>
+            <if test=" creditOverdueBal!=null and creditOverdueBal !='' ">and credit_overdue_bal =
+                #{creditOverdueBal }
+            </if>
+            <if test=" creditOverdueRatio!=null and creditOverdueRatio !='' ">and credit_overdue_ratio =
+                #{creditOverdueRatio }
+            </if>
+            <if test=" ensureNum!=null and ensureNum !='' ">and ensure_num = #{ensureNum }</if>
+            <if test=" ensureBal!=null and ensureBal !='' ">and ensure_bal = #{ensureBal }</if>
+            <if test=" ensureBadBal!=null and ensureBadBal !='' ">and ensure_bad_bal = #{ensureBadBal }</if>
+            <if test=" ensureBadRatio!=null and ensureBadRatio !='' ">and ensure_bad_ratio = #{ensureBadRatio }</if>
+            <if test=" ensureOverdueBal!=null and ensureOverdueBal !='' ">and ensure_overdue_bal =
+                #{ensureOverdueBal }
+            </if>
+            <if test=" ensureOverdueRatio!=null and ensureOverdueRatio !='' ">and ensure_overdue_ratio =
+                #{ensureOverdueRatio }
+            </if>
+            <if test=" mortgageNum!=null and mortgageNum !='' ">and mortgage_num = #{mortgageNum }</if>
+            <if test=" mortgageBal!=null and mortgageBal !='' ">and mortgage_bal = #{mortgageBal }</if>
+            <if test=" mortgageBadBal!=null and mortgageBadBal !='' ">and mortgage_bad_bal = #{mortgageBadBal }</if>
+            <if test=" mortgageBadRatio!=null and mortgageBadRatio !='' ">and mortgage_bad_ratio =
+                #{mortgageBadRatio }
+            </if>
+            <if test=" mortgageOverdueBal!=null and mortgageOverdueBal !='' ">and mortgage_overdue_bal =
+                #{mortgageOverdueBal }
+            </if>
+            <if test=" mortgageOverdueRatio!=null and mortgageOverdueRatio !='' ">and mortgage_overdue_ratio =
+                #{mortgageOverdueRatio }
+            </if>
+            <if test=" pledgeNum!=null and pledgeNum !='' ">and pledge_num = #{pledgeNum }</if>
+            <if test=" pledgeBal!=null and pledgeBal !='' ">and pledge_bal = #{pledgeBal }</if>
+            <if test=" pledgeBadBal!=null and pledgeBadBal !='' ">and pledge_bad_bal = #{pledgeBadBal }</if>
+            <if test=" pledgeBadRatio!=null and pledgeBadRatio !='' ">and pledge_bad_ratio = #{pledgeBadRatio }</if>
+            <if test=" pledgeOverdueBal!=null and pledgeOverdueBal !='' ">and pledge_overdue_bal =
+                #{pledgeOverdueBal }
+            </if>
+            <if test=" pledgeOverdueRatio!=null and pledgeOverdueRatio !='' ">and pledge_overdue_ratio =
+                #{pledgeOverdueRatio }
+            </if>
+            <if test=" createTime!=null and createTime !='' ">and create_time = #{createTime }</if>
+            <if test=" updateTime!=null and updateTime !='' ">and update_time = #{updateTime }</if>
+        </where>
+    </select>
+
+    <!-- 根据id查询 -->
+    <select id="getById" resultMap="paViewLoanOrgGridResultMap">
+        select
+        <include refid="columns"/>
+        from pa_view_loan_org_grid where loan_id = #{id}
+    </select>
+
+    <!-- 根据id删除 -->
+    <delete id="deleteById">
+        delete from  pa_view_loan_org_grid where  loan_id= #{id}
+    </delete>
+    <delete id="truncate">
+        truncate table pa_view_loan_org_grid
+    </delete>
+
+    <!-- 新增 -->
+    <insert id="insertPaViewLoanOrgGrid" parameterType="com.kx.system.domain.small.PaViewLoan" keyProperty="id"
+            useGeneratedKeys="true">
+        insert into pa_view_loan_org_grid(
+            loan_ftp,org_code,grid_code,customer_type,grant_credit_num,grant_credit_compare_month_num,grant_credit_compare_year_num,grant_credit_grid_inside_num,grant_credit_inside_num_ratio,grant_credit_inside_compare_month_num,grant_credit_inside_compare_year_num,grant_credit_grid_outside_num,grant_credit_outside_num_ratio,grant_credit_outside_compare_month_num,grant_credit_outside_compare_year_num,use_credit_num,use_credit_compare_month_num,use_credit_compare_year_num,use_credit_grid_inside_num,use_credit_inside_num_ratio,use_credit_inside_compare_month_num,use_credit_inside_compare_year_num,use_credit_grid_outside_num,use_credit_outside_num_ratio,use_credit_outside_compare_month_num,use_credit_outside_compare_year_num,grant_credit_bal,grant_credit_compare_month_bal,grant_credit_compare_year_bal,grant_credit_grid_inside_bal,grant_credit_inside_bal_ratio,grant_credit_inside_compare_month_bal,grant_credit_inside_compare_year_bal,grant_credit_grid_outside_bal,grant_credit_outside_bal_ratio,grant_credit_outside_compare_month_bal,grant_credit_outside_compare_year_bal,use_credit_bal,use_credit_compare_month_bal,use_credit_compare_year_bal,use_credit_grid_inside_bal,use_credit_inside_bal_ratio,use_credit_inside_compare_month_bal,use_credit_inside_compare_year_bal,use_credit_grid_outside_bal,use_credit_outside_bal_ratio,use_credit_outside_compare_month_bal,use_credit_outside_compare_year_bal,total_bad_bal,total_bad_compare_month_bal,total_bad_compare_year_bal,total_bad_ratio,total_bad_grid_inside_ratio,total_bad_grid_outside_ratio,total_overdue_bal,total_overdue_compare_month_bal,total_overdue_compare_year_bal,total_overdue_ratio,total_overdue_grid_inside_ratio,total_overdue_grid_outside_ratio,total_interest_ratio,total_interest_grid_inside_ratio,total_interest_grid_outside_ratio,credit_num,credit_bal,credit_bad_bal,credit_bad_ratio,credit_overdue_bal,credit_overdue_ratio,ensure_num,ensure_bal,ensure_bad_bal,ensure_bad_ratio,ensure_overdue_bal,ensure_overdue_ratio,mortgage_num,mortgage_bal,mortgage_bad_bal,mortgage_bad_ratio,mortgage_overdue_bal,mortgage_overdue_ratio,pledge_num,pledge_bal,pledge_bad_bal,pledge_bad_ratio,pledge_overdue_bal,pledge_overdue_ratio,create_time,update_time,
+        )values(
+             #{loanFtp}, #{orgCode}, #{gridCode}, #{customerType}, #{grantCreditNum}, #{grantCreditCompareMonthNum}, #{grantCreditCompareYearNum}, #{grantCreditGridInsideNum}, #{grantCreditInsideNumRatio}, #{grantCreditInsideCompareMonthNum}, #{grantCreditInsideCompareYearNum}, #{grantCreditGridOutsideNum}, #{grantCreditOutsideNumRatio}, #{grantCreditOutsideCompareMonthNum}, #{grantCreditOutsideCompareYearNum}, #{useCreditNum}, #{useCreditCompareMonthNum}, #{useCreditCompareYearNum}, #{useCreditGridInsideNum}, #{useCreditInsideNumRatio}, #{useCreditInsideCompareMonthNum}, #{useCreditInsideCompareYearNum}, #{useCreditGridOutsideNum}, #{useCreditOutsideNumRatio}, #{useCreditOutsideCompareMonthNum}, #{useCreditOutsideCompareYearNum}, #{grantCreditBal}, #{grantCreditCompareMonthBal}, #{grantCreditCompareYearBal}, #{grantCreditGridInsideBal}, #{grantCreditInsideBalRatio}, #{grantCreditInsideCompareMonthBal}, #{grantCreditInsideCompareYearBal}, #{grantCreditGridOutsideBal}, #{grantCreditOutsideBalRatio}, #{grantCreditOutsideCompareMonthBal}, #{grantCreditOutsideCompareYearBal}, #{useCreditBal}, #{useCreditCompareMonthBal}, #{useCreditCompareYearBal}, #{useCreditGridInsideBal}, #{useCreditInsideBalRatio}, #{useCreditInsideCompareMonthBal}, #{useCreditInsideCompareYearBal}, #{useCreditGridOutsideBal}, #{useCreditOutsideBalRatio}, #{useCreditOutsideCompareMonthBal}, #{useCreditOutsideCompareYearBal}, #{totalBadBal}, #{totalBadCompareMonthBal}, #{totalBadCompareYearBal}, #{totalBadRatio}, #{totalBadGridInsideRatio}, #{totalBadGridOutsideRatio}, #{totalOverdueBal}, #{totalOverdueCompareMonthBal}, #{totalOverdueCompareYearBal}, #{totalOverdueRatio}, #{totalOverdueGridInsideRatio}, #{totalOverdueGridOutsideRatio}, #{totalInterestRatio}, #{totalInterestGridInsideRatio}, #{totalInterestGridOutsideRatio}, #{creditNum}, #{creditBal}, #{creditBadBal}, #{creditBadRatio}, #{creditOverdueBal}, #{creditOverdueRatio}, #{ensureNum}, #{ensureBal}, #{ensureBadBal}, #{ensureBadRatio}, #{ensureOverdueBal}, #{ensureOverdueRatio}, #{mortgageNum}, #{mortgageBal}, #{mortgageBadBal}, #{mortgageBadRatio}, #{mortgageOverdueBal}, #{mortgageOverdueRatio}, #{pledgeNum}, #{pledgeBal}, #{pledgeBadBal}, #{pledgeBadRatio}, #{pledgeOverdueBal}, #{pledgeOverdueRatio}, #{createTime}, #{updateTime},
+        )
+    </insert>
+
+    <insert id="batchInsert">
+        insert into pa_view_loan_org_grid(
+        loan_ftp,org_code,grid_code,customer_type,grant_credit_num,grant_credit_compare_month_num,grant_credit_compare_year_num,grant_credit_grid_inside_num,grant_credit_inside_num_ratio,grant_credit_inside_compare_month_num,grant_credit_inside_compare_year_num,grant_credit_grid_outside_num,grant_credit_outside_num_ratio,grant_credit_outside_compare_month_num,grant_credit_outside_compare_year_num,use_credit_num,use_credit_compare_month_num,use_credit_compare_year_num,use_credit_grid_inside_num,use_credit_inside_num_ratio,use_credit_inside_compare_month_num,use_credit_inside_compare_year_num,use_credit_grid_outside_num,use_credit_outside_num_ratio,use_credit_outside_compare_month_num,use_credit_outside_compare_year_num,grant_credit_bal,grant_credit_compare_month_bal,grant_credit_compare_year_bal,grant_credit_grid_inside_bal,grant_credit_inside_bal_ratio,grant_credit_inside_compare_month_bal,grant_credit_inside_compare_year_bal,grant_credit_grid_outside_bal,grant_credit_outside_bal_ratio,grant_credit_outside_compare_month_bal,grant_credit_outside_compare_year_bal,use_credit_bal,use_credit_compare_month_bal,use_credit_compare_year_bal,use_credit_grid_inside_bal,use_credit_inside_bal_ratio,use_credit_inside_compare_month_bal,use_credit_inside_compare_year_bal,use_credit_grid_outside_bal,use_credit_outside_bal_ratio,use_credit_outside_compare_month_bal,use_credit_outside_compare_year_bal,total_bad_bal,total_bad_compare_month_bal,total_bad_compare_year_bal,total_bad_ratio,total_bad_grid_inside_ratio,total_bad_grid_outside_ratio,total_overdue_bal,total_overdue_compare_month_bal,total_overdue_compare_year_bal,total_overdue_ratio,total_overdue_grid_inside_ratio,total_overdue_grid_outside_ratio,total_interest_ratio,total_interest_grid_inside_ratio,total_interest_grid_outside_ratio,credit_num,credit_bal,credit_bad_bal,credit_bad_ratio,credit_overdue_bal,credit_overdue_ratio,ensure_num,ensure_bal,ensure_bad_bal,ensure_bad_ratio,ensure_overdue_bal,ensure_overdue_ratio,mortgage_num,mortgage_bal,mortgage_bad_bal,mortgage_bad_ratio,mortgage_overdue_bal,mortgage_overdue_ratio,pledge_num,pledge_bal,pledge_bad_bal,pledge_bad_ratio,pledge_overdue_bal,pledge_overdue_ratio,create_time,update_time
+        ) values
+        <foreach collection="paViewLoans" item="c" separator=",">
+            (
+            #{c.loanFtp}, #{c.orgCode}, #{c.gridCode}, #{c.customerType}, #{c.grantCreditNum},
+            #{c.grantCreditCompareMonthNum}, #{c.grantCreditCompareYearNum}, #{c.grantCreditGridInsideNum},
+            #{c.grantCreditInsideNumRatio}, #{c.grantCreditInsideCompareMonthNum}, #{c.grantCreditInsideCompareYearNum},
+            #{c.grantCreditGridOutsideNum}, #{c.grantCreditOutsideNumRatio}, #{c.grantCreditOutsideCompareMonthNum},
+            #{c.grantCreditOutsideCompareYearNum}, #{c.useCreditNum}, #{c.useCreditCompareMonthNum},
+            #{c.useCreditCompareYearNum}, #{c.useCreditGridInsideNum}, #{c.useCreditInsideNumRatio},
+            #{c.useCreditInsideCompareMonthNum}, #{c.useCreditInsideCompareYearNum}, #{c.useCreditGridOutsideNum},
+            #{c.useCreditOutsideNumRatio}, #{c.useCreditOutsideCompareMonthNum}, #{c.useCreditOutsideCompareYearNum},
+            #{c.grantCreditBal}, #{c.grantCreditCompareMonthBal}, #{c.grantCreditCompareYearBal},
+            #{c.grantCreditGridInsideBal}, #{c.grantCreditInsideBalRatio}, #{c.grantCreditInsideCompareMonthBal},
+            #{c.grantCreditInsideCompareYearBal}, #{c.grantCreditGridOutsideBal}, #{c.grantCreditOutsideBalRatio},
+            #{c.grantCreditOutsideCompareMonthBal}, #{c.grantCreditOutsideCompareYearBal}, #{c.useCreditBal},
+            #{c.useCreditCompareMonthBal}, #{c.useCreditCompareYearBal}, #{c.useCreditGridInsideBal},
+            #{c.useCreditInsideBalRatio}, #{c.useCreditInsideCompareMonthBal}, #{c.useCreditInsideCompareYearBal},
+            #{c.useCreditGridOutsideBal}, #{c.useCreditOutsideBalRatio}, #{c.useCreditOutsideCompareMonthBal},
+            #{c.useCreditOutsideCompareYearBal}, #{c.totalBadBal}, #{c.totalBadCompareMonthBal},
+            #{c.totalBadCompareYearBal}, #{c.totalBadRatio}, #{c.totalBadGridInsideRatio},
+            #{c.totalBadGridOutsideRatio}, #{c.totalOverdueBal}, #{c.totalOverdueCompareMonthBal},
+            #{c.totalOverdueCompareYearBal}, #{c.totalOverdueRatio}, #{c.totalOverdueGridInsideRatio},
+            #{c.totalOverdueGridOutsideRatio}, #{c.totalInterestRatio}, #{c.totalInterestGridInsideRatio},
+            #{c.totalInterestGridOutsideRatio}, #{c.creditNum}, #{c.creditBal}, #{c.creditBadBal}, #{c.creditBadRatio},
+            #{c.creditOverdueBal}, #{c.creditOverdueRatio}, #{c.ensureNum}, #{c.ensureBal}, #{c.ensureBadBal},
+            #{c.ensureBadRatio}, #{c.ensureOverdueBal}, #{c.ensureOverdueRatio}, #{c.mortgageNum}, #{c.mortgageBal},
+            #{c.mortgageBadBal}, #{c.mortgageBadRatio}, #{c.mortgageOverdueBal}, #{c.mortgageOverdueRatio},
+            #{c.pledgeNum}, #{c.pledgeBal}, #{c.pledgeBadBal}, #{c.pledgeBadRatio}, #{c.pledgeOverdueBal},
+            #{c.pledgeOverdueRatio}, now(), now()
+            )
+        </foreach>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="updatePaViewLoanOrgGrid" parameterType="com.kx.system.domain.small.PaViewLoan">
+        update pa_view_loan_org_grid
+        <trim prefix="SET" suffixOverrides=",">
+            <if test=" loanFtp!=null and loanFtp !='' ">loan_ftp = #{loanFtp } ,</if>
+            <if test=" orgCode!=null and orgCode !='' ">org_code = #{orgCode } ,</if>
+            <if test=" gridCode!=null and gridCode !='' ">grid_code = #{gridCode } ,</if>
+            <if test=" customerType!=null and customerType !='' ">customer_type = #{customerType } ,</if>
+            <if test=" grantCreditNum!=null and grantCreditNum !='' ">grant_credit_num = #{grantCreditNum } ,</if>
+            <if test=" grantCreditCompareMonthNum!=null and grantCreditCompareMonthNum !='' ">
+                grant_credit_compare_month_num = #{grantCreditCompareMonthNum } ,
+            </if>
+            <if test=" grantCreditCompareYearNum!=null and grantCreditCompareYearNum !='' ">
+                grant_credit_compare_year_num = #{grantCreditCompareYearNum } ,
+            </if>
+            <if test=" grantCreditGridInsideNum!=null and grantCreditGridInsideNum !='' ">grant_credit_grid_inside_num =
+                #{grantCreditGridInsideNum } ,
+            </if>
+            <if test=" grantCreditInsideNumRatio!=null and grantCreditInsideNumRatio !='' ">
+                grant_credit_inside_num_ratio = #{grantCreditInsideNumRatio } ,
+            </if>
+            <if test=" grantCreditInsideCompareMonthNum!=null and grantCreditInsideCompareMonthNum !='' ">
+                grant_credit_inside_compare_month_num = #{grantCreditInsideCompareMonthNum } ,
+            </if>
+            <if test=" grantCreditInsideCompareYearNum!=null and grantCreditInsideCompareYearNum !='' ">
+                grant_credit_inside_compare_year_num = #{grantCreditInsideCompareYearNum } ,
+            </if>
+            <if test=" grantCreditGridOutsideNum!=null and grantCreditGridOutsideNum !='' ">
+                grant_credit_grid_outside_num = #{grantCreditGridOutsideNum } ,
+            </if>
+            <if test=" grantCreditOutsideNumRatio!=null and grantCreditOutsideNumRatio !='' ">
+                grant_credit_outside_num_ratio = #{grantCreditOutsideNumRatio } ,
+            </if>
+            <if test=" grantCreditOutsideCompareMonthNum!=null and grantCreditOutsideCompareMonthNum !='' ">
+                grant_credit_outside_compare_month_num = #{grantCreditOutsideCompareMonthNum } ,
+            </if>
+            <if test=" grantCreditOutsideCompareYearNum!=null and grantCreditOutsideCompareYearNum !='' ">
+                grant_credit_outside_compare_year_num = #{grantCreditOutsideCompareYearNum } ,
+            </if>
+            <if test=" useCreditNum!=null and useCreditNum !='' ">use_credit_num = #{useCreditNum } ,</if>
+            <if test=" useCreditCompareMonthNum!=null and useCreditCompareMonthNum !='' ">use_credit_compare_month_num =
+                #{useCreditCompareMonthNum } ,
+            </if>
+            <if test=" useCreditCompareYearNum!=null and useCreditCompareYearNum !='' ">use_credit_compare_year_num =
+                #{useCreditCompareYearNum } ,
+            </if>
+            <if test=" useCreditGridInsideNum!=null and useCreditGridInsideNum !='' ">use_credit_grid_inside_num =
+                #{useCreditGridInsideNum } ,
+            </if>
+            <if test=" useCreditInsideNumRatio!=null and useCreditInsideNumRatio !='' ">use_credit_inside_num_ratio =
+                #{useCreditInsideNumRatio } ,
+            </if>
+            <if test=" useCreditInsideCompareMonthNum!=null and useCreditInsideCompareMonthNum !='' ">
+                use_credit_inside_compare_month_num = #{useCreditInsideCompareMonthNum } ,
+            </if>
+            <if test=" useCreditInsideCompareYearNum!=null and useCreditInsideCompareYearNum !='' ">
+                use_credit_inside_compare_year_num = #{useCreditInsideCompareYearNum } ,
+            </if>
+            <if test=" useCreditGridOutsideNum!=null and useCreditGridOutsideNum !='' ">use_credit_grid_outside_num =
+                #{useCreditGridOutsideNum } ,
+            </if>
+            <if test=" useCreditOutsideNumRatio!=null and useCreditOutsideNumRatio !='' ">use_credit_outside_num_ratio =
+                #{useCreditOutsideNumRatio } ,
+            </if>
+            <if test=" useCreditOutsideCompareMonthNum!=null and useCreditOutsideCompareMonthNum !='' ">
+                use_credit_outside_compare_month_num = #{useCreditOutsideCompareMonthNum } ,
+            </if>
+            <if test=" useCreditOutsideCompareYearNum!=null and useCreditOutsideCompareYearNum !='' ">
+                use_credit_outside_compare_year_num = #{useCreditOutsideCompareYearNum } ,
+            </if>
+            <if test=" grantCreditBal!=null and grantCreditBal !='' ">grant_credit_bal = #{grantCreditBal } ,</if>
+            <if test=" grantCreditCompareMonthBal!=null and grantCreditCompareMonthBal !='' ">
+                grant_credit_compare_month_bal = #{grantCreditCompareMonthBal } ,
+            </if>
+            <if test=" grantCreditCompareYearBal!=null and grantCreditCompareYearBal !='' ">
+                grant_credit_compare_year_bal = #{grantCreditCompareYearBal } ,
+            </if>
+            <if test=" grantCreditGridInsideBal!=null and grantCreditGridInsideBal !='' ">grant_credit_grid_inside_bal =
+                #{grantCreditGridInsideBal } ,
+            </if>
+            <if test=" grantCreditInsideBalRatio!=null and grantCreditInsideBalRatio !='' ">
+                grant_credit_inside_bal_ratio = #{grantCreditInsideBalRatio } ,
+            </if>
+            <if test=" grantCreditInsideCompareMonthBal!=null and grantCreditInsideCompareMonthBal !='' ">
+                grant_credit_inside_compare_month_bal = #{grantCreditInsideCompareMonthBal } ,
+            </if>
+            <if test=" grantCreditInsideCompareYearBal!=null and grantCreditInsideCompareYearBal !='' ">
+                grant_credit_inside_compare_year_bal = #{grantCreditInsideCompareYearBal } ,
+            </if>
+            <if test=" grantCreditGridOutsideBal!=null and grantCreditGridOutsideBal !='' ">
+                grant_credit_grid_outside_bal = #{grantCreditGridOutsideBal } ,
+            </if>
+            <if test=" grantCreditOutsideBalRatio!=null and grantCreditOutsideBalRatio !='' ">
+                grant_credit_outside_bal_ratio = #{grantCreditOutsideBalRatio } ,
+            </if>
+            <if test=" grantCreditOutsideCompareMonthBal!=null and grantCreditOutsideCompareMonthBal !='' ">
+                grant_credit_outside_compare_month_bal = #{grantCreditOutsideCompareMonthBal } ,
+            </if>
+            <if test=" grantCreditOutsideCompareYearBal!=null and grantCreditOutsideCompareYearBal !='' ">
+                grant_credit_outside_compare_year_bal = #{grantCreditOutsideCompareYearBal } ,
+            </if>
+            <if test=" useCreditBal!=null and useCreditBal !='' ">use_credit_bal = #{useCreditBal } ,</if>
+            <if test=" useCreditCompareMonthBal!=null and useCreditCompareMonthBal !='' ">use_credit_compare_month_bal =
+                #{useCreditCompareMonthBal } ,
+            </if>
+            <if test=" useCreditCompareYearBal!=null and useCreditCompareYearBal !='' ">use_credit_compare_year_bal =
+                #{useCreditCompareYearBal } ,
+            </if>
+            <if test=" useCreditGridInsideBal!=null and useCreditGridInsideBal !='' ">use_credit_grid_inside_bal =
+                #{useCreditGridInsideBal } ,
+            </if>
+            <if test=" useCreditInsideBalRatio!=null and useCreditInsideBalRatio !='' ">use_credit_inside_bal_ratio =
+                #{useCreditInsideBalRatio } ,
+            </if>
+            <if test=" useCreditInsideCompareMonthBal!=null and useCreditInsideCompareMonthBal !='' ">
+                use_credit_inside_compare_month_bal = #{useCreditInsideCompareMonthBal } ,
+            </if>
+            <if test=" useCreditInsideCompareYearBal!=null and useCreditInsideCompareYearBal !='' ">
+                use_credit_inside_compare_year_bal = #{useCreditInsideCompareYearBal } ,
+            </if>
+            <if test=" useCreditGridOutsideBal!=null and useCreditGridOutsideBal !='' ">use_credit_grid_outside_bal =
+                #{useCreditGridOutsideBal } ,
+            </if>
+            <if test=" useCreditOutsideBalRatio!=null and useCreditOutsideBalRatio !='' ">use_credit_outside_bal_ratio =
+                #{useCreditOutsideBalRatio } ,
+            </if>
+            <if test=" useCreditOutsideCompareMonthBal!=null and useCreditOutsideCompareMonthBal !='' ">
+                use_credit_outside_compare_month_bal = #{useCreditOutsideCompareMonthBal } ,
+            </if>
+            <if test=" useCreditOutsideCompareYearBal!=null and useCreditOutsideCompareYearBal !='' ">
+                use_credit_outside_compare_year_bal = #{useCreditOutsideCompareYearBal } ,
+            </if>
+            <if test=" totalBadBal!=null and totalBadBal !='' ">total_bad_bal = #{totalBadBal } ,</if>
+            <if test=" totalBadCompareMonthBal!=null and totalBadCompareMonthBal !='' ">total_bad_compare_month_bal =
+                #{totalBadCompareMonthBal } ,
+            </if>
+            <if test=" totalBadCompareYearBal!=null and totalBadCompareYearBal !='' ">total_bad_compare_year_bal =
+                #{totalBadCompareYearBal } ,
+            </if>
+            <if test=" totalBadRatio!=null and totalBadRatio !='' ">total_bad_ratio = #{totalBadRatio } ,</if>
+            <if test=" totalBadGridInsideRatio!=null and totalBadGridInsideRatio !='' ">total_bad_grid_inside_ratio =
+                #{totalBadGridInsideRatio } ,
+            </if>
+            <if test=" totalBadGridOutsideRatio!=null and totalBadGridOutsideRatio !='' ">total_bad_grid_outside_ratio =
+                #{totalBadGridOutsideRatio } ,
+            </if>
+            <if test=" totalOverdueBal!=null and totalOverdueBal !='' ">total_overdue_bal = #{totalOverdueBal } ,</if>
+            <if test=" totalOverdueCompareMonthBal!=null and totalOverdueCompareMonthBal !='' ">
+                total_overdue_compare_month_bal = #{totalOverdueCompareMonthBal } ,
+            </if>
+            <if test=" totalOverdueCompareYearBal!=null and totalOverdueCompareYearBal !='' ">
+                total_overdue_compare_year_bal = #{totalOverdueCompareYearBal } ,
+            </if>
+            <if test=" totalOverdueRatio!=null and totalOverdueRatio !='' ">total_overdue_ratio = #{totalOverdueRatio }
+                ,
+            </if>
+            <if test=" totalOverdueGridInsideRatio!=null and totalOverdueGridInsideRatio !='' ">
+                total_overdue_grid_inside_ratio = #{totalOverdueGridInsideRatio } ,
+            </if>
+            <if test=" totalOverdueGridOutsideRatio!=null and totalOverdueGridOutsideRatio !='' ">
+                total_overdue_grid_outside_ratio = #{totalOverdueGridOutsideRatio } ,
+            </if>
+            <if test=" totalInterestRatio!=null and totalInterestRatio !='' ">total_interest_ratio =
+                #{totalInterestRatio } ,
+            </if>
+            <if test=" totalInterestGridInsideRatio!=null and totalInterestGridInsideRatio !='' ">
+                total_interest_grid_inside_ratio = #{totalInterestGridInsideRatio } ,
+            </if>
+            <if test=" totalInterestGridOutsideRatio!=null and totalInterestGridOutsideRatio !='' ">
+                total_interest_grid_outside_ratio = #{totalInterestGridOutsideRatio } ,
+            </if>
+            <if test=" creditNum!=null and creditNum !='' ">credit_num = #{creditNum } ,</if>
+            <if test=" creditBal!=null and creditBal !='' ">credit_bal = #{creditBal } ,</if>
+            <if test=" creditBadBal!=null and creditBadBal !='' ">credit_bad_bal = #{creditBadBal } ,</if>
+            <if test=" creditBadRatio!=null and creditBadRatio !='' ">credit_bad_ratio = #{creditBadRatio } ,</if>
+            <if test=" creditOverdueBal!=null and creditOverdueBal !='' ">credit_overdue_bal = #{creditOverdueBal } ,
+            </if>
+            <if test=" creditOverdueRatio!=null and creditOverdueRatio !='' ">credit_overdue_ratio =
+                #{creditOverdueRatio } ,
+            </if>
+            <if test=" ensureNum!=null and ensureNum !='' ">ensure_num = #{ensureNum } ,</if>
+            <if test=" ensureBal!=null and ensureBal !='' ">ensure_bal = #{ensureBal } ,</if>
+            <if test=" ensureBadBal!=null and ensureBadBal !='' ">ensure_bad_bal = #{ensureBadBal } ,</if>
+            <if test=" ensureBadRatio!=null and ensureBadRatio !='' ">ensure_bad_ratio = #{ensureBadRatio } ,</if>
+            <if test=" ensureOverdueBal!=null and ensureOverdueBal !='' ">ensure_overdue_bal = #{ensureOverdueBal } ,
+            </if>
+            <if test=" ensureOverdueRatio!=null and ensureOverdueRatio !='' ">ensure_overdue_ratio =
+                #{ensureOverdueRatio } ,
+            </if>
+            <if test=" mortgageNum!=null and mortgageNum !='' ">mortgage_num = #{mortgageNum } ,</if>
+            <if test=" mortgageBal!=null and mortgageBal !='' ">mortgage_bal = #{mortgageBal } ,</if>
+            <if test=" mortgageBadBal!=null and mortgageBadBal !='' ">mortgage_bad_bal = #{mortgageBadBal } ,</if>
+            <if test=" mortgageBadRatio!=null and mortgageBadRatio !='' ">mortgage_bad_ratio = #{mortgageBadRatio } ,
+            </if>
+            <if test=" mortgageOverdueBal!=null and mortgageOverdueBal !='' ">mortgage_overdue_bal =
+                #{mortgageOverdueBal } ,
+            </if>
+            <if test=" mortgageOverdueRatio!=null and mortgageOverdueRatio !='' ">mortgage_overdue_ratio =
+                #{mortgageOverdueRatio } ,
+            </if>
+            <if test=" pledgeNum!=null and pledgeNum !='' ">pledge_num = #{pledgeNum } ,</if>
+            <if test=" pledgeBal!=null and pledgeBal !='' ">pledge_bal = #{pledgeBal } ,</if>
+            <if test=" pledgeBadBal!=null and pledgeBadBal !='' ">pledge_bad_bal = #{pledgeBadBal } ,</if>
+            <if test=" pledgeBadRatio!=null and pledgeBadRatio !='' ">pledge_bad_ratio = #{pledgeBadRatio } ,</if>
+            <if test=" pledgeOverdueBal!=null and pledgeOverdueBal !='' ">pledge_overdue_bal = #{pledgeOverdueBal } ,
+            </if>
+            <if test=" pledgeOverdueRatio!=null and pledgeOverdueRatio !='' ">pledge_overdue_ratio =
+                #{pledgeOverdueRatio } ,
+            </if>
+            <if test=" createTime!=null and createTime !='' ">create_time = #{createTime } ,</if>
+            <if test=" updateTime!=null and updateTime !='' ">update_time = #{updateTime } ,</if>
+        </trim>
+        where loan_id = #{id}
+    </update>
+
+
+    <select id="getByQuery" parameterType="com.kx.system.domain.param.PaViewSmallParam"
+            resultMap="paViewLoanOrgGridResultMap">
+        select
+        <include refid="columns"/>
+        from pa_view_loan_org_grid
+        <where>
+            <if test=" gridCode!=null and gridCode !='' and  gridCodes==null ">and grid_code = #{gridCode }</if>
+            <if test=" customerType!=null and customerType !='' ">and customer_type = #{customerType }</if>
+            <if test=" orgCodes!=null and orgCodes != ''">
+                and org_code = #{orgCodes}
+            </if>
+            <if test=" gridCodes!=null and gridCodes.size>0">
+                and grid_code in
+                <foreach item="item" collection="gridCodes" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="statisticed" resultType="java.lang.Boolean">
+        select count(1) from pa_view_loan_org_grid where org_code = '100000';
+    </select>
+    <select id="listGridLevel4" resultType="com.kx.system.domain.small.PaViewLoan">
+        select v.*
+        from pa_view_loan_org_grid v
+        left join pa_addr_info_type t on v.org_code = t.code
+        where t.addr_level = 4
+    </select>
+
+</mapper>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.kx</groupId>
+        <artifactId>kx</artifactId>
+        <version>3.6.3</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <modules>
+        <module>kx-system</module>
+        <module>kx-gen</module>
+        <module>kx-job</module>
+        <module>kx-file</module>
+    </modules>
+
+    <artifactId>kx-modules</artifactId>
+    <packaging>pom</packaging>
+
+    <description>
+        kx-modules业务模块
+    </description>
+
+</project>

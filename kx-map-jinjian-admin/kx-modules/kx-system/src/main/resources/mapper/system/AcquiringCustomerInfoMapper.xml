@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.AcquiringCustomerInfoMapper">
+
+    <resultMap type="com.kx.system.domain.customer.AcquiringCustomerInfo" id="AcquiringCustomerInfoResult">
+        <result property="id"    column="id"    />
+        <result property="customNm"    column="custom_nm"    />
+        <result property="customName"    column="custom_name"    />
+        <result property="customShortName"    column="custom_short_name"    />
+        <result property="businessLicenseNum"    column="business_license_num"    />
+        <result property="legalPersonName"    column="legal_person_name"    />
+        <result property="legalPersonIdentityNum"    column="legal_person_identity_num"    />
+        <result property="settlementAccountNum"    column="settlement_account_num"    />
+        <result property="customType"    column="custom_type"    />
+        <result property="belongGridCode"    column="belong_grid_code"    />
+        <result property="belongOrgCode"    column="belong_org_code"    />
+    </resultMap>
+
+    <sql id="selectAcquiringCustomerInfoVo">
+        select id, custom_nm, custom_name, custom_short_name, business_license_num, legal_person_name, legal_person_identity_num, settlement_account_num, custom_type,belong_grid_code,belong_org_code from acquiring_customer_info
+    </sql>
+
+    <select id="selectAcquiringCustomerInfoList" parameterType="com.kx.system.domain.customer.AcquiringCustomerInfo" resultMap="AcquiringCustomerInfoResult">
+        <include refid="selectAcquiringCustomerInfoVo"/>
+        <where>
+            <if test="customNm != null "> and custom_nm like concat('%', #{customNm}, '%')</if>
+            <if test="customName != null  and customName != ''"> and custom_name like concat('%', #{customName}, '%')</if>
+            <if test="customShortName != null  and customShortName != ''"> and custom_short_name like concat('%', #{customShortName}, '%')</if>
+            <if test="businessLicenseNum != null  and businessLicenseNum != ''"> and business_license_num like concat('%', #{businessLicenseNum}, '%')</if>
+            <if test="legalPersonName != null  and legalPersonName != ''"> and legal_person_name like concat('%', #{legalPersonName}, '%')</if>
+            <if test="legalPersonIdentityNum != null  and legalPersonIdentityNum != ''"> and legal_person_identity_num like concat('%', #{legalPersonIdentityNum}, '%')</if>
+            <if test="settlementAccountNum != null  and settlementAccountNum != ''"> and settlement_account_num like concat('%', #{settlementAccountNum}, '%')</if>
+            <if test="customType != null "> and custom_type = #{customType}</if>
+            <if test="belongOrgCode != null "> and belong_org_code = #{belongOrgCode}</if>
+            <if test="belongGridCode != null "> and belong_grid_code = #{belongGridCode}</if>
+        </where>
+    </select>
+
+    <select id="selectAcquiringCustomerInfoById" parameterType="Long" resultMap="AcquiringCustomerInfoResult">
+        <include refid="selectAcquiringCustomerInfoVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectPerformanceCustomerInfoIdList" resultType="java.lang.Long">
+        select id from acquiring_customer_info
+        <where>
+            <if test="customNm != null "> and custom_nm = #{customNm}</if>
+            <if test="customName != null  and customName != ''"> and custom_name like concat('%', #{customName}, '%')</if>
+            <if test="customShortName != null  and customShortName != ''"> and custom_short_name like concat('%', #{customShortName}, '%')</if>
+            <if test="businessLicenseNum != null  and businessLicenseNum != ''"> and business_license_num = #{businessLicenseNum}</if>
+            <if test="legalPersonName != null  and legalPersonName != ''"> and legal_person_name like concat('%', #{legalPersonName}, '%')</if>
+            <if test="legalPersonIdentityNum != null  and legalPersonIdentityNum != ''"> and legal_person_identity_num = #{legalPersonIdentityNum}</if>
+            <if test="settlementAccountNum != null  and settlementAccountNum != ''"> and settlement_account_num = #{settlementAccountNum}</if>
+            <if test="customType != null "> and custom_type = #{customType}</if>
+            <if test="belongOrgCode != null and belongOrgCode !='' "> and belong_org_code = #{belongOrgCode}</if>
+            <if test="belongGridCode != null and belongGridCode!='' "> and belong_grid_code = #{belongGridCode}</if>
+        </where>
+    </select>
+
+    <insert id="insertAcquiringCustomerInfo" parameterType="com.kx.system.domain.customer.AcquiringCustomerInfo">
+        insert into acquiring_customer_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="customNm != null">custom_nm,</if>
+            <if test="customName != null">custom_name,</if>
+            <if test="customShortName != null">custom_short_name,</if>
+            <if test="businessLicenseNum != null">business_license_num,</if>
+            <if test="legalPersonName != null">legal_person_name,</if>
+            <if test="legalPersonIdentityNum != null">legal_person_identity_num,</if>
+            <if test="settlementAccountNum != null">settlement_account_num,</if>
+            <if test="customType != null">custom_type,</if>
+            <if test="belongOrgCode != null and belongOrgCode !='' ">  belong_org_code,</if>
+            <if test="belongGridCode != null and belongGridCode!='' "> belong_grid_code,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="customNm != null">#{customNm},</if>
+            <if test="customName != null">#{customName},</if>
+            <if test="customShortName != null">#{customShortName},</if>
+            <if test="businessLicenseNum != null">#{businessLicenseNum},</if>
+            <if test="legalPersonName != null">#{legalPersonName},</if>
+            <if test="legalPersonIdentityNum != null">#{legalPersonIdentityNum},</if>
+            <if test="settlementAccountNum != null">#{settlementAccountNum},</if>
+            <if test="customType != null">#{customType},</if>
+            <if test="belongOrgCode != null and belongOrgCode !='' ">  belong_org_code,</if>
+            <if test="belongGridCode != null and belongGridCode!='' "> belong_grid_code,</if>
+        </trim>
+    </insert>
+
+    <update id="updateAcquiringCustomerInfo" parameterType="com.kx.system.domain.customer.AcquiringCustomerInfo">
+        update acquiring_customer_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="customNm != null">custom_nm = #{customNm},</if>
+            <if test="customName != null">custom_name = #{customName},</if>
+            <if test="customShortName != null">custom_short_name = #{customShortName},</if>
+            <if test="businessLicenseNum != null">business_license_num = #{businessLicenseNum},</if>
+            <if test="legalPersonName != null">legal_person_name = #{legalPersonName},</if>
+            <if test="legalPersonIdentityNum != null">legal_person_identity_num = #{legalPersonIdentityNum},</if>
+            <if test="settlementAccountNum != null">settlement_account_num = #{settlementAccountNum},</if>
+            <if test="customType != null">custom_type = #{customType},</if>
+            <if test="belongOrgCode != null and belongOrgCode !='' ">  belong_org_code = #{belongOrgCode},</if>
+            <if test="belongGridCode != null and belongGridCode!='' ">  belong_grid_code = #{belongGridCode},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAcquiringCustomerInfoById" parameterType="Long">
+        delete from acquiring_customer_info where id = #{id}
+    </delete>
+
+    <delete id="deleteAcquiringCustomerInfoByIds" parameterType="String">
+        delete from acquiring_customer_info where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <!-- 查询列表 -->
+    <select id="list" parameterType="com.kx.system.domain.customer.AcquiringCustomerInfo" resultMap="AcquiringCustomerInfoResult">
+         <include refid="selectAcquiringCustomerInfoVo"/>
+        <where>
+            <if test=" customNm!=null and customNm !='' "> and custom_nm = #{customNm } </if>
+            <if test=" customName!=null and customName !='' "> and custom_name = #{customName } </if>
+            <if test=" customShortName!=null and customShortName !='' "> and custom_short_name = #{customShortName } </if>
+            <if test=" businessLicenseNum!=null and businessLicenseNum !='' "> and business_license_num = #{businessLicenseNum } </if>
+            <if test=" legalPersonName!=null and legalPersonName !='' "> and legal_person_name = #{legalPersonName } </if>
+            <if test=" legalPersonIdentityNum!=null and legalPersonIdentityNum !='' "> and legal_person_identity_num = #{legalPersonIdentityNum } </if>
+            <if test=" settlementAccountNum!=null and settlementAccountNum !='' "> and settlement_account_num = #{settlementAccountNum } </if>
+            <if test=" customType!=null and customType !='' "> and custom_type = #{customType } </if>
+            <if test=" belongGridCode!=null and belongGridCode !='' "> and belong_grid_code = #{belongGridCode } </if>
+            <if test=" belongOrgCode!=null and belongOrgCode !='' "> and belong_org_code = #{belongOrgCode } </if>
+        </where>
+    </select>
+    <select id="selectCustomerInfo" resultType="com.kx.system.domain.customer.AcquiringCustomerInfo">
+        <include refid="selectAcquiringCustomerInfoVo"/>
+        <where>
+            <if test="customerId!=null and customerId !='' "> and id = #{customerId} </if>
+        </where>
+    </select>
+
+
+</mapper>

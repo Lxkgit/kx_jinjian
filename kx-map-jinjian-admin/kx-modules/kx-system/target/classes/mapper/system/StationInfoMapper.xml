@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.StationInfoMapper">
+
+    <!-- 基础结果映射 -->
+    <resultMap id="baseResultMap" type="com.kx.system.domain.station.StationInfo">
+        <id column="id" property="id"/>
+        <result column="gird_code" property="girdCode"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="parent_dept_name" property="parentDeptName"/>
+        <result column="parent_org_num" property="parentOrgNum"/>
+        <result column="org_num" property="orgNum"/>
+        <result column="station_name" property="stationName"/>
+        <result column="station_addr" property="stationAddr"/>
+        <result column="station_charge" property="stationCharge"/>
+        <result column="station_phone" property="stationPhone"/>
+        <result column="lon" property="lon"/>
+        <result column="lat" property="lat"/>
+        <result column="station_machines_num" property="stationMachinesNum"/>
+        <result column="station_counter_num" property="stationCounterNum"/>
+        <result column="station_crs_num" property="stationCrsNum"/>
+        <result column="coin_exchange_machines_num" property="coinExchangeMachinesNum"/>
+        <result column="change_wallets_num" property="changeWalletsNum"/>
+        <result column="change_wallets_amount" property="changeWalletsAmount"/>
+        <result column="coin_exchange_amount" property="coinExchangeAmount"/>
+        <result column="coin_exchange_count" property="coinExchangeCount"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_name" property="createName"/>
+        <result column="create_by" property="createBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_name" property="updateName"/>
+        <result column="update_by" property="updateBy"/>
+    </resultMap>
+
+    <!-- 基础查询字段 -->
+    <sql id="Base_Column_List">
+        id
+        , gird_code, parent_id, parent_dept_name, parent_org_num, org_num,
+        station_name, station_addr, station_charge, station_phone, lon, lat,
+        station_machines_num, station_counter_num, station_crs_num,
+        coin_exchange_machines_num, change_wallets_num, change_wallets_amount,
+        coin_exchange_amount, coin_exchange_count, create_time, create_name,
+        create_by, update_time, update_name, update_by
+    </sql>
+
+
+</mapper>
+
+
+

@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.KpiIndicatorMapper">
+
+    <resultMap type="com.kx.system.domain.kpiManage.KpiIndicator" id="KpiIndicatorResult">
+        <result property="id" column="id"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="name" column="name"/>
+        <result property="enable" column="enable"/>
+        <result property="type" column="type"/>
+        <result property="remark" column="remark"/>
+        <result property="calType" column="cal_type"/>
+        <result property="calExpression" column="cal_expression"/>
+        <result property="calExpressionFront" column="cal_expression_front"/>
+        <result property="createUserId" column="create_user_id"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectKpiIndicatorVo">
+        select id, parent_id, name, enable, type, remark, cal_type, cal_expression, cal_expression_front, create_user_id, del_flag, create_time, update_time from kpi_indicator
+    </sql>
+
+    <select id="selectKpiIndicatorList" parameterType="com.kx.system.domain.kpiManage.KpiIndicator"
+            resultMap="KpiIndicatorResult">
+        <include refid="selectKpiIndicatorVo"/>
+        <where>
+            <if test="parentId != null ">and parent_id = #{parentId}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="enable != null ">and enable = #{enable}</if>
+            <if test="type != null  and type != ''">and type = #{type}</if>
+            <if test="calType != null  and calType != ''">and cal_type = #{calType}</if>
+            <if test="calExpression != null  and calExpression != ''">and cal_expression = #{calExpression}</if>
+            <if test="calExpressionFront != null  and calExpressionFront != ''">and cal_expression_front =
+                #{calExpressionFront}
+            </if>
+            <if test="createUserId != null ">and create_user_id = #{createUserId}</if>
+        </where>
+    </select>
+
+    <select id="selectKpiIndicatorById" parameterType="Long" resultMap="KpiIndicatorResult">
+        <include refid="selectKpiIndicatorVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectTypeByNameAndUserName" resultType="com.kx.system.domain.vo.KpiIndicatorVO">
+        SELECT
+        ki.id,
+        ki.name,
+        ki.enable,
+        ki.remark,
+        ki.type,
+        ki.cal_type calType,
+        ki.cal_expression calExpression,
+        ki.create_time createTime,
+        CONCAT( '[', GROUP_CONCAT( '[', #{pNetworkId}, SUBSTRING_INDEX(sn.ancestors, #{pNetworkId}, -1), ',',
+        kin.network_id, ']' ), ']' ) networkIdArrayStr,
+        su.nick_name createUserName
+        FROM
+        kpi_indicator ki
+        LEFT JOIN sys_user su ON su.user_id = ki.create_user_id
+        LEFT JOIN kpi_indicator_network kin on kin.indicator_id = ki.id
+        LEFT JOIN sys_network sn ON sn.network_id = kin.network_id
+        WHERE
+        ki.parent_id IS NULL
+        AND ki.del_flag = 0
+        <if test="networkIds != null and networkIds.size() > 0">
+            AND (
+            (<foreach collection="networkIds" item="id" open="(" separator=" OR " close=")">
+            kin.network_id like concat(',' , #{id} ,',');
+        </foreach>)
+            OR ki.create_user_id = #{currentUserId})
+        </if>
+        <if test="(indicatorName != null and indicatorName != '')
+            or (createUserName != null and createUserName != '')">
+            AND ki.id IN (
+            SELECT DISTINCT
+            parent_id
+            FROM
+            kpi_indicator ki
+            LEFT JOIN sys_user su ON su.user_id = ki.create_user_id
+            WHERE
+            parent_id IS NOT NULL
+            <if test="indicatorName!=null and indicatorName!=''">
+                AND ki.name LIKE concat ( '%', #{indicatorName}, '%' )
+            </if>
+            <if test="createUserName!=null and createUserName!=''">
+                AND
+                (su.nick_name LIKE concat ( '%', #{createUserName}, '%' )
+                OR
+                su.job_number LIKE concat ( '%', #{createUserName}, '%' ))
+            </if>
+            )
+        </if>
+        GROUP BY ki.id
+    </select>
+    <select id="selectIndicatorByNameAndUserNameAndParentIds" resultType="com.kx.system.domain.vo.KpiIndicatorVO">
+        SELECT
+        ki.id,
+        ki.name,
+        ki.enable,
+        ki.remark,
+        ki.type,
+        ki.parent_id parentId,
+        ki.cal_type calType,
+        ki.cal_expression calExpression,
+        ki.cal_expression_front calExpressionFrontStr,
+        ki.create_time createTime,
+        su.nick_name createUserName
+        FROM
+        kpi_indicator ki
+        LEFT JOIN sys_user su ON su.user_id = ki.create_user_id
+        WHERE
+        parent_id IS NOT NULL
+        AND ki.del_flag = 0
+        AND parent_id IN
+        <foreach collection="parentIdList" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        <if test="indicatorName!=null and indicatorName!=''">
+            AND ki.name LIKE concat ( '%', #{indicatorName}, '%' )
+        </if>
+        <if test="createUserName!=null and createUserName!=''">
+            AND (su.nick_name LIKE concat ( '%', #{createUserName}, '%' )
+            OR
+            su.job_number LIKE concat ( '%', #{createUserName}, '%' ))
+        </if>
+        <if test="enable == true">
+            AND ki.enable = 1
+        </if>
+        <if test="enable == false">
+            AND ki.enable = 0
+        </if>
+        <if test="calType != null and calType != ''">
+            AND ki.cal_type = #{calType}
+        </if>
+    </select>
+
+    <insert id="insertKpiIndicator" parameterType="com.kx.system.domain.kpiManage.KpiIndicator" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into kpi_indicator
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="parentId != null">parent_id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="enable != null">enable,</if>
+            <if test="type != null">type,</if>
+            <if test="remark != null">remark,</if>
+            <if test="calType != null">cal_type,</if>
+            <if test="calExpression != null">cal_expression,</if>
+            <if test="calExpressionFront != null">cal_expression_front,</if>
+            <if test="createUserId != null">create_user_id,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="parentId != null">#{parentId},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="enable != null">#{enable},</if>
+            <if test="type != null">#{type},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="calType != null">#{calType},</if>
+            <if test="calExpression != null">#{calExpression},</if>
+            <if test="calExpressionFront != null">#{calExpressionFront},</if>
+            <if test="createUserId != null">#{createUserId},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateKpiIndicator" parameterType="com.kx.system.domain.kpiManage.KpiIndicator">
+        update kpi_indicator
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="enable != null">enable = #{enable},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="calType != null">cal_type = #{calType},</if>
+            <if test="calExpression != null">cal_expression = #{calExpression},</if>
+            <if test="calExpressionFront != null">cal_expression_front = #{calExpressionFront},</if>
+            <if test="createUserId != null">create_user_id = #{createUserId},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateEnableByIds">
+        update kpi_indicator set enable = #{enable} where id in
+        <foreach collection="indicatorIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        or parent_id in
+        <foreach collection="indicatorIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="updateDelFlagByIds">
+        update kpi_indicator set del_flag = 1 where id in
+        <foreach item="id" collection="indicatorIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        or parent_id in
+        <foreach item="id" collection="indicatorIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <delete id="deleteKpiIndicatorById" parameterType="Long">
+        delete from kpi_indicator where id = #{id}
+    </delete>
+
+    <delete id="deleteKpiIndicatorByIds" parameterType="String">
+        delete from kpi_indicator where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectRepeatIndicator" parameterType="String" resultType="Long">
+        select count(*)
+        from kpi_indicator
+        where
+        name = #{name,jdbcType=VARCHAR}
+        AND del_flag = 0
+        <if test="parentId != null">
+            AND parent_id = #{parentId}
+        </if>
+        <if test="parentId == null">
+            AND parent_id is null
+        </if>
+        <if test="exceptId != null">
+            AND id != #{exceptId}
+        </if>
+        <if test="createUserId != null">
+            AND create_user_id = #{createUserId}
+        </if>
+    </select>
+    <select id="selectListByTaskId" resultMap="KpiIndicatorResult">
+        <include refid="selectKpiIndicatorVo"/>
+        WHERE id IN (SELECT indicator_id FROM kpi_task_indicator WHERE task_id = #{taskId})
+        AND del_flag = 0
+    </select>
+    <select id="countByEnableAndIdList" resultType="java.lang.Integer">
+        select count(*) from kpi_indicator
+        where enable = #{enable}
+        and del_flag = 0
+        and id in
+        <foreach collection="idList" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+    <select id="countInUseById" resultType="java.lang.Integer">
+        SELECT
+            count(*)
+        FROM
+            kpi_task_indicator kti
+                LEFT JOIN kpi_task kt ON kt.id = kti.task_id
+        WHERE
+            kti.indicator_id = #{id}
+          AND kti.del_flag = 0
+          AND (
+            kt.status != 4
+            OR (
+            kt.status = 4 AND kt.end_time > DATE_SUB( CURDATE(), INTERVAL 2 DAY ))
+          )
+    </select>
+    <select id="countInUseByIds" resultType="java.lang.Integer">
+        SELECT
+        count(*)
+        FROM
+        kpi_task_indicator kti
+        LEFT JOIN kpi_task kt ON kt.id = kti.task_id
+        WHERE
+        kti.indicator_id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        AND kti.del_flag = 0
+        AND (
+        kt.status != 4
+        OR (
+        kt.status = 4 AND kt.end_time > DATE_SUB( CURDATE(), INTERVAL 2 DAY ))
+        )
+    </select>
+
+</mapper>

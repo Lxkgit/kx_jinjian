@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.ProductInfoMapper">
+  <resultMap id="BaseResultMap" type="com.kx.system.domain.ProductInfo">
+    <!--@mbg.generated-->
+    <!--@Table product_info-->
+    <id column="id" property="id" />
+    <result column="product_nm" property="productNm" />
+    <result column="product_name" property="productName" />
+    <result column="product_type" property="productType" />
+    <result column="business_link" property="businessLink" />
+    <result column="create_by" property="createBy" />
+    <result column="create_time" property="createTime" />
+    <result column="create_num" property="createNum" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, product_nm, product_name, product_type, business_link, create_by, create_time,
+    create_num
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select
+    <include refid="Base_Column_List" />
+    from product_info
+    where id = #{id}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--@mbg.generated-->
+    delete from product_info
+    where id = #{id}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.kx.system.domain.ProductInfo" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into product_info (product_nm, product_name, product_type, business_link, create_by,
+      create_time, create_num)
+    values (#{productNm}, #{productName}, #{productType}, #{businessLink}, #{createBy},
+      #{createTime}, #{createNum})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.kx.system.domain.ProductInfo" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into product_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="productNm != null and productNm != ''">
+        product_nm,
+      </if>
+      <if test="productName != null and productName != ''">
+        product_name,
+      </if>
+      <if test="productType != null and productType != ''">
+        product_type,
+      </if>
+      <if test="businessLink != null and businessLink != ''">
+        business_link,
+      </if>
+      <if test="createBy != null and createBy != ''">
+        create_by,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createNum != null and createNum != ''">
+        create_num,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="productNm != null and productNm != ''">
+        #{productNm},
+      </if>
+      <if test="productName != null and productName != ''">
+        #{productName},
+      </if>
+      <if test="productType != null and productType != ''">
+        #{productType},
+      </if>
+      <if test="businessLink != null and businessLink != ''">
+        #{businessLink},
+      </if>
+      <if test="createBy != null and createBy != ''">
+        #{createBy},
+      </if>
+      <if test="createTime != null">
+        #{createTime},
+      </if>
+      <if test="createNum != null and createNum != ''">
+        #{createNum},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kx.system.domain.ProductInfo">
+    <!--@mbg.generated-->
+    update product_info
+    <set>
+      <if test="productNm != null and productNm != ''">
+        product_nm = #{productNm},
+      </if>
+      <if test="productName != null and productName != ''">
+        product_name = #{productName},
+      </if>
+      <if test="productType != null and productType != ''">
+        product_type = #{productType},
+      </if>
+      <if test="businessLink != null and businessLink != ''">
+        business_link = #{businessLink},
+      </if>
+      <if test="createBy != null and createBy != ''">
+        create_by = #{createBy},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime},
+      </if>
+      <if test="createNum != null and createNum != ''">
+        create_num = #{createNum},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kx.system.domain.ProductInfo">
+    <!--@mbg.generated-->
+    update product_info
+    set product_nm = #{productNm},
+      product_name = #{productName},
+      product_type = #{productType},
+      business_link = #{businessLink},
+      create_by = #{createBy},
+      create_time = #{createTime},
+      create_num = #{createNum}
+    where id = #{id}
+  </update>
+
+  <select id="selectPage" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from product_info
+    <where>
+      <if test="productName != null and productName != ''">
+        and product_name like concat('%',#{productName},'%')
+      </if>
+      <if test="productType != null and productType != ''">
+        and product_type = #{productType}
+      </if>
+    </where>
+    </select>
+</mapper>

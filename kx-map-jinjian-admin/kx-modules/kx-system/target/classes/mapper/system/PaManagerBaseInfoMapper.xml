@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.PaManagerBaseInfoMapper">
+
+    <resultMap id="PaManagerBaseInfo" type="com.kx.system.domain.PaManagerBaseInfo">
+        <id property="id"    column="id"    />
+        <result property="managerCode"    column="manager_code"    />
+        <result property="managerName"    column="manager_name"    />
+        <result property="networkCode"    column="network_code"    />
+        <result property="networkName"    column="network_name"    />
+        <result property="managerPost"    column="manager_post"    />
+        <result property="householdsNum"    column="households_num"    />
+        <result property="populactionNum"    column="populaction_num"    />
+        <result property="villageCommunity"    column="village_community"    />
+        <result property="lowIncomeFramers"    column="low_income_framers"    />
+        <result property="companyNum"    column="company_num"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <select id="selectBaseInfoByManagerCode" resultMap="PaManagerBaseInfo">
+        select id, manager_code, manager_name, network_code, network_name, manager_post,
+            households_num, populaction_num, village_community, low_income_framers,
+            company_num, create_time,update_time
+        from pa_manager_base_info
+        where manager_code = #{managerCode}
+    </select>
+
+    <select id="selectBaseInfoAll" resultMap="PaManagerBaseInfo">
+        select * from pa_manager_base_info
+    </select>
+    <select id="selectBaseInfoByManagerCodes" resultMap="PaManagerBaseInfo">
+        select * from pa_manager_base_info
+        <where>
+            <if test=" list!=null ">  and  network_code  in
+                <foreach item="item" collection="list" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="selectBaseInfoByManagerCodesAndName" resultMap="PaManagerBaseInfo">
+        select * from pa_manager_base_info
+        <where>
+            <if test=" name!=null and name!='' ">  and  manager_name  like concat('%', #{name}, '%') </if>
+            <if test=" list!=null ">  and  network_code  in
+                <foreach item="item" collection="list" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

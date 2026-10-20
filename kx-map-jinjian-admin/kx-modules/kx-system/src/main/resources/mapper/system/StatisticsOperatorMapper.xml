@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kx.system.mapper.StatisticsOperatorMapper">
+    <insert id="batchInsert">
+        INSERT INTO ${tableName}
+        (
+        grid_code ,
+        grid_people_num,
+        village_num,
+        village_people_num,
+        industrial_park_num,
+        company_num,
+        financial_institution_num,
+        gdp,
+        business_area_num,
+        create_time
+        )
+        values
+        <foreach collection="os" item="o" separator=",">
+            (
+            #{o.gridCode},
+            #{o.gridPeopleNum},
+            #{o.villageNum},
+            #{o.villagePeopleNum},
+            #{o.industrialParkNum},
+            #{o.companyNum},
+            #{o.financialInstitutionNum},
+            #{o.gdp},
+            #{o.businessAreaNum},
+            now()
+            )
+        </foreach>
+    </insert>
+    <update id="update">
+        UPDATE ${tableName} SET
+        <if test="o.villageNum != null">
+            village_num=#{o.villageNum},
+        </if>
+        <if test="o.companyNum != null">
+            company_num=#{o.companyNum},
+        </if>
+        <if test="o.villagePeopleNum != null">
+            village_people_num=#{o.villagePeopleNum},
+        </if>
+        <if test="o.financialInstitutionNum != null">
+            financial_institution_num=#{o.financialInstitutionNum},
+        </if>
+        <if test="o.industrialParkNum != null">
+            industrial_park_num=#{o.industrialParkNum},
+        </if>
+        <if test="o.gridPeopleNum != null">
+            grid_people_num=#{o.gridPeopleNum},
+        </if>
+        <if test="o.businessAreaNum != null">
+            business_area_num=#{o.businessAreaNum},
+        </if>
+        <if test="o.gdp != null">
+            gdp=#{o.gdp},
+        </if>
+        <if test="o.levelFourGridNum != null">
+            level_four_grid_num=#{o.levelFourGridNum},
+        </if>
+        <if test="o.levelFiveGridNum != null">
+            level_five_grid_num=#{o.levelFiveGridNum},
+        </if>
+        grid_code = grid_code
+        WHERE grid_code = #{o.gridCode}
+    </update>
+    <select id="countByColumn" resultType="com.kx.system.domain.StatisticsValue">
+        SELECT ${groupByColumn} AS name, IFNULL(COUNT(1), 0) AS value
+        FROM ${tableName}
+        GROUP BY ${groupByColumn};
+    </select>
+    <select id="sumByColumn" resultType="com.kx.system.domain.StatisticsValue">
+        SELECT ${groupByColumn} AS name, IFNULL(SUM(${sumColumn}), 0) AS value
+        FROM ${tableName}
+        GROUP BY ${groupByColumn};
+    </select>
+
+    <select id="selectOverview" resultType="com.kx.system.domain.small.PaViewGridOverview">
+        SELECT * FROM ${tableName}
+    </select>
+</mapper>

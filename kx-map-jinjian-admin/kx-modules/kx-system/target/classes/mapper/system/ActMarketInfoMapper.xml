@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.ActMarketInfoMapper">
+  <resultMap id="BaseResultMap" type="com.kx.system.domain.ActMarketInfo">
+    <!--@mbg.generated-->
+    <!--@Table act_market_info-->
+    <id column="id" property="id" />
+    <result column="act_name" property="actName" />
+    <result column="act_status" property="actStatus" />
+    <result column="create_by" property="createBy" />
+    <result column="create_manager_num" property="createManagerNum" />
+    <result column="create_dept_name" property="createDeptName" />
+    <result column="create_org_num" property="createOrgNum" />
+    <result column="act_time_start" property="actTimeStart" />
+    <result column="act_time_end" property="actTimeEnd" />
+    <result column="link" property="link" />
+    <result column="qr_code" property="qrCode" />
+    <result column="act_duration" property="actDuration" />
+    <result column="act_desc" property="actDesc" />
+    <result column="act_participate_num" property="actParticipateNum" />
+    <result column="other_expect_desc" property="otherExpectDesc" />
+    <result column="del_flag" property="delFlag" />
+    <result column="create_time" property="createTime" />
+    <result column="act_type" property="actType" />
+  </resultMap>
+
+
+
+  <resultMap id="BaseResultMapVo" type="com.kx.system.domain.vo.ActMarketInfoVo">
+    <!--@mbg.generated-->
+    <!--@Table act_market_info-->
+    <id column="id" property="id" />
+    <result column="act_name" property="actName" />
+    <result column="act_status" property="actStatus" />
+    <result column="create_by" property="createBy" />
+    <result column="create_manager_num" property="createManagerNum" />
+    <result column="create_dept_name" property="createDeptName" />
+    <result column="create_org_num" property="createOrgNum" />
+    <result column="act_time_start" property="actTimeStart" />
+    <result column="act_time_end" property="actTimeEnd" />
+    <result column="link" property="link" />
+    <result column="qr_code" property="qrCode" />
+    <result column="act_duration" property="actDuration" />
+    <result column="act_desc" property="actDesc" />
+    <result column="act_participate_num" property="actParticipateNum" />
+    <result column="other_expect_desc" property="otherExpectDesc" />
+    <result column="del_flag" property="delFlag" />
+    <result column="create_time" property="createTime" />
+    <result column="photo" property="photo" />
+    <result column="checkIn_addr" property="checkinAddr" />
+    <result column="act_feedback" property="actFeedback" />
+    <result column="scan_code_num" property="scanCodeNum" />
+    <result column="info_collect_num" property="infoCollectNum" />
+    <result column="info_collect_rate" property="infoCollectRate" />
+    <result column="info_collect_effect_num" property="infoCollectEffectNum" />
+    <result column="info_collect_effect_rate" property="infoCollectEffectRate" />
+    <result column="bus_proc_num" property="busProcNum" />
+    <result column="bus_proc_rate" property="busProcRate" />
+    <result column="coordinates" property="coordinates" />
+    <result column="act_type" property="actType" />
+    <result column="grid_center" property="gridCenter" />
+    <result column="grid_name" property="gridName" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, act_name, act_status, create_by, create_manager_num, create_dept_name, create_org_num,
+    act_time_start, act_time_end, link, qr_code, act_duration, act_desc, act_participate_num,
+    other_expect_desc, del_flag,create_time,update_org_num,update_dept_name,update_by,update_manager_num,
+    update_time,coordinates,act_type,grid_center,grid_name
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select
+    <include refid="Base_Column_List" />
+    from act_market_info
+    where id = #{id}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--@mbg.generated-->
+    delete from act_market_info
+    where id = #{id}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.kx.system.domain.ActMarketInfo" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into act_market_info (act_name, act_status, create_by, create_manager_num, create_dept_name,
+      create_org_num, act_time_start, act_time_end, link, qr_code, act_duration,
+      act_desc, act_participate_num, other_expect_desc, del_flag,create_time)
+    values (#{actName}, #{actStatus}, #{createBy}, #{createManagerNum}, #{createDeptName},
+      #{createOrgNum}, #{actTimeStart}, #{actTimeEnd}, #{link}, #{qrCode}, #{actDuration},
+      #{actDesc}, #{actParticipateNum}, #{otherExpectDesc}, #{delFlag},#{createTime})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.kx.system.domain.ActMarketInfo" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into act_market_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="actName != null and actName != ''">
+        act_name,
+      </if>
+      <if test="actStatus != null">
+        act_status,
+      </if>
+      <if test="createBy != null and createBy != ''">
+        create_by,
+      </if>
+      <if test="createManagerNum != null and createManagerNum != ''">
+        create_manager_num,
+      </if>
+      <if test="createDeptName != null and createDeptName != ''">
+        create_dept_name,
+      </if>
+      <if test="createOrgNum != null and createOrgNum != ''">
+        create_org_num,
+      </if>
+      <if test="actTimeStart != null">
+        act_time_start,
+      </if>
+      <if test="actTimeEnd != null">
+        act_time_end,
+      </if>
+      <if test="link != null and link != ''">
+        link,
+      </if>
+      <if test="qrCode != null and qrCode != ''">
+        qr_code,
+      </if>
+      <if test="actDuration != null and actDuration != ''">
+        act_duration,
+      </if>
+      <if test="actDesc != null and actDesc != ''">
+        act_desc,
+      </if>
+      <if test="actParticipateNum != null">
+        act_participate_num,
+      </if>
+      <if test="otherExpectDesc != null and otherExpectDesc != ''">
+        other_expect_desc,
+      </if>
+      <if test="delFlag != null">
+        del_flag,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="coordinates != null and coordinates != ''">
+        coordinates,
+      </if>
+      <if test="gridCenter != null and gridCenter != ''">
+        grid_center,
+      </if>
+      <if test="gridName != null and gridName != ''">
+        grid_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="actName != null and actName != ''">
+        #{actName},
+      </if>
+      <if test="actStatus != null">
+        #{actStatus},
+      </if>
+      <if test="createBy != null and createBy != ''">
+        #{createBy},
+      </if>
+      <if test="createManagerNum != null and createManagerNum != ''">
+        #{createManagerNum},
+      </if>
+      <if test="createDeptName != null and createDeptName != ''">
+        #{createDeptName},
+      </if>
+      <if test="createOrgNum != null and createOrgNum != ''">
+        #{createOrgNum},
+      </if>
+      <if test="actTimeStart != null">
+        #{actTimeStart},
+      </if>
+      <if test="actTimeEnd != null">
+        #{actTimeEnd},
+      </if>
+      <if test="link != null and link != ''">
+        #{link},
+      </if>
+      <if test="qrCode != null and qrCode != ''">
+        #{qrCode},
+      </if>
+      <if test="actDuration != null and actDuration != ''">
+        #{actDuration},
+      </if>
+      <if test="actDesc != null and actDesc != ''">
+        #{actDesc},
+      </if>
+      <if test="actParticipateNum != null">
+        #{actParticipateNum},
+      </if>
+      <if test="otherExpectDesc != null and otherExpectDesc != ''">
+        #{otherExpectDesc},
+      </if>
+      <if test="delFlag != null">
+        #{delFlag},
+      </if>
+      <if test="createTime != null">
+        #{createTime},
+      </if>
+      <if test="coordinates != null and coordinates != ''">
+        #{coordinates},
+      </if>
+      <if test="gridCenter != null and gridCenter != ''">
+        #{gridCenter},
+      </if>
+      <if test="gridName != null and gridName != ''">
+        #{gridName},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kx.system.domain.ActMarketInfo">
+    <!--@mbg.generated-->
+    update act_market_info
+    <set>
+      <if test="actName != null and actName != ''">
+        act_name = #{actName},
+      </if>
+      <if test="actStatus != null">
+        act_status = #{actStatus},
+      </if>
+      <if test="actTimeStart != null">
+        act_time_start = #{actTimeStart},
+      </if>
+      <if test="actTimeEnd != null">
+        act_time_end = #{actTimeEnd},
+      </if>
+      <if test="link != null and link != ''">
+        link = #{link},
+      </if>
+      <if test="qrCode != null and qrCode != ''">
+        qr_code = #{qrCode},
+      </if>
+      <if test="actDuration != null and actDuration != ''">
+        act_duration = #{actDuration},
+      </if>
+      <if test="actDesc != null and actDesc != ''">
+        act_desc = #{actDesc},
+      </if>
+      <if test="actParticipateNum != null">
+        act_participate_num = #{actParticipateNum},
+      </if>
+      <if test="otherExpectDesc != null and otherExpectDesc != ''">
+        other_expect_desc = #{otherExpectDesc},
+      </if>
+      <if test="delFlag != null">
+        del_flag = #{delFlag},
+      </if>
+      <if test="updateBy != null and updateBy != ''">
+        update_by = #{updateBy},
+      </if>
+      <if test="updateManagerNum != null and updateManagerNum != ''">
+        update_manager_num = #{updateManagerNum},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime},
+      </if>
+      <if test="updateDeptName != null and updateDeptName != ''">
+        update_dept_name = #{updateDeptName},
+      </if>
+      <if test="updateOrgNum != null and updateOrgNum != ''">
+        update_org_num = #{updateOrgNum},
+      </if>
+      <if test="coordinates != null and coordinates != ''">
+        coordinates=#{coordinates},
+      </if>
+      <if test="gridCenter != null and gridCenter != ''">
+        grid_center=#{gridCenter},
+      </if>
+      <if test="gridName != null and gridName != ''">
+        grid_name=#{gridName},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kx.system.domain.ActMarketInfo">
+    <!--@mbg.generated-->
+    update act_market_info
+    set act_name = #{actName},
+      act_status = #{actStatus},
+      create_by = #{createBy},
+      create_manager_num = #{createManagerNum},
+      create_dept_name = #{createDeptName},
+      create_org_num = #{createOrgNum},
+      act_time_start = #{actTimeStart},
+      act_time_end = #{actTimeEnd},
+      link = #{link},
+      qr_code = #{qrCode},
+      act_duration = #{actDuration},
+      act_desc = #{actDesc},
+      act_participate_num = #{actParticipateNum},
+      other_expect_desc = #{otherExpectDesc},
+      del_flag = #{delFlag},
+      create_time = #{createTime}
+    where id = #{id}
+  </update>
+
+  <select id="selectPage" resultMap="BaseResultMapVo">
+    select <include refid="Base_Column_List" /> from act_market_info
+    <where>
+      del_flag = 0
+      <if test="actName != null and actName != ''">
+        and act_name like concat('%',#{actName},'%')
+      </if>
+      <if test="actStatus">
+        and act_status = #{actStatus}
+      </if>
+      <if test="createBy != null and createBy != ''">
+        and create_by like concat('%',#{createBy},'%')
+      </if>
+      <if test="createTimeStart != null">
+        and create_time>=#{createTime}
+      </if>
+      <if test="createTimeEnd != null">
+        and #{createTimeEnd} >= create_time
+      </if>
+      <if test="createOrgNum != null and createOrgNum != ''">
+        and create_org_num like  concat('%',#{createOrgNum},'%')
+      </if>
+      <if test="createDeptName != null and createDeptName != ''">
+        and create_dept_name like  concat('%',#{createDeptName},'%')
+      </if>
+      <if test="actTimeStart != null">
+        and act_time_start>= #{actTimeStart}
+      </if>
+      <if test="actTimeEnd != null">
+        and #{actTimeEnd} >= act_time_end
+      </if>
+
+    </where>
+  </select>
+
+  <select id="selectActMarketInfoAndResultById" resultMap="BaseResultMapVo">
+    select a.id, act_name, act_status, a.create_by, a.create_manager_num, a.create_dept_name,
+           a.create_org_num, act_time_start, act_time_end, link, qr_code, act_duration,a.coordinates,
+           act_desc, act_participate_num, other_expect_desc, a.del_flag, a.create_time,
+    photo, checkIn_addr, act_feedback, scan_code_num, info_collect_num, info_collect_effect_num,
+    bus_proc_num
+    from act_market_info a
+    left join act_market_result_info b on a.id = b.act_id
+    where a.id = #{id}
+  </select>
+
+  <select id="selectActMarketInfoAndResultList" resultMap="BaseResultMapVo">
+    select a.id, act_name, act_status, a.create_by, a.create_manager_num, a.create_dept_name,
+           a.create_org_num, act_time_start, act_time_end, link, qr_code, act_duration,a.coordinates,
+           act_desc, act_participate_num, other_expect_desc, a.del_flag, a.create_time,
+           photo, checkIn_addr, act_feedback, scan_code_num, info_collect_num,info_collect_rate,
+           info_collect_effect_num,info_collect_effect_rate,bus_proc_num,bus_proc_rate
+    from act_market_info a
+           left join act_market_result_info b on a.id = b.act_id
+    <where>
+        <if test="actStatus != null">
+          and act_status = #{actStatus}
+        </if>
+        <if test="actName != null and actName != ''">
+          and act_name like concat('%',#{actName},'%')
+        </if>
+    </where>
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMapVo">
+     select
+    <include refid="Base_Column_List" />
+    from act_market_info
+
+    </select>
+</mapper>

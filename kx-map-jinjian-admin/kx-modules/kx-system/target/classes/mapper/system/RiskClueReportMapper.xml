@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.RiskClueReportMapper">
+
+    <resultMap id="RiskClueReportResult" type="com.kx.system.domain.riskclue.RiskClueReport">
+        <id property="id" column="id"/>
+        <result property="clueNo" column="clue_no"/>
+        <result property="clueSource" column="clue_source"/>
+        <result property="clueTitle" column="clue_title"/>
+        <result property="clueType" column="clue_type"/>
+        <result property="riskSubject" column="risk_subject"/>
+        <result property="unifiedSocialCreditCode" column="unified_social_credit_code"/>
+        <result property="clueDescription" column="clue_description"/>
+        <result property="subjectAddress" column="subject_address"/>
+        <result property="contactName" column="contact_name"/>
+        <result property="contactPhone" column="contact_phone"/>
+        <result property="locationAddress" column="location_address"/>
+        <result property="longitude" column="longitude"/>
+        <result property="latitude" column="latitude"/>
+        <result property="coordinateSystem" column="coordinate_system"/>
+        <result property="riskLevel" column="risk_level"/>
+        <result property="reportOrgCode" column="report_org_code"/>
+        <result property="reportOrgName" column="report_org_name"/>
+        <result property="reporterUserName" column="reporter_user_name"/>
+        <result property="reporterNickName" column="reporter_nick_name"/>
+        <result property="areaCode" column="area_code"/>
+        <result property="areaFullName" column="area_full_name"/>
+        <result property="streetCode" column="street_code"/>
+        <result property="streetName" column="street_name"/>
+        <result property="sourceBizType" column="source_biz_type"/>
+        <result property="sourceBizId" column="source_biz_id"/>
+        <result property="reviewStatus" column="review_status"/>
+        <result property="reviewRound" column="review_round"/>
+        <result property="transferStatus" column="transfer_status"/>
+        <result property="feedbackStatus" column="feedback_status"/>
+        <result property="firstReportTime" column="first_report_time"/>
+        <result property="reportTime" column="report_time"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="riskClueColumns">
+        id, clue_no, clue_source, clue_title, clue_type, risk_subject, unified_social_credit_code,
+        clue_description, subject_address, contact_name, contact_phone, location_address, longitude, latitude,
+        coordinate_system, risk_level, report_org_code, report_org_name, reporter_user_name, reporter_nick_name,
+        area_code, area_full_name, street_code, street_name, source_biz_type, source_biz_id,
+        review_status, review_round, transfer_status, feedback_status, first_report_time, report_time,
+        del_flag, create_by, create_time, update_by, update_time, remark
+    </sql>
+
+    <select id="selectRiskClueReportList" resultMap="RiskClueReportResult">
+        SELECT <include refid="riskClueColumns"/>
+        FROM risk_clue_report
+        <where>
+            del_flag = '0'
+            <if test="keyword != null and keyword != ''">
+                AND (clue_no LIKE CONCAT('%', #{keyword}, '%')
+                  OR clue_title LIKE CONCAT('%', #{keyword}, '%')
+                  OR risk_subject LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+            <if test="reportTimeStart != null">AND report_time <![CDATA[>=]]> #{reportTimeStart}</if>
+            <if test="reportTimeEnd != null">AND report_time <![CDATA[<=]]> #{reportTimeEnd}</if>
+            <if test="clueType != null">AND clue_type = #{clueType}</if>
+            <if test="reviewStatus != null">AND review_status = #{reviewStatus}</if>
+            <if test="transferStatus != null">AND transfer_status = #{transferStatus}</if>
+            <if test="feedbackStatus != null">AND feedback_status = #{feedbackStatus}</if>
+            <if test="riskLevel != null">AND risk_level = #{riskLevel}</if>
+            <if test="streetCode != null and streetCode != ''">AND street_code = #{streetCode}</if>
+            <if test="streetName != null and streetName != ''">AND street_name = #{streetName}</if>
+        </where>
+        ORDER BY COALESCE(report_time, create_time) DESC, id DESC
+    </select>
+
+    <select id="selectRiskClueReportById" resultMap="RiskClueReportResult">
+        SELECT <include refid="riskClueColumns"/>
+        FROM risk_clue_report WHERE id = #{id} AND del_flag = '0'
+    </select>
+
+    <insert id="insertRiskClueReport" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.kx.system.domain.riskclue.RiskClueReport">
+        INSERT INTO risk_clue_report (
+            clue_no, clue_source, clue_title, clue_type, risk_subject, unified_social_credit_code,
+            clue_description, subject_address, contact_name, contact_phone, location_address, longitude, latitude,
+            coordinate_system, risk_level, report_org_code, report_org_name, reporter_user_name, reporter_nick_name,
+            area_code, area_full_name, street_code, street_name, source_biz_type, source_biz_id,
+            review_status, review_round, transfer_status, feedback_status, first_report_time, report_time,
+            del_flag, create_by, create_time, update_by, update_time, remark
+        ) VALUES (
+            #{clueNo}, #{clueSource}, #{clueTitle}, #{clueType}, #{riskSubject}, #{unifiedSocialCreditCode},
+            #{clueDescription}, #{subjectAddress}, #{contactName}, #{contactPhone}, #{locationAddress}, #{longitude}, #{latitude},
+            #{coordinateSystem}, #{riskLevel}, #{reportOrgCode}, #{reportOrgName}, #{reporterUserName}, #{reporterNickName},
+            #{areaCode}, #{areaFullName}, #{streetCode}, #{streetName}, #{sourceBizType}, #{sourceBizId},
+            #{reviewStatus}, #{reviewRound}, #{transferStatus}, #{feedbackStatus}, #{firstReportTime}, #{reportTime},
+            #{delFlag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, #{remark}
+        )
+    </insert>
+
+    <update id="updateClueNo">
+        UPDATE risk_clue_report SET clue_no = #{clueNo} WHERE id = #{id}
+    </update>
+
+    <sql id="updateEditableColumns">
+        clue_source = #{clueSource}, clue_title = #{clueTitle}, clue_type = #{clueType},
+        risk_subject = #{riskSubject}, unified_social_credit_code = #{unifiedSocialCreditCode},
+        clue_description = #{clueDescription}, subject_address = #{subjectAddress},
+        contact_name = #{contactName}, contact_phone = #{contactPhone}, location_address = #{locationAddress},
+        longitude = #{longitude}, latitude = #{latitude}, coordinate_system = #{coordinateSystem}, risk_level = #{riskLevel},
+        area_code = #{areaCode}, area_full_name = #{areaFullName}, street_code = #{streetCode}, street_name = #{streetName},
+        source_biz_type = #{sourceBizType}, source_biz_id = #{sourceBizId}, remark = #{remark},
+        update_by = #{updateBy}, update_time = #{updateTime}
+    </sql>
+
+    <update id="updateRiskClueContent" parameterType="com.kx.system.domain.riskclue.RiskClueReport">
+        UPDATE risk_clue_report SET <include refid="updateEditableColumns"/>
+        WHERE id = #{id} AND review_status = #{originalReviewStatus} AND del_flag = '0'
+    </update>
+
+    <update id="submitRiskClueReport" parameterType="com.kx.system.domain.riskclue.RiskClueReport">
+        UPDATE risk_clue_report SET <include refid="updateEditableColumns"/>,
+            review_status = 1, review_round = #{reviewRound},
+            first_report_time = #{firstReportTime}, report_time = #{reportTime}
+        WHERE id = #{id} AND review_status = #{originalReviewStatus} AND del_flag = '0'
+    </update>
+
+    <update id="updateReviewStatus">
+        UPDATE risk_clue_report SET review_status = #{reviewStatus}, update_by = #{updateBy}, update_time = NOW()
+        WHERE id = #{id} AND review_status = 1 AND del_flag = '0'
+    </update>
+
+    <update id="updateTransferStatus">
+        UPDATE risk_clue_report SET transfer_status = 1, update_by = #{updateBy}, update_time = NOW()
+        WHERE id = #{id} AND review_status = 2 AND transfer_status = 0 AND del_flag = '0'
+    </update>
+
+    <update id="updateFeedbackStatus">
+        UPDATE risk_clue_report SET feedback_status = 1, update_by = #{updateBy}, update_time = NOW()
+        WHERE id = #{id} AND transfer_status = 1 AND feedback_status = 0 AND del_flag = '0'
+    </update>
+
+    <update id="deleteRiskClueReport">
+        UPDATE risk_clue_report SET del_flag = '1', update_by = #{updateBy}, update_time = NOW()
+        WHERE id = #{id} AND review_status IN (0, 1) AND transfer_status = 0 AND del_flag = '0'
+    </update>
+
+    <select id="selectFilesByClueId" resultType="com.kx.system.domain.riskclue.RiskClueFile">
+        SELECT id, clue_id AS clueId, file_type AS fileType, original_name AS originalName,
+               object_name AS objectName, file_url AS fileUrl, file_ext AS fileExt, file_size AS fileSize,
+               sort_order AS sortOrder, del_flag AS delFlag, create_by AS createBy, create_time AS createTime
+        FROM risk_clue_file WHERE clue_id = #{clueId} AND del_flag = '0' ORDER BY file_type, sort_order, id
+    </select>
+
+    <update id="deleteFilesByClueId">
+        UPDATE risk_clue_file SET del_flag = '1' WHERE clue_id = #{clueId} AND del_flag = '0'
+    </update>
+
+    <insert id="batchInsertFiles">
+        INSERT INTO risk_clue_file
+            (clue_id, file_type, original_name, object_name, file_url, file_ext, file_size, sort_order, del_flag, create_by, create_time)
+        VALUES
+        <foreach collection="files" item="item" separator=",">
+            (#{item.clueId}, #{item.fileType}, #{item.originalName}, #{item.objectName}, #{item.fileUrl},
+             #{item.fileExt}, #{item.fileSize}, #{item.sortOrder}, '0', #{item.createBy}, #{item.createTime})
+        </foreach>
+    </insert>
+
+    <select id="selectReviewRecordsByClueId" resultType="com.kx.system.domain.riskclue.RiskClueReviewRecord">
+        SELECT id, clue_id AS clueId, review_round AS reviewRound, review_result AS reviewResult,
+               review_opinion AS reviewOpinion, reviewer_user_id AS reviewerUserId,
+               reviewer_user_name AS reviewerUserName, reviewer_nick_name AS reviewerNickName,
+               reviewer_dept_id AS reviewerDeptId, reviewer_dept_name AS reviewerDeptName,
+               review_time AS reviewTime, create_time AS createTime
+        FROM risk_clue_review_record WHERE clue_id = #{clueId} ORDER BY review_round, id
+    </select>
+
+    <insert id="insertReviewRecord" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO risk_clue_review_record
+            (clue_id, review_round, review_result, review_opinion, reviewer_user_id, reviewer_user_name,
+             reviewer_nick_name, reviewer_dept_id, reviewer_dept_name, review_time, create_time)
+        VALUES
+            (#{clueId}, #{reviewRound}, #{reviewResult}, #{reviewOpinion}, #{reviewerUserId}, #{reviewerUserName},
+             #{reviewerNickName}, #{reviewerDeptId}, #{reviewerDeptName}, #{reviewTime}, #{createTime})
+    </insert>
+
+    <select id="selectTransferRecordByClueId" resultType="com.kx.system.domain.riskclue.RiskClueTransferRecord">
+        SELECT id, clue_id AS clueId, transfer_basis AS transferBasis, receive_org_id AS receiveOrgId,
+               receive_org_code AS receiveOrgCode, receive_org_name AS receiveOrgName,
+               transfer_method AS transferMethod, document_info AS documentInfo, transfer_time AS transferTime,
+               operator_user_id AS operatorUserId, operator_user_name AS operatorUserName,
+               operator_nick_name AS operatorNickName, create_time AS createTime
+        FROM risk_clue_transfer_record WHERE clue_id = #{clueId} LIMIT 1
+    </select>
+
+    <insert id="insertTransferRecord" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO risk_clue_transfer_record
+            (clue_id, transfer_basis, receive_org_id, receive_org_code, receive_org_name, transfer_method,
+             document_info, transfer_time, operator_user_id, operator_user_name, operator_nick_name, create_time)
+        VALUES
+            (#{clueId}, #{transferBasis}, #{receiveOrgId}, #{receiveOrgCode}, #{receiveOrgName}, #{transferMethod},
+             #{documentInfo}, #{transferTime}, #{operatorUserId}, #{operatorUserName}, #{operatorNickName}, #{createTime})
+    </insert>
+
+    <select id="selectFeedbackRecordsByClueId" resultType="com.kx.system.domain.riskclue.RiskClueFeedbackRecord">
+        SELECT id, clue_id AS clueId, feedback_org_name AS feedbackOrgName, feedback_person AS feedbackPerson,
+               feedback_phone AS feedbackPhone, feedback_content AS feedbackContent, feedback_time AS feedbackTime,
+               create_by AS createBy, create_time AS createTime
+        FROM risk_clue_feedback_record WHERE clue_id = #{clueId} ORDER BY feedback_time, id
+    </select>
+
+    <insert id="insertFeedbackRecord" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO risk_clue_feedback_record
+            (clue_id, feedback_org_name, feedback_person, feedback_phone, feedback_content,
+             feedback_time, create_by, create_time)
+        VALUES
+            (#{clueId}, #{feedbackOrgName}, #{feedbackPerson}, #{feedbackPhone}, #{feedbackContent},
+             #{feedbackTime}, #{createBy}, #{createTime})
+    </insert>
+</mapper>

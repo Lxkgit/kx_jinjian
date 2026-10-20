@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.GridInfoMapper">
+
+    <!-- ResultMap映射 -->
+    <resultMap id="BaseResultMap" type="com.kx.common.core.domain.system.grid.GridInfo">
+        <id column="id" property="id"/>
+        <result column="grid_code" property="gridCode"/>
+        <result column="key_grid_flag" property="keyGridFlag"/>
+        <result column="grid_bank_charge" property="gridBankCharge"/>
+        <result column="grid_bank_charge_phone" property="gridBankChargePhone"/>
+        <result column="grid_bank_member" property="gridBankMember"/>
+        <result column="grid_bank_member_phone" property="gridBankMemberPhone"/>
+        <result column="grid_branch_charge" property="gridBranchCharge"/>
+        <result column="merchant_num" property="merchantNum"/>
+        <result column="cash_num" property="cashNum"/>
+        <result column="publicity_num" property="publicityNum"/>
+        <result column="publicity_person_num" property="publicityPersonNum"/>
+        <result column="cash_service_num" property="cashServiceNum"/>
+        <result column="refuse_cash_num" property="refuseCashNum"/>
+        <result column="cash_exchange_num" property="cashExchangeNum"/>
+        <result column="cash_exchange_amount" property="cashExchangeAmount"/>
+        <result column="broken_coin_count" property="brokenCoinCount"/>
+        <result column="broken_coin_amount" property="brokenCoinAmount"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_name" property="createName"/>
+        <result column="create_by" property="createBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_name" property="updateName"/>
+        <result column="update_by" property="updateBy"/>
+    </resultMap>
+
+    <!-- 新增 -->
+    <insert id="insertGridInfo" parameterType="com.kx.common.core.domain.system.grid.GridInfo" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO grid_info (grid_code, key_grid_flag, grid_bank_charge, grid_bank_charge_phone,
+                               grid_bank_member, grid_bank_member_phone, grid_branch_charge,
+                               merchant_num, cash_num, publicity_num, publicity_person_num,
+                               cash_service_num, refuse_cash_num, cash_exchange_num, cash_exchange_amount,
+                               broken_coin_count, broken_coin_amount,
+                               create_time, create_name, create_by,
+                               update_time, update_name, update_by)
+        VALUES (#{gridCode}, #{keyGridFlag}, #{gridBankCharge}, #{gridBankChargePhone},
+                #{gridBankMember}, #{gridBankMemberPhone}, #{gridBranchCharge},
+                #{merchantNum}, #{cashNum}, #{publicityNum}, #{publicityPersonNum},
+                #{cashServiceNum}, #{refuseCashNum}, #{cashExchangeNum}, #{cashExchangeAmount},
+                #{brokenCoinCount}, #{brokenCoinAmount},
+                #{createTime}, #{createName}, #{createBy},
+                #{updateTime}, #{updateName}, #{updateBy})
+    </insert>
+
+    <!-- 根据ID删除 -->
+    <delete id="deleteGridInfoByGridCode">
+        UPDATE grid_info
+        set del_flag = 0
+        WHERE grid_code = #{gridCode}
+    </delete>
+
+    <!-- 更新 -->
+    <update id="updateGridInfoByGridCode" parameterType="com.kx.common.core.domain.system.grid.GridInfo">
+        UPDATE grid_info
+        <set>
+            <if test="keyGridFlag != null">key_grid_flag = #{keyGridFlag},</if>
+            <if test="gridBankCharge != null">grid_bank_charge = #{gridBankCharge},</if>
+            <if test="gridBankChargePhone != null">grid_bank_charge_phone = #{gridBankChargePhone},</if>
+            <if test="gridBankMember != null">grid_bank_member = #{gridBankMember},</if>
+            <if test="gridBankMemberPhone != null">grid_bank_member_phone = #{gridBankMemberPhone},</if>
+            <if test="gridBranchCharge != null">grid_branch_charge = #{gridBranchCharge},</if>
+            <if test="merchantNum != null">merchant_num = #{merchantNum},</if>
+            <if test="cashNum != null">cash_num = #{cashNum},</if>
+            <if test="publicityNum != null">publicity_num = #{publicityNum},</if>
+            <if test="publicityPersonNum != null">publicity_person_num = #{publicityPersonNum},</if>
+            <if test="cashServiceNum != null">cash_service_num = #{cashServiceNum},</if>
+            <if test="refuseCashNum != null">refuse_cash_num = #{refuseCashNum},</if>
+            <if test="cashExchangeNum != null">cash_exchange_num = #{cashExchangeNum},</if>
+            <if test="cashExchangeAmount != null">cash_exchange_amount = #{cashExchangeAmount},</if>
+            <if test="brokenCoinCount != null">broken_coin_count = #{brokenCoinCount},</if>
+            <if test="brokenCoinAmount != null">broken_coin_amount = #{brokenCoinAmount},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateName != null">update_name = #{updateName},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </set>
+        WHERE grid_code = #{gridCode}
+    </update>
+
+    <!-- 根据网格编码查询 -->
+    <select id="selectGridInfoByGridCode" resultMap="BaseResultMap">
+        SELECT * FROM grid_info
+        WHERE grid_code = #{gridCode}
+    </select>
+
+    <!-- 条件查询（支持多字段条件） -->
+    <select id="selectGridInfoList" parameterType="com.kx.common.core.domain.system.grid.GridInfo" resultMap="BaseResultMap">
+        SELECT * FROM grid_info
+        <where>
+            <if test="gridCode != null and gridCode != ''">AND grid_code LIKE CONCAT('%',
+                #{gridCode}, '%')
+            </if>
+            <if test="keyGridFlag != null">AND key_grid_flag = #{keyGridFlag}</if>
+        </where>
+    </select>
+
+</mapper>

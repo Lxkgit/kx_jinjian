@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.GridCommunityAdminMapper">
+
+    <resultMap id="GridCommunityAdminResultMap" type="com.kx.system.domain.GridCommunityAdmin">
+        <id property="gridCode" column="grid_code" />
+        <result property="adminName" column="admin_name" />
+        <result property="adminPhone" column="admin_phone" />
+        <result property="createTime" column="create_time" />
+        <result property="updateTime" column="update_time" />
+    </resultMap>
+
+    <insert id="insert" parameterType="com.kx.system.domain.GridCommunityAdmin">
+        INSERT INTO grid_community_admin (grid_code, admin_name, admin_phone, create_time, update_time)
+        VALUES (#{gridCode}, #{adminName}, #{adminPhone}, #{createTime}, #{updateTime})
+    </insert>
+
+    <update id="update" parameterType="com.kx.system.domain.GridCommunityAdmin">
+        UPDATE grid_community_admin
+        SET admin_name = #{adminName}, admin_phone = #{adminPhone}, update_time = #{updateTime}
+        WHERE id = #{id}
+    </update>
+    <delete id="delete">
+        DELETE FROM grid_community_admin
+        WHERE id = #{id}
+    </delete>
+
+
+    <select id="selectAll" resultMap="GridCommunityAdminResultMap">
+        SELECT id, grid_code, admin_name, admin_phone, create_time, update_time FROM grid_community_admin
+    </select>
+    <select id="selectByGridCode" resultType="com.kx.system.domain.GridCommunityAdmin">
+        SELECT id, grid_code, admin_name, admin_phone, create_time, update_time FROM grid_community_admin
+        WHERE grid_code = #{gridCode}
+    </select>
+
+</mapper>

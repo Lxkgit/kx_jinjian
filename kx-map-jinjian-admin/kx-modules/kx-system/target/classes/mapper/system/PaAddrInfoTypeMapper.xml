@@ -1,0 +1,924 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.PaAddrInfoTypeMapper">
+
+    <resultMap type="com.kx.system.domain.PaAddrInfoType" id="AddrInfoTypeResult">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="code" column="code" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="parentCode" column="parent_code" jdbcType="VARCHAR"/>
+        <result property="ancestorCodes" column="ancestor_codes" jdbcType="VARCHAR"/>
+        <result property="isMaintained" column="is_maintained" jdbcType="VARCHAR"/>
+        <result property="belongNetworkId" column="belong_network_code" jdbcType="VARCHAR"/>
+        <result property="belongNetworkCode" column="belong_network_code" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="creditLevel" column="credit_level" jdbcType="VARCHAR"/>
+        <result property="lon" column="lon" jdbcType="DECIMAL"/>
+        <result property="lat" column="lat" jdbcType="DECIMAL"/>
+        <result property="anotherName" column="another_name" jdbcType="VARCHAR"/>
+        <result property="boundaryPoints" column="boundary_points" jdbcType="VARCHAR"/>
+        <result property="centerPoint" column="center_point" jdbcType="VARCHAR"/>
+        <result property="coordinates" column="coordinates" jdbcType="VARCHAR"/>
+        <result property="addrLevel" column="addr_level" jdbcType="INTEGER"/>
+        <result property="type" column="type" jdbcType="VARCHAR"/>
+        <result property="etlDt" column="etl_dt" jdbcType="VARCHAR"/>
+        <result property="typeCode" column="type_code" jdbcType="BIGINT"/>
+        <result property="userId" column="user_id" jdbcType="BIGINT"/>
+        <result property="secondUserId" column="second_user_id" typeHandler="com.kx.system.config.typehandler.ListStringTypeHandler"/>
+        <result property="deptId" column="dept_id" jdbcType="BIGINT"/>
+        <result property="managerNum" column="manager_num" jdbcType="VARCHAR"/>
+        <result property="ruralGridType" column="rural_grid_type" jdbcType="VARCHAR"/>
+        <result property="deptCode" column="dept_code" jdbcType="VARCHAR"/>
+        <result property="userManagerNum" column="user_manager_num"/>
+        <result property="secondManagerNum" column="second_manager_num" typeHandler="com.kx.system.config.typehandler.ListStringTypeHandler"/>
+        <result property="secondUserName" column="second_user_name" typeHandler="com.kx.system.config.typehandler.ListStringTypeHandler" />
+    </resultMap>
+
+    <sql id="selectAddrInfoVo">
+        select id,
+               code,
+               name,
+               parent_code,
+               ancestor_codes,
+               is_maintained,
+               belong_network_code,
+               update_time,
+               credit_level,
+               lon,
+               lat,
+               another_name,
+               boundary_points,
+               center_point,
+               coordinates,
+               addr_level,
+               type,
+               etl_dt,
+               type_code,
+               user_id,
+               second_user_id,
+               dept_id,
+               manager_num,
+               user_manager_num,
+               second_manager_num,
+               rural_grid_type,
+               dept_code
+        from pa_addr_info_type
+    </sql>
+
+
+    <select id="selectAddrInfoById" resultMap="AddrInfoTypeResult">
+        <include refid="selectAddrInfoVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectCoordinatesByAreaCode" resultMap="AddrInfoTypeResult">
+        select code, coordinates
+        from pa_addr_info_type
+        <choose>
+            <when test="isCurrent == true">
+                where code = #{areaCode}
+            </when>
+            <otherwise>
+                where parent_code = #{areaCode}
+            </otherwise>
+        </choose>
+        and coordinates is not null
+        and code not like '3302%'
+    </select>
+
+    <select id="initAddrInfoType" parameterType="com.kx.system.domain.PaAddrInfoType">
+        INSERT INTO pa_addr_info_type (code,
+        name,
+        parent_code,
+        ancestor_codes,
+        is_maintained,
+        belong_network_code,
+        update_time,
+        credit_level,
+        lon,
+        lat,
+        another_name,
+        boundary_points,
+        center_point,
+        coordinates,
+        addr_level,
+        type,
+        etl_dt,
+        type_code)
+        SELECT code,
+        name,
+        parent_code,
+        ancestor_codes,
+        is_maintained,
+        belong_network_code,
+        update_time,
+        credit_level,
+        lon,
+        lat,
+        another_name,
+        boundary_points,
+        center_point,
+        coordinates,
+        addr_level,
+        type,
+        etl_dt,#{typeCode} as type_code
+        FROM pa_addr_info
+        WHERE CODE like concat(#{parentCode}, '%')
+    </select>
+
+    <select id="getSum" parameterType="com.kx.system.domain.PaAddrInfoType" resultType="integer">
+        SELECT
+        count( 1 )
+        FROM
+        pa_addr_info_type
+        <where>
+            <if test=" typeCode!=null and typeCode !='' ">
+                type_code = #{typeCode}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="getPaAddrInfoTypeUser" parameterType="com.kx.system.domain.param.SearchAddrInfoUserParam"
+            resultType="com.kx.system.api.domain.SysUser">
+        SELECT user_id userId,
+        dept_id deptId,
+        user_name userName,
+        nick_name nickName,
+        user_type userType,
+        manager_num managerNum,
+        email,
+        phonenumber,
+        remark
+        FROM sys_user u
+        <where>
+            ${params.dataScope}
+            <if test="deptId != null and deptId != ''">
+                AND (dept_id = #{deptId} OR dept_id IN (select dept_id from sys_dept where sys_dept.ancestors like concat('%,',
+                #{deptId} ,',%')))
+            </if>
+            <if test="search != null and search.size() != 0 ">
+                AND (
+                <foreach collection="search" item="item" open="(" close=")" separator="or" >
+                    nick_name like concat('%', #{item}, '%')
+                    or manager_num like concat('%', #{item}, '%')
+                </foreach>
+                )
+            </if>
+
+        </where>
+        limit 50
+    </select>
+
+    <select id="getAddrInfoTypeBottom" parameterType="com.kx.system.domain.PaAddrInfoType"
+            resultMap="AddrInfoTypeResult">
+        SELECT
+        p.id,
+        p.code,
+        p.name,
+        p.parent_code,
+        p.ancestor_codes,
+        p.is_maintained,
+        p.belong_network_code,
+        p.update_time,
+        p.credit_level,
+        p.lon,
+        p.lat,
+        p.another_name,
+        p.boundary_points,
+        p.center_point,
+        p.addr_level,
+        p.type,
+        p.etl_dt,
+        p.type_code,
+        p.rural_grid_type,
+        p.user_id,
+        u1.nick_name userName,
+        p.user_manager_num,
+        p.second_user_id,
+        p.second_user_name,
+        p.second_manager_num,
+        coalesce(gmi.duty_network_name, t.customer_name) AS anchorName,
+        coalesce(a.id, assigned_anchor.id) as anchorId
+        FROM
+        pa_addr_info_type p
+        left join performance_customer_info t on p.user_id=t.id
+        left join `kx-admin-renhang`.anchor_point a on t.customer_nm = a.customer_nm
+        left join grid_message_info gmi on gmi.grid_code = p.code
+        left join anchor_point assigned_anchor on assigned_anchor.anchor_name = gmi.duty_network_name
+        left join sys_user u1 on u1.user_id = p.user_id
+        <where>
+            <if test="typeCode !=null and typeCode != '' ">
+                and p.type_code = #{typeCode}
+            </if>
+            <if test="code !=null and code != '' ">
+                <!--and (p.code = #{code} or p.parent_code = #{code})-->
+                and p.ancestor_codes like concat('%,',#{code},',%')
+            </if>
+            <if test="userId !=null and userId != '' ">
+                and p.user_id = #{userId}
+            </if>
+            <if test="deptId !=null and deptId != '' ">
+                and p.dept_id = #{deptId}
+            </if>
+            <if test="name !=null and name != '' ">
+                and p.name like concat('%', #{name}, '%')
+            </if>
+            <if test="userName !=null and userName != '' ">
+                and u1.nick_name like concat('%', #{userName}, '%')
+            </if>
+            <if test="anchorName !=null and anchorName != '' ">
+                and coalesce(gmi.duty_network_name, t.customer_name) like concat('%', #{anchorName}, '%')
+            </if>
+            <if test="isDutyAnchor!=null and isDutyAnchor != ''and isDutyAnchor ==1">
+                and coalesce(gmi.duty_network_name, t.customer_name) is not null
+            </if>
+            <if test="isDutyAnchor!=null and isDutyAnchor != ''and isDutyAnchor ==0">
+                and coalesce(gmi.duty_network_name, t.customer_name) is null
+            </if>
+        and addr_level=5
+        </where>
+        ORDER BY addr_level,code
+    </select>
+
+
+    <sql id="selectPaAddrInfoTypeListSql">
+        SELECT
+            p.NAME parentName,
+            IFNULL(n.addrNum,0) childNum,
+            CASE WHEN n.addrNum > 0 THEN TRUE ELSE FALSE END AS isLeaf,
+            b.id,
+            b.CODE,
+            b.NAME,
+            b.parent_code,
+            b.ancestor_codes,
+            b.is_maintained,
+            b.belong_network_code,
+            b.update_time,
+            b.credit_level,
+            b.lon,
+            b.lat,
+            b.another_name,
+            b.boundary_points,
+            b.center_point,
+            b.addr_level,
+            b.type,
+            b.etl_dt,
+            b.type_code,
+            b.dept_id,
+            b.user_id,
+            u1.nick_name user_name,
+            b.user_manager_num,
+            b.second_user_id,
+            b.second_manager_num,
+            b.rural_grid_type,
+            b.second_user_name
+        FROM pa_addr_info_type b
+                 LEFT JOIN sys_user u1
+                           ON b.user_id = u1.user_id
+                 LEFT JOIN pa_addr_info_type p
+                           ON b.parent_code = p.code and p.type_code = b.type_code
+                 LEFT JOIN (SELECT parent_code,type_code, count(1) addrNum
+                            FROM pa_addr_info_type
+                            WHERE type_code = #{typeCode}
+                            GROUP BY parent_code,type_code) n
+                           ON n.parent_code = b.CODE and n.type_code = b.type_code
+
+    </sql>
+
+<!--    <select id="getPaAddrInfoTypeList" resultMap="AddrInfoTypeResult">-->
+
+<!--        SELECT-->
+<!--        count(b.ancestor_codes) as childNum ,-->
+<!--        b.dept_id,-->
+<!--        b.id,-->
+<!--        b.dept_id,-->
+<!--        IF(n.addrNum > 0, true, false) isLeaf,-->
+<!--        b.code,-->
+<!--        b2.name as parentName,-->
+<!--        b.type_code,-->
+<!--        b.addr_level,-->
+<!--        b.name,-->
+<!--        b.parent_code,-->
+<!--        b.ancestor_codes,-->
+<!--        b.user_id ,-->
+<!--        b.user_name,-->
+<!--        b.second_user_id,-->
+<!--        b.second_user_name,-->
+<!--        b.rural_grid_type-->
+<!--        FROM pa_addr_info_type b-->
+<!--        LEFT JOIN sys_user u ON b.user_id = u.user_id-->
+<!--        LEFT JOIN (-->
+<!--        SELECT parent_code,type_code, COUNT(1) addrNum-->
+<!--        FROM pa_addr_info_type-->
+<!--        GROUP BY parent_code,type_code-->
+<!--        ) n ON n.parent_code = b.code AND n.type_code = b.type_code-->
+<!--        left join pa_addr_info_type b2 on b.parent_code = b2.code-->
+<!--        <where>-->
+<!--            <if test="typeCode != null and typeCode != '' ">-->
+<!--                AND b.type_code = #{typeCode}-->
+<!--            </if>-->
+<!--            <if test="parentCode != null and parentCode != '' ">-->
+<!--                AND b.parent_code = #{parentCode}-->
+<!--            </if>-->
+<!--            <if test="code != null and code != '' ">-->
+<!--                AND b.code = #{code}-->
+<!--            </if>-->
+<!--            <if test="code != null and code != '' ">-->
+<!--                AND b.ancestor_codes like concat('%,', #{code}, ',%')-->
+<!--            </if>-->
+<!--&lt;!&ndash;            <if test="addrLevel != null and addrLevel != '' ">&ndash;&gt;-->
+<!--&lt;!&ndash;                AND b.addr_level = #{addrLevel}&ndash;&gt;-->
+<!--&lt;!&ndash;            </if>&ndash;&gt;-->
+<!--        </where>-->
+<!--&lt;!&ndash;        <include refid="selectPaAddrInfoTypeListSql"/>&ndash;&gt;-->
+<!--&lt;!&ndash;        WHERE b.type_code = #{typeCode}&ndash;&gt;-->
+<!--&lt;!&ndash;        <if test="parentCode !=null and parentCode != '' ">&ndash;&gt;-->
+<!--&lt;!&ndash;            and b.parent_code = #{parentCode}&ndash;&gt;-->
+<!--&lt;!&ndash;        </if>&ndash;&gt;-->
+<!--&lt;!&ndash;        <if test="code !=null and code != '' ">&ndash;&gt;-->
+<!--&lt;!&ndash;            and b.code = #{code}&ndash;&gt;-->
+<!--&lt;!&ndash;        </if>&ndash;&gt;-->
+<!--&lt;!&ndash;        order by b.update_time desc&ndash;&gt;-->
+<!--    </select>-->
+
+
+    <select id="getPaAddrInfoTypeList" resultMap="AddrInfoTypeResult">
+        <bind name="pattern" value="'%,' + code + ',%'"/>
+        SELECT
+        IFNULL(n.addrNum, 0) AS childNum,
+        CASE
+            WHEN b.addr_level &gt;= 5 THEN 0
+            ELSE IFNULL(minimum_grid.minimumNum, 0)
+        END AS minimumNum,
+        b.dept_id,
+        b.id,
+        IF(n.addrNum > 0, true, false) AS isLeaf,
+        b.code,
+        b2.name AS parentName,
+        b.type_code,
+        b.addr_level,
+        b.name,
+        b.parent_code,
+        b.ancestor_codes,
+        b.user_id,
+        b.user_name,
+        b.second_user_id,
+        b.second_user_name,
+        b.rural_grid_type
+        FROM pa_addr_info_type b
+        LEFT JOIN (
+        SELECT parent_code, type_code, COUNT(1) AS addrNum
+        FROM pa_addr_info_type
+        WHERE type_code = #{typeCode}
+        GROUP BY parent_code, type_code
+        ) n ON n.parent_code = b.code AND n.type_code = b.type_code
+        LEFT JOIN (
+            SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(ancestor_codes, ',', 3), ',', -1) AS code,
+                   1 AS addr_level,
+                   type_code, COUNT(1) AS minimumNum
+            FROM pa_addr_info_type
+            WHERE type_code = #{typeCode} AND addr_level = 5 AND ancestor_codes IS NOT NULL
+            GROUP BY type_code, SUBSTRING_INDEX(SUBSTRING_INDEX(ancestor_codes, ',', 3), ',', -1)
+            UNION ALL
+            SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(ancestor_codes, ',', 4), ',', -1) AS code,
+                   2 AS addr_level,
+                   type_code, COUNT(1) AS minimumNum
+            FROM pa_addr_info_type
+            WHERE type_code = #{typeCode} AND addr_level = 5 AND ancestor_codes IS NOT NULL
+            GROUP BY type_code, SUBSTRING_INDEX(SUBSTRING_INDEX(ancestor_codes, ',', 4), ',', -1)
+            UNION ALL
+            SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(ancestor_codes, ',', 5), ',', -1) AS code,
+                   3 AS addr_level,
+                   type_code, COUNT(1) AS minimumNum
+            FROM pa_addr_info_type
+            WHERE type_code = #{typeCode} AND addr_level = 5 AND ancestor_codes IS NOT NULL
+            GROUP BY type_code, SUBSTRING_INDEX(SUBSTRING_INDEX(ancestor_codes, ',', 5), ',', -1)
+            UNION ALL
+            SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(ancestor_codes, ',', 6), ',', -1) AS code,
+                   4 AS addr_level,
+                   type_code, COUNT(1) AS minimumNum
+            FROM pa_addr_info_type
+            WHERE type_code = #{typeCode} AND addr_level = 5 AND ancestor_codes IS NOT NULL
+            GROUP BY type_code, SUBSTRING_INDEX(SUBSTRING_INDEX(ancestor_codes, ',', 6), ',', -1)
+        ) minimum_grid ON minimum_grid.code = b.code
+                      AND minimum_grid.addr_level = b.addr_level
+                      AND minimum_grid.type_code = b.type_code
+        LEFT JOIN pa_addr_info_type b2 ON b.parent_code = b2.code
+        <where>
+            <if test="typeCode != null and typeCode != ''">
+                AND b.type_code = #{typeCode}
+            </if>
+            <if test="parentCode != null and parentCode != ''">
+                AND b.parent_code = #{parentCode}
+            </if>
+            <if test="code != null and code != ''">
+                AND b.code = #{code}
+            </if>
+            <if test="code != null and code != ''">
+                AND b.ancestor_codes LIKE #{pattern}
+            </if>
+        </where>
+    </select>
+    <select id="cleanChildGrid">
+        DELETE
+        from pa_addr_info_type
+        WHERE type_code = #{typeCode}
+        and parent_code like concat(#{parentCode}, '%');
+    </select>
+
+    <insert id="insertAddrInfo" parameterType="com.kx.system.domain.PaAddrInfoType">
+        insert into pa_addr_info_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="code != null">code,</if>
+            <if test="name != null">name,</if>
+            <if test="type != null">type,</if>
+            <if test="anotherName != null">another_name,</if>
+            <if test="parentCode != null">parent_code,</if>
+            <if test="ancestorCodes != null">ancestor_codes,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="isMaintained != null">is_maintained,</if>
+            <if test="belongNetworkCode != null">belong_network_code,</if>
+            <if test="boundaryPoints != null">boundary_points,</if>
+            <if test="addrLevel != null">addr_level,</if>
+            <if test="typeCode != null">type_code,</if>
+            <if test="centerPoint != null">center_point,</if>
+            <if test="coordinates != null">coordinates,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="secondUserId != null and secondUserId.size() != 0">second_user_id,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="ruralGridType != null">rural_grid_type,</if>
+            <if test="userManagerNum!=null and userManagerNum!=''">user_manager_num,manager_num,</if>
+            <if test="secondManagerNum != null and secondManagerNum.size() != 0">second_manager_num,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="code != null">#{code},</if>
+            <if test="name != null">#{name},</if>
+            <if test="type != null">#{type},</if>
+            <if test="anotherName != null">#{anotherName},</if>
+            <if test="parentCode != null">#{parentCode},</if>
+            <if test="ancestorCodes != null">#{ancestorCodes},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="isMaintained != null">#{isMaintained},</if>
+            <if test="belongNetworkCode != null">#{belongNetworkCode},</if>
+            <if test="boundaryPoints != null">#{boundaryPoints},</if>
+            <if test="addrLevel != null">#{addrLevel},</if>
+            <if test="typeCode != null">#{typeCode},</if>
+            <if test="centerPoint != null">#{centerPoint},</if>
+            <if test="coordinates != null">#{coordinates},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="secondUserId != null and secondUserId.size() != 0">#{secondUserId,typeHandler=com.kx.system.config.typehandler.ListStringTypeHandler},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="ruralGridType != null">#{ruralGridType},</if>
+            <if test="userManagerNum!=null and userManagerNum!=''">#{userManagerNum},#{userManagerNum},</if>
+            <if test="secondManagerNum != null and secondManagerNum.size() != 0">#{secondManagerNum,typeHandler=com.kx.system.config.typehandler.ListStringTypeHandler},</if>
+        </trim>
+    </insert>
+
+
+    <sql id="updateAddrInfoSql">
+        update pa_addr_info_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="code != null">code = #{code},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="anotherName != null">another_name = #{anotherName},</if>
+            <if test="parentCode != null">parent_code = #{parentCode},</if>
+            <if test="ancestorCodes != null">ancestor_codes = #{ancestorCodes},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="isMaintained != null">is_maintained = #{isMaintained},</if>
+            <if test="belongNetworkCode != null">belong_network_code = #{belongNetworkCode},</if>
+            <if test="boundaryPoints != null">boundary_points = #{boundaryPoints},</if>
+            <if test="typeCode != null">type_code = #{typeCode},</if>
+            <if test="centerPoint != null">center_point = #{centerPoint},</if>
+            <if test="coordinates != null">coordinates = #{coordinates},</if>
+            <if test="userId != null ">user_id = #{userId},</if>
+            <if test="secondUserId != null and secondUserId.size() != 0">second_user_id = #{secondUserId,typeHandler=com.kx.system.config.typehandler.ListStringTypeHandler},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="deptCode != null">dept_code = #{deptCode},</if>
+            <if test="ruralGridType != null">rural_grid_type = #{ruralGridType},</if>
+            <if test="userManagerNum!=null and userManagerNum!=''">user_manager_num=#{userManagerNum},manager_num=#{userManagerNum},</if>
+            <if test="userName!=null">user_name=#{userName},</if>
+            <if test="secondManagerNum != null and secondManagerNum.size() != 0">second_manager_num =#{secondManagerNum,typeHandler=com.kx.system.config.typehandler.ListStringTypeHandler},</if>
+        </trim>
+    </sql>
+
+    <update id="updateAddrInfo" parameterType="com.kx.system.domain.PaAddrInfoType">
+        <include refid="updateAddrInfoSql"/>
+        where id = #{id}
+    </update>
+
+    <update id="updateAddrInfoByCode">
+        <include refid="updateAddrInfoSql"/>
+        where code = #{code}
+    </update>
+
+    <delete id="deleteAddrInfoById" >
+        delete
+        from pa_addr_info_type
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteAddrInfoByCode">
+        delete
+        from pa_addr_info_type
+        where type_code = #{typeCode}
+        and code = #{code}
+    </delete>
+
+
+    <select id="selectByCode" resultMap="AddrInfoTypeResult">
+        <include refid="selectAddrInfoVo"/>
+        where type_code = #{typeCode}
+
+        and code = #{code}
+        order by id desc
+    </select>
+
+
+    <select id="selectByCodeList" resultMap="AddrInfoTypeResult">
+        <include refid="selectAddrInfoVo"/>
+        where code in
+        <foreach item="code" collection="codeList" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </select>
+
+    <select id="selectByParentCodeList" resultMap="AddrInfoTypeResult">
+        <include refid="selectAddrInfoVo"/>
+        where parent_code in
+        <foreach item="code" collection="codeList" open="(" separator="," close=")">
+        #{code}
+        </foreach>
+    </select>
+
+    <select id="selectByParentCode" resultMap="AddrInfoTypeResult">
+        <include refid="selectAddrInfoVo"/>
+        where parent_code = #{parentCode} and code is not null
+    </select>
+
+    <select id="selectSelfAndChildByParentCode" resultMap="AddrInfoTypeResult">
+        <include refid="selectAddrInfoVo"/>
+        where (parent_code = #{parentCode}) and code is not null
+        order by addr_level asc
+    </select>
+
+    <select id="selectAllCode" resultMap="AddrInfoTypeResult">
+        <include refid="selectAddrInfoVo"/>
+    </select>
+
+    <select id="testSelect" resultMap="AddrInfoTypeResult">
+        <include refid="selectAddrInfoVo"/>
+        where addr_level = '5'
+    </select>
+
+    <resultMap type="com.kx.system.domain.anchor.PaPocAddress" id="PaPocAddressResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="code" column="code"/>
+        <result property="lon" column="lon"/>
+        <result property="lat" column="lat"/>
+        <result property="address" column="address"/>
+    </resultMap>
+
+
+
+    <select id="address" resultMap="PaPocAddressResult">
+        select
+            id,
+            name,
+            admin_code as code,
+            lon,
+            lat,
+            address
+        from pa_poc_address where length(admin_code)=6
+    </select>
+
+    <update id="addressUpdateByLonLat">
+        <foreach collection="list" item="item" separator=";" close=";" >
+            UPDATE pa_poc_address
+            SET admin_code = #{item.code}
+            WHERE id = #{item.id}
+        </foreach>
+    </update>
+
+
+    <update id="cleanUser">
+        UPDATE pa_addr_info_type
+        SET user_id = NULL,user_manager_num  = NULL,manager_num = NULL
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateAddrInfo2">
+        update pa_addr_info_type
+        <trim prefix="SET" suffixOverrides=",">
+            second_user_id = #{secondUserId,typeHandler=com.kx.system.config.typehandler.ListStringTypeHandler},
+            second_manager_num = #{secondManagerNum,typeHandler=com.kx.system.config.typehandler.ListStringTypeHandler},
+            second_user_name = #{secondUserName,typeHandler=com.kx.system.config.typehandler.ListStringTypeHandler},
+            <if test="code != null">code = #{code},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="anotherName != null">another_name = #{anotherName},</if>
+            <if test="parentCode != null">parent_code = #{parentCode},</if>
+            <if test="ancestorCodes != null">ancestor_codes = #{ancestorCodes},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="isMaintained != null">is_maintained = #{isMaintained},</if>
+            <if test="belongNetworkCode != null">belong_network_code = #{belongNetworkCode},</if>
+            <if test="boundaryPoints != null">boundary_points = #{boundaryPoints},</if>
+            <if test="typeCode != null">type_code = #{typeCode},</if>
+            <if test="centerPoint != null">center_point = #{centerPoint},</if>
+            <if test="coordinates != null">coordinates = #{coordinates},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="deptCode != null">dept_code = #{deptCode},</if>
+            <if test="ruralGridType != null">rural_grid_type = #{ruralGridType},</if>
+            <if test="userManagerNum != null and userManagerNum != ''">user_manager_num = #{userManagerNum},manager_num = #{userManagerNum},</if>
+
+        </trim>
+        where id = #{id}
+
+    </update>
+
+    <select id="getByGridCode" resultType="com.kx.system.domain.PaAddrInfoType" resultMap="AddrInfoTypeResult">
+        <include refid="selectAddrInfoVo">
+        </include>
+        where code = #{gridCode}
+    </select>
+
+    <select id="selectByCodeAndJurisdiction" resultMap="AddrInfoTypeResult">
+        select id, code, name, parent_code, update_time, belong_network_code,credit_level,center_point,boundary_points,
+        coordinates,addr_level,type,type_code from pa_addr_info_type
+        where
+        type_code = #{typeCode}
+        <if test="jurisdiction!= null and jurisdiction == '0'.toString()">
+            and code = #{code}
+        </if>
+        <if test="jurisdiction!= null and jurisdiction == '1'.toString()">
+            and parent_code = #{code}
+        </if>
+        <if test="jurisdiction!= null and jurisdiction == '2'.toString()">
+            and (code = #{code} or parent_code = #{code})
+        </if>
+        order by addr_level,length(code)
+    </select>
+    <select id="selectBaseByCodeAndJurisdiction" resultMap="AddrInfoTypeResult">
+        select pait.id, pait.code, pait.name, pait.parent_code, pait.update_time, pait.belong_network_code,pait.credit_level,pait.center_point,pait.boundary_points,
+        pait.coordinates,pait.addr_level,pait.type,gmi.is_cash
+        from pa_addr_info_type pait
+        left join grid_message_info gmi on pait.code = gmi.grid_code
+        <where>
+            <if test="jurisdiction!= null and jurisdiction == '0'.toString()">
+                and code = #{code}
+            </if>
+            <if test="jurisdiction!= null and jurisdiction == '1'.toString()">
+                and parent_code = #{code}
+            </if>
+            <if test="jurisdiction!= null and jurisdiction == '2'.toString()">
+                and (code = #{code} or parent_code = #{code})
+            </if>
+        </where>
+        order by addr_level,length(code)
+    </select>
+
+    <select id="listByIds" resultMap="AddrInfoTypeResult">
+        <include refid="selectAddrInfoVo"/>
+        where type_code = #{typeCode}
+        and code in
+        <foreach collection="codeList" separator="," open="(" close=")" item="code">
+            #{code}
+        </foreach>
+    </select>
+    <select id="listAllChildGrid" resultMap="AddrInfoTypeResult">
+        <include refid="selectAddrInfoVo"/>
+        WHERE type_code = #{typeCode}
+        and parent_code like concat(#{parentCode}, '%');
+    </select>
+    <select id="selectDeptIdAndUserIdByTypeCode" resultMap="AddrInfoTypeResult">
+        select id, code, user_id, dept_id, ancestor_codes
+        from pa_addr_info_type
+        where type_code = #{typeCode}
+        and (user_id is not null or dept_id is not null)
+    </select>
+    <select id="selectByDeptId" resultMap="AddrInfoTypeResult">
+        <include refid="selectAddrInfoVo"/>
+        where dept_id = #{deptId}
+    </select>
+    <select id="selectByDeptCode" resultMap="AddrInfoTypeResult">
+        <include refid="selectAddrInfoVo"/>
+        where dept_code = #{deptCode}
+    </select>
+
+    <select id="selectByUserId" resultMap="AddrInfoTypeResult">
+        <include refid="selectAddrInfoVo"/>
+        where user_id = #{userId}
+    </select>
+
+    <select id="selectParentsByCode" resultType="java.lang.String">
+        select distinct parent_code from pa_addr_info_type
+    </select>
+    <!--    <select id="getPaAddrInfoTypeListByPermission" resultType="com.kx.system.domain.PaAddrInfoType">-->
+    <select id="getPaAddrInfoTypeListByPermission" resultMap="AddrInfoTypeResult">
+        <include refid="selectPaAddrInfoTypeListSql"/>
+        WHERE b.type_code = #{typeCode}
+<!--        ${params.dataScope}-->
+<!--        <if test="addrLevel != null">-->
+<!--            and b.addr_level = #{addrLevel}-->
+<!--        </if>-->
+<!--        order by b.addr_level,b.code-->
+        <if test="parentCode != null and parentCode!= ''">
+            and b.parent_code = #{parentCode}
+        </if>
+        ${params.dataScope}
+        order by b.addr_level,b.code
+    </select>
+    <select id="selectCodeAndParentCodeAll" resultType="com.kx.system.domain.PaAddrInfoType">
+        select code,parent_code
+        from pa_addr_info_type
+    </select>
+
+    <select id="getMinAddrLevel" resultType="int">
+        select min(addr_level) from pa_addr_info_type b
+        WHERE type_code = #{typeCode} and user_id = #{userId}
+    </select>
+
+    <select id="selectParentsByCode2" resultType="java.lang.String">
+        select distinct parent_code from pa_addr_info_type where parent_code like concat(#{parentCode},'%')
+    </select>
+    <select id="selectByChildNum" resultType="java.lang.Integer" parameterType="java.lang.String">
+        select count(parent_code)
+        from pa_addr_info_type
+        where parent_code = #{code}
+    </select>
+
+
+    <select id="getMinimumCount" resultType="java.lang.Integer">
+        SELECT COUNT(1) minimumNum
+        FROM pa_addr_info_type
+        WHERE addr_level = 5
+          AND SUBSTRING(code, 1, 4) = '3307';
+    </select>
+
+    <select id="getMinimumCountByParentCode" resultType="java.lang.Integer">
+        SELECT COUNT(1) minimumNum
+        FROM pa_addr_info_type
+        WHERE addr_level = 5
+        AND ancestor_codes like concat('%,',#{parentCode},',%');
+    </select>
+
+
+    <update id="batchUpdate">
+        <foreach collection="paAddrInfoTypeList" item="paAddrInfoType" close=";" separator=";" >
+            update pa_addr_info_type
+            <trim prefix="SET" suffixOverrides=",">
+                <if test="paAddrInfoType.ancestorCodes != null and paAddrInfoType.ancestorCodes != ''">
+                    ancestor_codes = #{paAddrInfoType.ancestorCodes}
+                </if>
+            </trim>
+            where id = #{paAddrInfoType.id}
+        </foreach>
+    </update>
+
+    <select id="getPaAddrInfoTypeByOrgCode" resultType="com.kx.system.api.domain.shop.dto.OrgGridInfoDto" parameterType="com.kx.system.api.domain.shop.param.OrgGridInfoParam">
+        SELECT
+            pait.`code` AS gridCode,
+            pait.`name` AS gridName,
+--             g.grid_branch_charge_id AS grid_branch_charge_id,
+            g.grid_branch_charge_code AS grid_branch_charge_code,
+            g.grid_branch_charge_name AS grid_branch_charge_name,
+--             g.org_id AS org_id,
+            g.org_code AS org_code,
+            g.org_name AS org_name
+        FROM
+            pa_addr_info_type pait
+                INNER JOIN (
+                SELECT
+                    gi.grid_code AS grid_code,
+                    dp.grid_branch_charge_id AS grid_branch_charge_id,
+                    dp.grid_branch_charge_code AS grid_branch_charge_code,
+                    dp.grid_branch_charge_name AS grid_branch_charge_name,
+                    dp.org_id AS org_id,
+                    dp.org_code AS org_code,
+                    dp.org_name AS org_name
+                FROM
+                    grid_info gi
+                        INNER JOIN (
+                        SELECT
+                            d.dept_id AS grid_branch_charge_id,
+                            d.org_num AS grid_branch_charge_code,
+                            d.dept_name AS grid_branch_charge_name,
+                            f.dept_id AS org_id,
+                            f.org_num AS org_code,
+                            f.dept_name AS org_name
+                        FROM
+                            sys_dept d
+                                JOIN ( SELECT dept_id FROM sys_dept WHERE org_num = #{orgNum} LIMIT 1 ) root ON FIND_IN_SET( root.dept_id, d.ancestors )
+                                LEFT JOIN sys_dept f ON FIND_IN_SET( f.dept_id, d.ancestors )
+                                AND f.dot_type = '2'
+                                AND NOT EXISTS (
+                                    SELECT
+                                        1
+                                    FROM
+                                        sys_dept f2
+                                    WHERE
+                                        f2.dot_type = '2'
+                                      AND FIND_IN_SET( f2.dept_id, d.ancestors )
+                                      AND CHAR_LENGTH( f2.ancestors ) > CHAR_LENGTH( f.ancestors )
+                                )
+                        WHERE
+                            d.dot_type = '3'
+                            <if test="branchName != null and branchName != ''">
+                                AND d.dept_name LIKE concat('%',#{branchName},'%')
+                            </if>
+                    ) dp ON gi.grid_branch_charge = dp.grid_branch_charge_code
+            ) g ON g.grid_code = pait.`code`
+        WHERE
+            pait.addr_level = 5
+            <if test="gridCode != null and gridCode != ''">
+                AND pait.ancestor_codes like concat('%,',#{gridCode},',%')
+            </if>
+            <if test="gridName != null and gridName != ''">
+                AND pait.name like concat('%,',#{gridName},',%')
+            </if>
+    </select>
+
+
+    <select id="getGridInfo" resultType="com.kx.system.api.domain.shop.dto.GridInfoDto">
+        select pait.code             as grid_code,
+               pait.name             as grid_name,
+               pait.ancestor_codes   as grid_ancestor_codes,
+               gi.grid_branch_charge as branch_code,
+               sd.dept_name          as branch_name,
+               sd.ancestors          as branch_ancestors,
+               sd.dot_type           as type,
+               sd.dept_classify      as dept_classify,
+               sd.org_id             as org_dept_id,
+               sd.org_code           as org_dept_code,
+               sd.org_name           as org_dept_name
+        from pa_addr_info_type pait
+                 left join grid_info gi on pait.code = gi.grid_code
+                 left join (SELECT d.dept_id       AS dept_id,
+                                   d.org_num       AS org_num,
+                                   d.dept_name     AS dept_name,
+                                   d.ancestors     AS ancestors,
+                                   d.dot_type      AS dot_type,
+                                   d.dept_classify AS dept_classify,
+                                   f.dept_id       AS org_id,
+                                   f.org_num       AS org_code,
+                                   f.dept_name     AS org_name
+                            FROM sys_dept d
+                                     LEFT JOIN sys_dept f ON FIND_IN_SET(f.dept_id, d.ancestors)
+                                AND f.dot_type = '2'
+                                AND NOT EXISTS (SELECT 1
+                                                FROM sys_dept f2
+                                                WHERE f2.dot_type = '2'
+                                                  AND FIND_IN_SET(f2.dept_id, d.ancestors)
+                                                  AND CHAR_LENGTH(f2.ancestors) > CHAR_LENGTH(f.ancestors))) sd
+                           on gi.grid_branch_charge = sd.org_num
+        where pait.addr_level = 5
+    </select>
+
+    <select id="getGridInfoByCode" resultType="com.kx.system.api.domain.shop.dto.GridInfoDto">
+        select pait.code             as grid_code,
+               pait.name             as grid_name,
+               pait.ancestor_codes   as grid_ancestor_codes,
+               gi.grid_branch_charge as branch_code,
+               sd.dept_name          as branch_name,
+               sd.ancestors          as branch_ancestors,
+               sd.dot_type           as type,
+               sd.dept_classify      as dept_classify,
+               sd.org_id             as org_dept_id,
+               sd.org_code           as org_dept_code,
+               sd.org_name           as org_dept_name,
+               sd.org_area_code      as org_dept_area_code,
+               sd.org_area_ancestor_codes AS org_dept_area_ancestor_codes
+        from pa_addr_info_type pait
+                 left join grid_info gi on pait.code = gi.grid_code
+                 left join (SELECT d.dept_id       AS dept_id,
+                                   d.org_num       AS org_num,
+                                   d.dept_name     AS dept_name,
+                                   d.ancestors     AS ancestors,
+                                   d.dot_type      AS dot_type,
+                                   d.dept_classify AS dept_classify,
+                                   f.dept_id       AS org_id,
+                                   f.org_num       AS org_code,
+                                   f.dept_name     AS org_name,
+                                   f.area_code     AS org_area_code,
+                                   pait2.ancestor_codes AS org_area_ancestor_codes
+                            FROM sys_dept d
+                                     LEFT JOIN sys_dept f ON FIND_IN_SET(f.dept_id, d.ancestors)
+                                AND f.dot_type = '2'
+                                AND NOT EXISTS (SELECT 1
+                                                FROM sys_dept f2
+                                                WHERE f2.dot_type = '2'
+                                                  AND FIND_IN_SET(f2.dept_id, d.ancestors)
+                                                  AND CHAR_LENGTH(f2.ancestors) > CHAR_LENGTH(f.ancestors))
+                                    left join pa_addr_info_type pait2 on f.area_code = pait2.code
+                            ) sd
+                           on gi.grid_branch_charge = sd.org_num
+        where pait.code = #{gridCode}
+    </select>
+</mapper>

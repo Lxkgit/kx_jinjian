@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kx.system.mapper.ManagerTransferReferIndexMapper">
+    <insert id="batchInsert">
+        insert into manager_transfer_refer_index
+        ("manager_num","two_year_loan_pass_rate","last_month_normal_inte_rate")
+        values
+        <foreach collection="paTaskPositions" item="i" separator=",">
+            (#{i.managerNum},#{i.twoYearLoanPassRate},#{i.lastMonthNormalInteRate})
+        </foreach>
+    </insert>
+    <delete id="truncate">
+        truncate table manager_transfer_refer_index
+    </delete>
+
+    <select id="list" resultType="com.kx.system.domain.PaTaskPosition">
+        select "manager_num","two_year_loan_pass_rate","last_month_normal_inte_rate"
+        from manager_transfer_refer_index
+        <where>
+            <if test="managerNum != null and managerNum != ''">
+                "manager_num" = #{managerNum}
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,718 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kx.system.mapper.FilingCustomerInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="filingCustomerInfoResultMap" type="com.kx.system.domain.filing.FilingCustomerInfo">
+        <id column="id" property="id"/>
+        <result column="customer_type" property="customerType"/>
+        <result column="customer_name" property="customerName"/>
+        <result column="customer_address" property="customerAddress"/>
+        <result column="customer_phone" property="customerPhone"/>
+        <result column="customer_identity" property="customerIdentity"/>
+        <result column="customer_source" property="customerSource"/>
+        <result column="belong_grid_code" property="belongGridCode"/>
+        <result column="belong_grid_name" property="belongGridName"/>
+        <result column="filing_manager_code" property="filingManagerCode"/>
+        <result column="filing_manager_name" property="filingManagerName"/>
+        <result column="filing_org_code" property="filingOrgCode"/>
+        <result column="filing_org_name" property="filingOrgName"/>
+        <result column="filing_progress" property="filingProgress"/>
+        <result column="filing_source" property="filingSource"/>
+        <result column="filing_status" property="filingStatus"/>
+        <result column="filing_date" property="filingDate"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="customer_introducer_identity" property="customerIntroducerIdentity"/>
+        <result column="customer_address_type" property="customerAddressType"/>
+        <result column="customer_nm" property="customerNm"/>
+        <result column="model_id" property="modelId"/>
+        <result column="clock_in" property="clockIn"/>
+        <result column="customer_photo" property="customerPhoto"/>
+        <result column="move_status" property="moveStatus"/>
+    </resultMap>
+    <resultMap id="EsFilingMemberResultMap" type="com.kx.system.domain.es.EsFilingMemberDto">
+        <id column="id" property="id"/>
+        <result column="customer_type" property="customerType"/>
+        <result column="customer_name" property="customerName"/>
+        <result column="customer_address" property="customerAddress"/>
+        <result column="customer_phone" property="customerPhone"/>
+        <result column="customer_identity" property="customerIdentity"/>
+        <result column="customer_source" property="customerSource"/>
+        <result column="belong_grid_code" property="belongGridCode"/>
+        <result column="belong_grid_name" property="belongGridName"/>
+        <result column="filing_manager_code" property="filingManagerCode"/>
+        <result column="filing_manager_name" property="filingManagerName"/>
+        <result column="filing_org_code" property="filingOrgCode"/>
+        <result column="filing_org_name" property="filingOrgName"/>
+        <result column="filing_progress" property="filingProgress"/>
+        <result column="filing_source" property="filingSource"/>
+        <result column="filing_status" property="filingStatus"/>
+        <result column="filing_date" property="filingDate"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="customer_introducer_identity" property="customerIntroducerIdentity"/>
+        <result column="customer_address_type" property="customerAddressType"/>
+        <result column="customer_nm" property="customerNm"/>
+        <result column="clock_in" property="clockIn"/>
+        <result column="customer_photo" property="customerPhoto"/>
+        <result property="userDeptId" column="dept_id"/>
+        <result property="userId" column="user_id" />
+        <result property="gridManagerName" column="nick_name" />
+        <result property="ancestorsId" column="ancestors" />
+        <result property="ancestorCodes" column="ancestor_codes" />
+        <result property="groupId" column="custom_group_id" />
+        <result column="credit_manager_jobNumber" property="creditManagerJobNumber" />
+        <result column="credit_manager" property="creditManager" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="columns">
+        id,
+        customer_type,
+        customer_name,
+        customer_address,
+        customer_phone,
+        customer_identity,
+        customer_source,
+        belong_grid_code,
+        belong_grid_name,
+        filing_manager_code,
+        filing_manager_name,
+        filing_org_code,
+        filing_org_name,
+        filing_progress,
+        filing_source,
+        filing_status,
+        filing_date,
+        create_time,
+        update_time,
+        customer_introducer_identity,
+        customer_address_type,
+        customer_nm,
+        model_id,
+        customer_photo,
+        clock_in
+    </sql>
+
+    <sql id="columnsByLeft">
+        a.id,
+        a.customer_type,
+        a.customer_name,
+        a.customer_address,
+        a.customer_phone,
+        a.customer_identity,
+        a.customer_source,
+        a.belong_grid_code,
+        a.belong_grid_name,
+        a.filing_manager_code,
+        a.filing_manager_name,
+        a.filing_org_code,
+        a.filing_org_name,
+        a.filing_progress,
+        a.filing_source,
+        a.filing_status,
+        a.filing_date,
+        a.create_time,
+        a.update_time,
+        a.customer_introducer_identity,
+        a.customer_address_type,
+        a.customer_nm,
+        a.model_id,
+        a.customer_photo,
+        a.clock_in,
+        b.move_status
+    </sql>
+
+    <!-- 查询列表 -->
+    <select id="listInfoCount" parameterType="com.kx.system.domain.filing.FilingCustomerInfo" resultType="int">
+        SELECT
+        count(1)
+        FROM
+        filing_customer_info a
+        LEFT JOIN custom_group_customer c ON a.id = c.customer_id
+        <where>
+            <if test="filingCustomerInfo.customerIdentity != null and filingCustomerInfo.customerIdentity != '' ">and
+                a.customer_identity like concat('%', #{filingCustomerInfo.customerIdentity}, '%')
+            </if>
+            <if test="filingCustomerInfo.customerName != null and filingCustomerInfo.customerName != '' ">and
+                a.customer_name like concat('%', #{filingCustomerInfo.customerName}, '%')
+            </if>
+            <if test="filingCustomerInfo.customerPhone != null and filingCustomerInfo.customerPhone != '' ">and
+                a.customer_phone like concat('%', #{filingCustomerInfo.customerPhone}, '%')
+            </if>
+            <if test="filingCustomerInfo.filingManagerCode != null and filingCustomerInfo.filingManagerCode != '' ">and
+                a.filing_manager_code like concat('%', #{filingCustomerInfo.filingManagerCode}, '%')
+            </if>
+            <if test="filingCustomerInfo.customGroupId != null and filingCustomerInfo.customGroupId != '' ">and
+                c.custom_group_id like concat('%', #{filingCustomerInfo.customGroupId}, '%')
+            </if>
+            <if test="filingCustomerInfo.belongGridCodeArr != null and filingCustomerInfo.belongGridCodeArr.size > 0 ">
+                and
+                <foreach collection="filingCustomerInfo.belongGridCodeArr" item="belongGridCode" separator="or" open="("
+                         close=")">
+                    a.belong_grid_code in (select code from pa_addr_info_type where ancestor_codes like
+                    concat('%',#{belongGridCode},'%'))
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询列表 -->
+    <select id="listInfo" parameterType="com.kx.system.domain.filing.FilingCustomerInfo"
+            resultMap="filingCustomerInfoResultMap">
+        SELECT
+        a.id,
+        a.customer_type,
+        a.customer_name,
+        a.customer_address,
+        a.customer_phone,
+        a.customer_identity,
+        a.customer_source,
+        a.belong_grid_code,
+        a.belong_grid_name,
+        a.filing_manager_code,
+        a.filing_manager_name,
+        a.filing_org_code,
+        a.filing_org_name,
+        a.filing_progress,
+        a.filing_source,
+        a.filing_status,
+        a.filing_date,
+        a.create_time,
+        a.update_time,
+        a.customer_introducer_identity,
+        a.customer_address_type,
+        a.customer_nm,
+        a.model_id,
+        a.customer_photo,
+        a.clock_in,
+        a.branch_bank,
+        a.grid_manager,
+        a.separate_bank,
+        a.filing_manager_code as credit_manager_jobNumber,
+        a.filing_manager_name as credit_manager
+        FROM
+        filing_customer_info a
+        LEFT JOIN custom_group_customer c ON a.id = c.customer_id
+        <where>
+            <if test="filingCustomerInfo.customerIdentity != null and filingCustomerInfo.customerIdentity != '' ">and
+                a.customer_identity like concat('%', #{filingCustomerInfo.customerIdentity}, '%')
+            </if>
+            <if test="filingCustomerInfo.customerName != null and filingCustomerInfo.customerName != '' ">and
+                a.customer_name like concat('%', #{filingCustomerInfo.customerName}, '%')
+            </if>
+            <if test="filingCustomerInfo.customerPhone != null and filingCustomerInfo.customerPhone != '' ">and
+                a.customer_phone like concat('%', #{filingCustomerInfo.customerPhone}, '%')
+            </if>
+            <if test="filingCustomerInfo.filingManagerCode != null and filingCustomerInfo.filingManagerCode != '' ">and
+                a.filing_manager_code like concat('%', #{filingCustomerInfo.filingManagerCode}, '%')
+            </if>
+            <if test="filingCustomerInfo.customGroupId != null and filingCustomerInfo.customGroupId != '' ">and
+                c.custom_group_id like concat('%', #{filingCustomerInfo.customGroupId}, '%')
+            </if>
+            <if test="filingCustomerInfo.belongGridCodeArr != null and filingCustomerInfo.belongGridCodeArr.size > 0 ">
+                and
+                <foreach collection="filingCustomerInfo.belongGridCodeArr" item="belongGridCode" separator="or" open="("
+                         close=")">
+                    a.belong_grid_code in (select code from pa_addr_info_type where ancestor_codes like
+                    concat('%',#{belongGridCode},'%'))
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询列表 -->
+    <select id="getInfoByIdentity" parameterType="com.kx.system.domain.filing.FilingCustomerInfo"
+            resultMap="filingCustomerInfoResultMap">
+        SELECT
+            id,
+            customer_identity
+        FROM
+            performance_customer_info
+        WHERE
+            customer_identity = #{customerIntroducerIdentity}
+        UNION
+        SELECT
+            id,
+            customer_identity
+        FROM
+            filing_customer_info
+        WHERE
+            customer_identity = #{customerIntroducerIdentity}
+    </select>
+
+    <!-- 查询列表 -->
+    <select id="listAllIdentity" parameterType="com.kx.system.domain.filing.FilingCustomerInfo"
+            resultMap="filingCustomerInfoResultMap">
+        select
+        <include refid="columnsByLeft"/>
+        from filing_customer_info a
+        left join filing_customer_transfer b on a.id = b.filing_id and b.move_status = '0'
+        left join sys_user u on a.filing_manager_code = u.manager_num
+        <where>
+            ${params.dataScope}
+            <if test="ids != null and ids.size > 0 ">and a.id in
+                <foreach collection="ids" item="id" separator="," open="(" close=")">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="groupIdList != null and groupIdList.size > 0">
+                and a.id in (SELECT customer_id FROM custom_group_customer where custom_group_id in
+                <foreach collection="groupIdList" item="i" separator="," open="(" close=")">
+                    #{customGroupId}
+                </foreach>
+                )
+            </if>
+            <if test=" customerType!=null and customerType !='' ">and a.customer_type = #{customerType }</if>
+            <if test=" customerName!=null and customerName !='' ">and a.customer_name like concat('%', #{customerName},
+                '%')
+            </if>
+            <if test=" customerAddress!=null and customerAddress !='' ">and a.customer_address = #{customerAddress }
+            </if>
+            <if test=" customerPhone!=null and customerPhone !='' ">and a.customer_phone like concat('%',
+                #{customerPhone}, '%')
+            </if>
+            <if test=" customerIdentity!=null and customerIdentity !='' ">and a.customer_identity = #{customerIdentity}
+            </if>
+            <if test=" customerSource!=null and customerSource !='' ">and a.customer_source = #{customerSource }</if>
+            <if test=" belongGridCode!=null and belongGridCode !='' ">and a.belong_grid_code = #{belongGridCode }</if>
+            <if test=" belongGridName!=null and belongGridName !='' ">and a.belong_grid_name = #{belongGridName }</if>
+            <if test=" filingManagerCode!=null and filingManagerCode !='' ">and a.filing_manager_code =
+                #{filingManagerCode }
+            </if>
+            <if test=" filingManagerName!=null and filingManagerName !='' ">and a.filing_manager_name =
+                #{filingManagerName }
+            </if>
+            <if test=" filingOrgCode!=null and filingOrgCode !='' ">and a.filing_org_code = #{filingOrgCode }</if>
+            <if test=" filingOrgName!=null and filingOrgName !='' ">and a.filing_org_name = #{filingOrgName }</if>
+            <if test=" filingProgress!=null and filingProgress !='' ">and a.filing_progress = #{filingProgress }</if>
+            <if test=" filingSource!=null and filingSource !='' ">and a.filing_source = #{filingSource }</if>
+            <if test=" filingStatus!=null and filingStatus =='0'.toString() ">and a.filing_status = #{filingStatus }
+            </if>
+            <if test=" filingStatus!=null and filingStatus =='1'.toString() ">and a.filing_status != '0'</if>
+            <if test=" filingDate!=null  ">and a.filing_date = #{filingDate }</if>
+            <if test=" createTime!=null  ">and a.create_time = #{createTime }</if>
+            <if test=" updateTime!=null  ">and a.update_time = #{updateTime }</if>
+            <if test=" customerIntroducerIdentity!=null and customerIntroducerIdentity !='' ">and
+                a.customer_introducer_identity like concat('%', #{customerIntroducerIdentity}, '%')
+            </if>
+            <if test=" customerAddressType!=null and customerAddressType !='' ">and a.customer_address_type =
+                #{customerAddressType}
+            </if>
+            <if test=" customerNm!=null and customerNm !='' ">and a.customer_nm like concat('%', #{customerNm}, '%')
+            </if>
+            <if test=" modelId!=null and modelId !='' ">and a.model_id = #{modelId}</if>
+            <if test=" clockIn!=null and clockIn !='' ">and a.clock_in = #{clockIn}</if>
+            <if test=" customerPhoto!=null and customerPhoto !='' ">and a.customer_photo = #{customerPhoto}</if>
+            <if test="belongGridCodeArr != null and belongGridCodeArr.size > 0 ">and belong_grid_code in
+                <foreach collection="belongGridCodeArr" item="belongGridCode" separator="," open="(" close=")">
+                    #{belongGridCode}
+                </foreach>
+            </if>
+            <if test=" deptList!=null and deptList.size>0 ">
+                and filing_org_code in
+                <foreach item="item" collection="deptList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="query != null and query != ''">and (a.customer_name like concat('%', #{query}, '%')
+                or a.customer_identity like concat('%', #{query}, '%')
+                or a.customer_phone like concat('%', #{query}, '%'))
+            </if>
+        </where>
+        order by a.create_time desc
+    </select>
+
+    <!-- 查询列表 -->
+    <select id="list" parameterType="com.kx.system.domain.filing.FilingCustomerInfo"
+            resultMap="filingCustomerInfoResultMap">
+        select
+        <include refid="columnsByLeft"/>
+        from filing_customer_info a
+        left join filing_customer_transfer b on a.id = b.filing_id and b.move_status = '0'
+        left join sys_user u on a.filing_manager_code = u.manager_num
+        <where>
+            ${params.dataScope}
+            <if test="ids != null and ids.size > 0 ">and a.id in
+                <foreach collection="ids" item="id" separator="," open="(" close=")">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="groupIdList != null and groupIdList.size > 0">
+                and a.id in (SELECT customer_id FROM custom_group_customer where custom_group_id in
+                <foreach collection="groupIdList" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+            <if test=" customerType!=null and customerType !='' ">and a.customer_type = #{customerType }</if>
+            <if test=" customerName!=null and customerName !='' ">and a.customer_name like concat('%', #{customerName},
+                '%')
+            </if>
+            <if test=" customerAddress!=null and customerAddress !='' ">and a.customer_address = #{customerAddress }
+            </if>
+            <if test=" customerPhone!=null and customerPhone !='' ">and a.customer_phone like concat('%',
+                #{customerPhone}, '%')
+            </if>
+            <if test=" customerIdentity!=null and customerIdentity !='' ">and a.customer_identity like concat('%',
+                #{customerIdentity}, '%')
+            </if>
+            <if test=" customerSource!=null and customerSource !='' ">and a.customer_source = #{customerSource }</if>
+            <if test=" belongGridCode!=null and belongGridCode !='' ">and a.belong_grid_code = #{belongGridCode }</if>
+            <if test=" belongGridName!=null and belongGridName !='' ">and a.belong_grid_name = #{belongGridName }</if>
+            <if test=" filingManagerCode!=null and filingManagerCode !='' ">and a.filing_manager_code =
+                #{filingManagerCode }
+            </if>
+            <if test=" filingManagerName!=null and filingManagerName !='' ">and a.filing_manager_name =
+                #{filingManagerName }
+            </if>
+            <if test=" filingOrgCode!=null and filingOrgCode !='' ">and a.filing_org_code = #{filingOrgCode }</if>
+            <if test=" filingOrgName!=null and filingOrgName !='' ">and a.filing_org_name = #{filingOrgName }</if>
+            <if test=" filingProgress!=null and filingProgress !='' ">and a.filing_progress = #{filingProgress }</if>
+            <if test=" filingSource!=null and filingSource !='' ">and a.filing_source = #{filingSource }</if>
+            <if test=" filingStatus!=null and filingStatus =='0'.toString() ">and a.filing_status = #{filingStatus }
+            </if>
+            <if test=" filingStatus!=null and filingStatus =='1'.toString() ">and a.filing_status != '0'</if>
+            <if test=" filingDate!=null  ">and a.filing_date = #{filingDate }</if>
+            <if test=" createTime!=null  ">and a.create_time = #{createTime }</if>
+            <if test=" updateTime!=null  ">and a.update_time = #{updateTime }</if>
+            <if test=" customerIntroducerIdentity!=null and customerIntroducerIdentity !='' ">and
+                a.customer_introducer_identity like concat('%', #{customerIntroducerIdentity}, '%')
+            </if>
+            <if test=" customerAddressType!=null and customerAddressType !='' ">and a.customer_address_type =
+                #{customerAddressType}
+            </if>
+            <if test=" customerNm!=null and customerNm !='' ">and a.customer_nm like concat('%', #{customerNm}, '%')
+            </if>
+            <if test=" modelId!=null and modelId !='' ">and a.model_id = #{modelId}</if>
+            <if test=" clockIn!=null and clockIn !='' ">and a.clock_in = #{clockIn}</if>
+            <if test=" customerPhoto!=null and customerPhoto !='' ">and a.customer_photo = #{customerPhoto}</if>
+            <if test="belongGridCodeArr != null and belongGridCodeArr.size > 0 ">and belong_grid_code in
+                <foreach collection="belongGridCodeArr" item="belongGridCode" separator="," open="(" close=")">
+                    #{belongGridCode}
+                </foreach>
+            </if>
+            <if test=" deptList!=null and deptList.size>0 ">
+                and filing_org_code in
+                <foreach item="item" collection="deptList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="query != null and query != ''">and (a.customer_name like concat('%', #{query}, '%')
+                or a.customer_identity like concat('%', #{query}, '%')
+                or a.customer_phone like concat('%', #{query}, '%'))
+            </if>
+        </where>
+        order by a.create_time desc
+    </select>
+
+    <!-- 查询列表id -->
+    <select id="listIdCount" parameterType="com.kx.system.domain.filing.FilingCustomerInfo" resultType="int">
+        <include refid="listIdSql">
+            <property name="columns" value="count(1)"/>
+        </include>
+    </select>
+
+    <!-- 查询列表id -->
+    <select id="listIds" parameterType="com.kx.system.domain.filing.FilingCustomerInfo" resultType="java.lang.Long">
+        <include refid="listIdSql">
+            <property name="columns" value="a.id"/>
+        </include>
+    </select>
+
+    <sql id="listIdSql">
+        select ${columns} from filing_customer_info a left join filing_customer_transfer b on a.id = b.filing_id and
+        b.move_status = '0'
+        left join sys_user u on a.filing_manager_code = u.manager_num
+        <where>
+            ${params.dataScope}
+            and a.filing_status != '0'
+            <if test="ids != null and ids.size > 0 ">and a.id in
+                <foreach collection="ids" item="id" separator="," open="(" close=")">
+                    #{id}
+                </foreach>
+            </if>
+            <if test=" customerType!=null and customerType !='' ">and a.customer_type = #{customerType }</if>
+            <if test=" customerTypes !=null and customerTypes.size > 0">and a.customer_type in
+                <foreach collection="customerTypes" item="t" open="(" close=")" separator=",">
+                    #{t}
+                </foreach>
+            </if>
+            <if test=" customerName!=null and customerName !='' ">and a.customer_name like concat('%', #{customerName},
+                '%')
+            </if>
+            <if test=" customerAddress!=null and customerAddress !='' ">and a.customer_address = #{customerAddress }
+            </if>
+            <if test=" customerPhone!=null and customerPhone !='' ">and a.customer_phone like concat('%',
+                #{customerPhone},'%')
+            </if>
+            <if test=" customerIdentity!=null and customerIdentity !='' ">and a.customer_identity like concat('%',
+                #{customerIdentity},'%')
+            </if>
+            <if test=" customerSource!=null and customerSource !='' ">and a.customer_source = #{customerSource }</if>
+            <if test=" belongGridCode!=null and belongGridCode !='' ">and a.belong_grid_code = #{belongGridCode }</if>
+            <if test=" belongGridName!=null and belongGridName !='' ">and a.belong_grid_name = #{belongGridName }</if>
+            <if test=" filingManagerCode!=null and filingManagerCode !='' ">and a.filing_manager_code =
+                #{filingManagerCode }
+            </if>
+            <if test=" filingManagerName!=null and filingManagerName !='' ">and a.filing_manager_name =
+                #{filingManagerName }
+            </if>
+            <if test=" filingOrgCode!=null and filingOrgCode !='' ">and a.filing_org_code = #{filingOrgCode }</if>
+            <if test=" filingOrgName!=null and filingOrgName !='' ">and a.filing_org_name = #{filingOrgName }</if>
+            <if test=" filingProgress!=null and filingProgress !='' ">and a.filing_progress = #{filingProgress }</if>
+            <if test=" filingSource!=null and filingSource !='' ">and a.filing_source = #{filingSource }</if>
+            <if test=" filingStatus!=null and filingStatus =='0'.toString() ">and a.filing_status = #{filingStatus }
+            </if>
+            <if test=" filingStatus!=null and filingStatus =='1'.toString() ">and a.filing_status != '0'</if>
+            <if test=" filingDate!=null  ">and a.filing_date = #{filingDate }</if>
+            <if test=" createTime!=null  ">and a.create_time = #{createTime }</if>
+            <if test=" updateTime!=null  ">and a.update_time = #{updateTime }</if>
+            <if test=" customerIntroducerIdentity!=null and customerIntroducerIdentity !='' ">and
+                a.customer_introducer_identity = #{customerIntroducerIdentity }
+            </if>
+            <if test=" customerAddressType!=null and customerAddressType !='' ">and a.customer_address_type =
+                #{customerAddressType}
+            </if>
+            <if test=" customerNm!=null and customerNm !='' ">and a.customer_nm = #{customerNm}</if>
+            <if test=" modelId!=null and modelId !='' ">and a.model_id = #{modelId}</if>
+            <if test=" clockIn!=null and clockIn !='' ">and a.clock_in = #{clockIn}</if>
+            <if test=" customerPhoto!=null and customerPhoto !='' ">and a.customer_photo = #{customerPhoto}</if>
+            <if test="belongGridCodeArr != null and belongGridCodeArr.size > 0 ">and belong_grid_code in
+                <foreach collection="belongGridCodeArr" item="belongGridCode" separator="," open="(" close=")">
+                    #{belongGridCode}
+                </foreach>
+            </if>
+            <if test=" deptList!=null and deptList.size>0 ">
+                and filing_org_code in
+                <foreach item="item" collection="deptList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </sql>
+
+    <!-- 根据id查询 -->
+    <select id="getById" resultMap="filingCustomerInfoResultMap">
+        select
+        <include refid="columns"/>
+        from filing_customer_info a where a.id = #{id}
+    </select>
+
+    <!-- 根据id删除 -->
+    <delete id="deleteById">
+        delete from  filing_customer_info where  id= #{id}
+    </delete>
+
+    <!-- 新增 -->
+    <insert id="insertFilingCustomerInfo" parameterType="com.kx.system.domain.filing.FilingCustomerInfo"
+            keyProperty="id" useGeneratedKeys="true">
+        insert into filing_customer_info(
+            customer_type,customer_name,customer_address,customer_phone,customer_identity,customer_source,belong_grid_code,belong_grid_name,filing_manager_code,filing_manager_name,filing_org_code,filing_org_name,filing_progress,filing_source,filing_status,filing_date,create_time,update_time,customer_introducer_identity,customer_address_type,customer_nm,model_id,customer_photo,clock_in,separate_bank
+        )values(
+             #{customerType}, #{customerName}, #{customerAddress}, #{customerPhone}, #{customerIdentity}, #{customerSource}, #{belongGridCode}, #{belongGridName}, #{filingManagerCode}, #{filingManagerName}, #{filingOrgCode}, #{filingOrgName}, #{filingProgress}, #{filingSource}, #{filingStatus}, now(), now(), now(),#{customerIntroducerIdentity},#{customerAddressType},#{customerNm},#{modelId},#{customerPhoto},#{clockIn},#{separateBank}
+        )
+    </insert>
+
+    <!-- 更新 -->
+    <update id="updateFilingCustomerInfo" parameterType="com.kx.system.domain.filing.FilingCustomerInfo">
+        update filing_customer_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test=" updateTime!=null  ">update_time = #{updateTime },</if>
+            <if test=" customerType!=null and customerType !='' ">customer_type = #{customerType } ,</if>
+            <if test=" customerName!=null and customerName !='' ">customer_name = #{customerName } ,</if>
+            <if test=" customerAddress!=null and customerAddress !='' ">customer_address = #{customerAddress } ,</if>
+            <if test=" customerPhone!=null and customerPhone !='' ">customer_phone = #{customerPhone } ,</if>
+            <if test=" customerIdentity!=null and customerIdentity !='' ">customer_identity = #{customerIdentity } ,
+            </if>
+            <if test=" customerSource!=null and customerSource !='' ">customer_source = #{customerSource } ,</if>
+            <if test=" belongGridCode!=null and belongGridCode !='' ">belong_grid_code = #{belongGridCode } ,</if>
+            <if test=" belongGridName!=null and belongGridName !='' ">belong_grid_name = #{belongGridName } ,</if>
+            <if test=" filingManagerCode!=null and filingManagerCode !='' ">filing_manager_code = #{filingManagerCode }
+                ,
+            </if>
+            <if test=" filingManagerName!=null and filingManagerName !='' ">filing_manager_name = #{filingManagerName }
+                ,
+            </if>
+            <if test=" filingOrgCode!=null and filingOrgCode !='' ">filing_org_code = #{filingOrgCode } ,</if>
+            <if test=" filingOrgName!=null and filingOrgName !='' ">filing_org_name = #{filingOrgName } ,</if>
+            <if test=" filingProgress!=null and filingProgress !='' ">filing_progress = #{filingProgress } ,</if>
+            <if test=" filingSource!=null and filingSource !='' ">filing_source = #{filingSource } ,</if>
+            <if test=" filingStatus!=null and filingStatus !='' ">filing_status = #{filingStatus } ,</if>
+            <if test=" filingDate!=null ">filing_date = #{filingDate } ,</if>
+            <if test=" createTime!=null ">create_time = #{createTime } ,</if>
+
+            <if test=" customerIntroducerIdentity!=null ">
+                customer_introducer_identity = #{customerIntroducerIdentity } ,
+            </if>
+
+            <if test=" customerAddressType!=null and customerAddressType !='' ">customer_address_type =
+                #{customerAddressType} ,
+            </if>
+            <if test=" customerNm!=null and customerNm !='' ">customer_nm = #{customerNm},</if>
+            <if test=" modelId!=null and modelId !='' ">model_id = #{modelId},</if>
+            <if test=" clockIn!=null and clockIn !='' ">clock_in = #{clockIn},</if>
+            <if test=" customerPhoto!=null and customerPhoto !='' ">customer_photo = #{customerPhoto}</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+
+    <select id="checkFiling" resultMap="filingCustomerInfoResultMap">
+        select
+        <include refid="columns"/>
+        from filing_customer_info
+        <where>
+
+            filing_status != '0'
+            <if test="id != null">
+                and id != #{id}
+            </if>
+            and (
+            <trim prefixOverrides="or">
+                <if test="name != null and name != '' and phone!=null and  phone != ''  ">
+                    or (customer_name = #{name} and customer_phone = #{phone} )
+                </if>
+                <if test="name != null and name != '' and identity!=null and  identity!= '' ">
+                    or (customer_name = #{name} and customer_identity = #{identity} )
+                </if>
+                <if test="identity != null and identity != '' and phone!=null and  phone != ''   ">
+                    or ( customer_phone = #{phone} and customer_identity = #{identity})
+                </if>
+            </trim>
+            )
+        </where>
+
+    </select>
+    <select id="selectCustomerInfo" resultMap="filingCustomerInfoResultMap">
+        select
+        <include refid="columns"/>
+        from filing_customer_info
+        <where>
+            <if test="customerId!=null and customerId !='' ">and id = #{customerId}</if>
+            <if test="customerIdentity!=null and customerIdentity !='' ">and customer_identity = #{customerIdentity}
+            </if>
+        </where>
+    </select>
+
+    <select id="getTypeByPhoneAndIdentity" resultType="java.lang.Long">
+        select model_id from filing_customer_info
+        <where>
+            <if test="phone!=null and phone !='' ">and customer_phone = #{phone}</if>
+            <if test="identity!=null and identity !='' ">and customer_identity = #{identity}</if>
+            and filing_source != '0'
+        </where>
+        order by update_time desc
+        limit 1
+    </select>
+
+    <select id="listByIds" resultMap="filingCustomerInfoResultMap">
+        select
+        <include refid="columnsByLeft"/>
+        from filing_customer_info a left join filing_customer_transfer b on a.id = b.filing_id and b.move_status = '0'
+        where a.id in
+        <foreach collection="filingIds" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+    <select id="countByGrid" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM filing_customer_info
+        WHERE belong_grid_code IN
+        (SELECT code FROM pa_addr_info_type WHERE ancestor_codes LIKE CONCAT('%,',#{gridCode},',%'))
+    </select>
+
+
+    <update id="updateBatchById" parameterType="java.util.List">
+        update filing_customer_info
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix=" filing_manager_code = case " suffix=" end, ">
+                <foreach collection="list" item="item">
+                    <if test="item.filingManagerCode != null and item.filingManagerCode!=''">
+                        when id = #{item.id} then #{item.filingManagerCode}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix=" filing_manager_name = case " suffix=" end, ">
+                <foreach collection="list" item="item">
+                    <if test="item.filingManagerName != null and item.filingManagerName!='' ">
+                        when id = #{item.id} then #{item.filingManagerName}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix=" filing_org_code = case " suffix=" end, ">
+                <foreach collection="list" item="item">
+                    <if test="item.filingOrgCode != null and item.filingOrgCode!='' ">
+                        when id = #{item.id} then #{item.filingOrgCode}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix=" filing_org_name = case " suffix=" end, ">
+                <foreach collection="list" item="item">
+                    <if test="item.filingOrgName != null and item.filingOrgName!='' ">
+                        when id = #{item.id} then #{item.filingOrgName}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix=" filing_progress = case " suffix=" end, ">
+                <foreach collection="list" item="item">
+                    <if test="item.filingProgress != null and item.filingProgress!='' ">
+                        when id = #{item.id} then #{item.filingProgress}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix=" update_time = case " suffix=" end, ">
+                <foreach collection="list" item="item">
+                    <if test="item.updateTime != null">
+                        when id = #{item.id} then #{item.updateTime}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where id in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item.id}
+        </foreach>
+    </update>
+
+
+    <update id="updateFilingCustomerGrid">
+        update
+            filing_customer_info a
+            left join anchor_point b on a.id = b.customer_id
+            left join pa_addr_info c on b.belong_grid = c.code
+            set
+                a.belong_grid_code = b.belong_grid,
+                a.belong_grid_name = c.name
+        where b.type = '3' and a.filing_status !='0'
+    </update>
+    <update id="updateGridManager">
+        update filing_customer_info fci,anchor_point ap set fci.grid_manager = ap.grid_manager where fci.customer_nm = ap.customer_nm and ap.type = 3 and ap.belong_grid = #{code}
+    </update>
+
+    <select id="selectEsDataByGroupId" resultMap="EsFilingMemberResultMap">
+
+        SELECT a.id, a.customer_type, a.customer_name, a.customer_address,
+        a.customer_phone, a.customer_identity, a.customer_source,
+        a.belong_grid_code, a.belong_grid_name, a.filing_manager_code,
+        a.filing_manager_name, a.filing_org_code, a.filing_org_name,
+        a.filing_progress, a.filing_source, a.filing_status, a.filing_date,
+        a.create_time, a.update_time, a.customer_introducer_identity,
+        a.customer_address_type, a.customer_nm, a.model_id, a.customer_photo,
+        a.clock_in, a.branch_bank, a.grid_manager,u2.nick_name, a.separate_bank,
+        a.filing_manager_code as credit_manager_jobNumber, a.filing_manager_name as credit_manager,
+        u.dept_id,u.user_id,sd.ancestors,cgc.custom_group_id,pait.ancestor_codes
+        FROM custom_group_customer cgc
+        left join filing_customer_info a on a.id = cgc.customer_id
+        left join sys_user u on a.filing_manager_code = u.manager_num
+        left join sys_user u2 on a.grid_manager = u2.manager_num
+        left join sys_dept sd on u.dept_id= sd.dept_id
+        left join pa_addr_info_type pait on a.belong_grid_code = pait.code
+        where cgc.custom_group_id = #{groupId}
+        limit #{startIndex},#{endIndex}
+    </select>
+
+    <select id="selectAll" resultMap="filingCustomerInfoResultMap">
+        select
+        <include refid="columns" /> from filing_customer_info
+    </select>
+</mapper>
